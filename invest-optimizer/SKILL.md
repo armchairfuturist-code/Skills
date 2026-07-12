@@ -11,7 +11,6 @@ Reference files:
 - [`METRICS.md`](METRICS.md) — market metric thresholds and synthesis rules
 - [`POSTURE.md`](POSTURE.md) — posture × goals calibration matrix
 - [`SCREENING.md`](SCREENING.md) — individual stock technical gates
-- [`TOOLS.md`](TOOLS.md) — quantitative data tools
 
 ## Phase 1 — Anchor to goals
 
@@ -68,7 +67,7 @@ Verdict: AGENT-DOMINATED / HUMAN-MIXED / HUMAN-DOMINATED
 
 ### 2E — Event/prediction: what are live probability markets pricing?
 
-Use [`polymarket-cli`](TOOLS.md) to anchor probability-driven verdicts that complement the four structural axes. Live prediction-market prices on recessions, rate moves, and sector outcomes are a harder signal than any VIX read.
+Use `polymarket-cli` to anchor probability-driven verdicts that complement the four structural axes. Live prediction-market prices on recessions, rate moves, and sector outcomes are a harder signal than any VIX read.
 
 Measures: Polymarket-implied probability of recession within 12m, rate-hike probability, sector-outcome markets.
 
@@ -85,6 +84,10 @@ Weight all five axes. Add microstructure as a **modifier** — it amplifies or m
 - AGENT-DOMINATED × any pulse → **monthly ATM covered calls structurally underperform** (strikes get run over by intraday agent-driven spikes)
 
 **Completion criterion:** Five axis verdicts (valuation, complacency, macro, microstructure, prediction markets), each supported by at least one metric reading, plus a synthesized pulse with explicit weighting rationale.
+
+### Tool fallback
+
+If a quantitative tool (`polymarket-cli`, `Riskfolio-Lib`, `qlib`) is unavailable, fall back to the manual metric checks in METRICS.md and state the gap. Never block a posture brief on a missing data source.
 
 ## Phase 3 — Calibrate posture
 
@@ -103,6 +106,25 @@ When the posture implies individual stock picks, apply the technical gates in [`
 
 **Completion criterion:** At least one concrete recommendation per portfolio area (equities, fixed income, alternatives, cash, sector tilts, income instruments as applicable), each with target posture, specific actions, and a risk gate.
 
+## Phase 3.5 — Optimize weights
+
+Translate the target posture from Phase 3 into mathematically grounded allocation weights. Heuristic templates give ranges; optimization gives exact weights within those ranges.
+
+If `Riskfolio-Lib` is available, run portfolio optimization on the candidate universe constrained to the target posture's allocation bands from [`POSTURE.md`](POSTURE.md):
+
+1. Build the candidate universe (equities, ETFs, bonds per the target posture tilt)
+2. Select an optimization model matched to the goal profile:
+   - **Growth/Aggressive** → mean-variance (maximize Sharpe) or mean-CVaR for fat tails
+   - **Balanced** → risk parity or mean-variance with turnover constraint
+   - **Income/Conservative** → risk parity or minimum-variance
+   - **Preservation** → minimum-variance or Black-Litterman with conservative views
+3. Constrain to the posture's asset-class bands (e.g. Balanced: equities 50–65%, fixed income 25–40%, cash 5–10%)
+4. Output optimal weights per asset
+
+If `Riskfolio-Lib` is unavailable, fall back to equal-weight or inverse-volatility weighting within the target bands and state the gap. Never block a posture brief on a missing tool.
+
+**Completion criterion:** Every asset in the recommended portfolio has an explicit weight assignment, either optimized or fallback-weighted, summing to 100% within the target posture's allocation bands.
+
 ## Phase 4 — Risk check
 
 Before outputting, validate recommendations against system risk constraints. If system values aren't available, use defaults:
@@ -115,7 +137,17 @@ Before outputting, validate recommendations against system risk constraints. If 
 
 If any recommendation violates a limit, downgrade the posture to the next safe rung. State the violation and the downgrade explicitly.
 
-**Completion criterion:** Every recommendation checked against risk limits. Violations blocked or downgraded with reason.
+### Regime validation
+
+If a prior posture brief exists, check whether the previous regime read was confirmed or contradicted by subsequent market action:
+
+- **Confirmed** — metrics moved in the predicted direction (e.g. prior LATE CYCLE → yield curve un-inverted or spreads widened)
+- **Contradicted** — metrics moved against (e.g. prior LATE CYCLE → VIX dropped and spreads tightened)
+- **Mixed** — some axes confirmed, others didn't → note which and adjust confidence in the current read
+
+A contradicted prior read lowers confidence in regime calls depending on the same axes. State the adjustment explicitly.
+
+**Completion criterion:** Every recommendation checked against risk limits. Violations blocked or downgraded with reason. Prior regime read validated as confirmed, contradicted, or mixed with confidence adjustment stated.
 
 ## Output format
 
@@ -154,4 +186,4 @@ Present as a structured posture brief. The format adapts to **investor type** �
 
 ## Branch: Quick pulse
 
-When only market conditions are requested (no portfolio recommendations), run Phase 2 only. Output a compact table of five axes and overall pulse. Skip Phases 1, 3, and 4.
+When only market conditions are requested (no portfolio recommendations), run Phase 2 only. Output a compact table of five axes and overall pulse. Skip Phases 1, 3, 3.5, and 4.

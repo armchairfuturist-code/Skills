@@ -1,6 +1,22 @@
 # Individual Stock Screening
 
-When posture recommends sector or asset-class shifts that imply individual stock picks, filter candidates through three technical gates.
+When posture recommends sector or asset-class shifts that imply individual stock picks, source candidates then filter through three technical gates.
+
+## Candidate sourcing
+
+The screener is a filter, not a generator — candidates must come from somewhere first. Source per the target posture's tilt:
+
+| Posture tilt | Where to source candidates |
+|---|---|
+| Sector rotation (e.g. defensive, value) | ETF holdings in the target sector (e.g. XLP constituents for defensive) — pull top 20 by weight, filter |
+| Small cap / emerging markets | ETF holdings (IWM, EEM) screened for liquidity and momentum |
+| Quality growth | User's existing holdings + ETF holdings in VUG/QQQ — supplement with sector leaders |
+| Income / dividend | ETF holdings in SCHD, VYM — screen for dividend safety (payout ratio < 60%, consistent dividend growth) |
+| Broad market shift | User's existing holdings are the universe — screen each for hold/trim/add |
+
+If the user holds individual stocks, always include current holdings in the candidate pool for the relevant areas — a posture shift may mean trimming, not new buys.
+
+Generate 15–30 raw candidates per affected area before applying technical gates. The filter exists to narrow, not to search.
 
 ## Technical gates
 

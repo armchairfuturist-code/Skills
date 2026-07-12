@@ -4,12 +4,14 @@ How market pulse maps to portfolio posture through the lens of personal goals. S
 
 ## The matrix
 
+Cells marked **(default)** are the allocation the goal profile would produce on its own — they exist for completeness. Focus calibration effort on the non-obvious intersections where the pulse materially changes the default behavior.
+
 | Market pulse | Growth / Aggressive | Balanced / Moderate | Income / Conservative | Preservation |
 |---|---|---|---|---|
-| **EXPANSION** — cheap valuations, bull market, low fear | Maximum equities. Small/value tilt. Emerging markets. Full risk budget. | Neutral weight, drift to equity. Maintain targets. | Income tilt. High quality, preferreds, dividend growers. | Standard allocation. Quality bias. |
+| **EXPANSION** — cheap valuations, bull market, low fear | Maximum equities. Small/value tilt. Emerging markets. Full risk budget. | **(default)** Neutral weight, drift to equity. Maintain targets. | Income tilt. High quality, preferreds, dividend growers. | **(default)** Standard allocation. Quality bias. |
 | **LATE CYCLE** — rich valuations, complacency, macro warnings | Reduce to neutral. Trim winners, raise cash 15–20%. Quality rotation. | Shift defensive. +5–10% bonds. Quality, low vol equities. | Short duration, high credit quality. Trim HY exposure. | Reduce equity to minimum target. Short Treasuries core. |
-| **CONTRACTION** — fear, recession, crash | Average down systematically. Extend duration. Scale into weakness. | Rebalance. Sell bonds into equity strength at targets. | Hold income. Dividends safe; yield quality only. | Maintain. Equity at floor. Duration extended. |
-| **CRISIS** — panic, credit freeze, policy emergency | Aggressive buy. Full deployment into panic. Go barbell. | Systematic rebalance only. | Hold course. Income from best credits. | Hold. This is what the allocation is for. |
+| **CONTRACTION** — fear, recession, crash | Average down systematically. Extend duration. Scale into weakness. | Rebalance. Sell bonds into equity strength at targets. | **(default)** Hold income. Dividends safe; yield quality only. | **(default)** Maintain. Equity at floor. Duration extended. |
+| **CRISIS** — panic, credit freeze, policy emergency | Aggressive buy. Full deployment into panic. Go barbell. | Systematic rebalance only. | Hold course. Income from best credits. | **(default)** Hold. This is what the allocation is for. |
 
 ## Allocation templates by posture
 
