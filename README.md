@@ -69,10 +69,11 @@ If you have not set these, the agent asks or infers them. It will not proceed wi
    - Prediction markets: what are betting markets implying about recession and rate moves? (Polymarket)
    Each axis gets a verdict. Together they form one market pulse: EXPANSION, LATE CYCLE, CONTRACTION, or CRISIS.
 3. Calibrate posture. The pulse meets your goals in a matrix. Late cycle plus a growth goal means trim and raise cash. Late cycle plus a preservation goal means cut equity to the floor. Same pulse, different posture.
-4. Risk check. Every recommendation is tested against position-size and concentration limits. Anything that breaks a limit is downgraded, with the reason stated.
+4. Optimize weights. If Riskfolio-Lib is available, it runs portfolio optimization (mean-variance, risk parity, or Black-Litterman depending on your goal profile) constrained to the posture's allocation bands. Falls back to equal-weight or inverse-volatility weighting if the library is missing.
+5. Risk check. Every recommendation is tested against position-size and concentration limits. Anything that breaks a limit is downgraded, with the reason stated. If a prior posture brief exists, it validates whether the previous regime read was confirmed, contradicted, or mixed — and adjusts confidence in the current read accordingly.
 
 ### What you get
-A posture brief. Your profile and why it matters. The market pulse table. A posture table with current allocation, target allocation, the action to take, and the trigger that reverses it. If the posture implies stock picks, a screener shows which candidates pass three technical gates (near 52-week low, average daily range, trend above moving averages). The screener is a research list, not a buy list.
+A posture brief. Your profile and why it matters. The market pulse table. A posture table with current allocation, target allocation, the action to take, and the trigger that reverses it. Optimized weight allocations per asset (or fallback-weighted if the optimization library is missing). If the posture implies stock picks, the screener sources candidates from sector ETF holdings, then filters through three technical gates (near 52-week low, average daily range, trend above moving averages). The screener is a research list, not a buy list.
 
 ### The quick version
 Ask only about market conditions and the skill skips your portfolio. You get a compact pulse table: valuation, complacency, macro, overall.
