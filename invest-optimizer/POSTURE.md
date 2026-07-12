@@ -8,8 +8,8 @@ How market pulse maps to portfolio posture through the lens of personal goals. S
 |---|---|---|---|---|
 | **EXPANSION** — cheap valuations, bull market, low fear | Maximum equities. Small/value tilt. Emerging markets. Full risk budget. | Neutral weight, drift to equity. Maintain targets. | Income tilt. High quality, preferreds, dividend growers. | Standard allocation. Quality bias. |
 | **LATE CYCLE** — rich valuations, complacency, macro warnings | Reduce to neutral. Trim winners, raise cash 15–20%. Quality rotation. | Shift defensive. +5–10% bonds. Quality, low vol equities. | Short duration, high credit quality. Trim HY exposure. | Reduce equity to minimum target. Short Treasuries core. |
-| **CONTRACTION** — fear, recession, crash | Average down systematically. Extend duration. Scale into weakness. | Rebalance. Sell bonds into equity strength at targets. | Hold income. Dividends safe; don't chase yield. | Maintain. Equity at floor. Duration extended. |
-| **CRISIS** — panic, credit freeze, policy emergency | Aggressive buy. Full deployment into panic. Go barbell. | Systematic rebalance only. No discretionary buys. | Hold course. Income from best credits. No forced sales. | Hold. This is what the allocation is for. |
+| **CONTRACTION** — fear, recession, crash | Average down systematically. Extend duration. Scale into weakness. | Rebalance. Sell bonds into equity strength at targets. | Hold income. Dividends safe; yield quality only. | Maintain. Equity at floor. Duration extended. |
+| **CRISIS** — panic, credit freeze, policy emergency | Aggressive buy. Full deployment into panic. Go barbell. | Systematic rebalance only. | Hold course. Income from best credits. | Hold. This is what the allocation is for. |
 
 ## Allocation templates by posture
 
@@ -39,11 +39,11 @@ Tilt: short duration Treasuries, TIPS, money market
 
 ## Agent-Market Microstructure Addendum
 
-When AI trading agents compose >30% of daily volume (current: 60–70%+), traditional "set-and-forget" income strategies face structural headwinds. Agents herd into identical predictions, creating localized parabolic surges followed by random liquidity vacuums and flash crashes.
+When AI trading agents compose >30% of daily volume (current: 60–70%+), traditional "set-and-forget" income strategies face structural headwinds from the **parabolic-and-drop** regime.
 
 ### How agent-market changes instrument selection
 
-Standard monthly ATM covered calls **underperform structurally** — an intraday agent-driven spike can breach a strike written 25 days ago in minutes. The premium (1–2%/mo) does not compensate for the capped upside + asymmetric crash exposure.
+Standard monthly ATM covered calls **underperform structurally** — an intraday agent-driven spike can breach a strike written 25 days ago in minutes. The premium does not compensate for the capped upside + asymmetric crash exposure.
 
 **Preference hierarchy for income instruments in agent-dominated markets:**
 

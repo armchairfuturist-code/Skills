@@ -1,6 +1,6 @@
 # Market Metrics Reference
 
-Thresholds and interpretation for the three market axes the Invest Optimizer reads. All values are current-snapshot checks; a metric outside the range for its axis contributes to the synthesized **market pulse**.
+Thresholds and interpretation for the five market axes the Invest Optimizer reads. All values are current-snapshot checks; a metric outside the range for its axis contributes to the synthesized **market pulse**.
 
 ## Valuation
 
@@ -73,25 +73,15 @@ Junk bond yield over Treasuries.
 
 | State | Verdict | Meaning |
 |---|---|---|
-| > +0.5% | STEEP | Normal expansion |
-| 0% to +0.5% | FLAT | Late cycle — slowing growth |
-| < 0% (inverted) | INVERTED | Recession warning — most reliable lead indicator |
-| Recently un-inverted | RECESSION IMMINENT | Recession typically hits after un-inversion, not during |
+| > +0.5% | EXPANSION | Normal growth — steep curve |
+| 0% to +0.5% | WARNING | Late cycle — flattening, slowing growth |
+| < 0% (inverted) | RECESSION | Recession warning — most reliable lead indicator |
+| Recently un-inverted | CRISIS | Recession typically hits after un-inversion, not during |
 
 The recession usually arrives 6–18 months after the curve un-inverts.
 
-## Synthesizing the pulse
-
-Weight all three axes. General rules:
-
-- 2+ axes flashing warning (RICH / COMPLACENT / INVERTED) → LATE CYCLE or CONTRACTION
-- 2+ axes flashing fear (EXTREME / DISTRESS / PANIC) → CRISIS
-- Valuation cheap + macro expansion + VIX normal → EXPANSION
-- Mixed signals → weight macro highest (it leads), then valuation (it lags), then complacency (it amplifies)
-
 ## Market Microstructure
 
-Who drives price action determines which option strategies survive.
 ### AI Trading Agent Volume Share
 Estimated share of daily equity volume driven by automated/AI agents (quant funds, ML models, algos).
 
