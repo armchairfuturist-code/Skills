@@ -15,16 +15,16 @@ These are prompt packs for an AI coding agent (Claude Code, Cline, MiMoCode, and
 You hand the agent your lab results, your DNA file, and your wearable data. It tells you what to fix first, what to take, and when to re-test. No more staring at a lab sheet wondering what matters.
 
 ### What to give it
-- Bloodwork (recent, any format): the standard panel plus hormones, inflammation, thyroid, iron, vitamin D, B12, HbA1c, fasting insulin
+- Bloodwork (recent, any format): any panel at all — a single CBC or a full longevity workup. The skill is panel-agnostic: it maps and contextualizes every marker present, then tells you which high-value longevity markers are *missing* so you know what to test next.
 - DNA report (optional): 23andMe or Ancestry raw data
 - Health tracker export (optional): HRV, resting heart rate, sleep stages, VO2 max
 - Goals: what you want (longevity, energy, sharp thinking, body composition)
 - Risk tolerance: how far you will go (established supplements only, peptides, research compounds)
 
-Missing data is fine. The skill works with what you have and flags the gaps.
+Missing data is fine. The skill works with whatever you provide and flags gaps on two axes: out-of-range values (visible gaps) and absent high-value markers (invisible gaps — you can't calibrate what you can't see).
 
 ### What it does, step by step
-1. Profile your signals. It reads each marker. It checks whether the test was done right (fasted? right time of day?). It writes a card with your value, optimal range, trend, and confidence.
+1. Profile your signals. It parses every marker in the panel you gave it, maps each to a canonical name, and checks whether the test was done right (fasted? right time of day?). It writes a card with your value, optimal range, trend, and confidence — and scans for the longevity markers you *weren't* tested for.
 2. Map to body systems. Metabolic, hormonal, cardiovascular, inflammatory, mitochondrial, nutritional, sleep, cognitive. Your numbers land in the system they belong to.
 3. Find the gaps. A gap is a marker that is actionable and outside its optimal range. It ranks each gap P0 (fix now), P1 (borderline), P2 (nice to have).
 4. Build the plan in three layers:

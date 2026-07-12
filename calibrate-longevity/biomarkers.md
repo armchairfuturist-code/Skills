@@ -4,6 +4,59 @@ Optimal ranges for longevity. These are stricter than standard lab reference ran
 
 ---
 
+## Coverage targets
+
+Not every panel measures the same thing. This table lists the high-value longevity markers the skill watches for. It is **not a required input set** — the skill contextualizes whatever markers are present. After parsing a panel, the skill scans this list for *absent* markers and reports them as invisible gaps (blind spots worth testing next time).
+
+| Priority | Marker | System | Why it matters |
+|---|---|---|---|
+| **Core** | Fasting glucose | Metabolic | Glycemic control; >90 mg/dL correlates with mortality even in range |
+| **Core** | Fasting insulin / HOMA-IR | Metabolic | Early insulin resistance; responds before glucose |
+| **Core** | HbA1c | Metabolic | 90-day glucose average |
+| **Core** | Lipids (TC, LDL, HDL, TG) | Cardiovascular | Standard risk panel |
+| **Core** | **ApoB** | Cardiovascular | Better predictor than LDL; particle count |
+| **Core** | **Lp(a)** | Cardiovascular | Largely genetic; drives residual risk |
+| **Core** | hs-CRP | Inflammatory | Low-grade inflammation |
+| **Core** | Homocysteine | Inflammatory / methylation | CVD + cognitive risk; B-vitamin status |
+| **Core** | Ferritin + iron studies | Nutritional | Deficiency *and* overload both harmful |
+| **Core** | Vitamin D (25-OH) | Nutritional | Broad mortality signal |
+| **Core** | TSH, fT4, fT3 | Hormonal | Thyroid function |
+| **Core** | Albumin | Liver / nutritional | PhenoAge input; visceral protein status |
+| **Core** | Creatinine / eGFR (or Cystatin C) | Renal | Filtration; PhenoAge input |
+| **Core** | CBC (WBC, RBC, MCV, RDW, platelets) | Hematologic | Anemia, inflammation, RDW is a PhenoAge input |
+| **High** | Free testosterone (men) / estradiol + progesterone (women) | Hormonal | Hypogonadism, cycle-phase issues |
+| **High** | Cortisol (AM, ideally 4-point curve) | Hormonal / HPA | Stress axis |
+| **High** | DHEA-S | Hormonal | Adrenal; declines with age |
+| **High** | B12, RBC folate, methylmalonic acid | Nutritional / methylation | B-status; MMA is functional B12 |
+| **High** | Magnesium (RBC), Zinc, Selenium | Nutritional | Cofactors for antioxidant / enzyme function |
+| **High** | Uric acid | Metabolic | U-shaped; gout + CVD |
+| **High** | GGT, ALT, AST | Liver / oxidative | Fatty liver, oxidative stress |
+| **High** | HbA1c + fasting insulin → HOMA-IR | Metabolic | Cheap insulin-resistance proxy |
+| **High** | CRP, WBC, neutrophil:lymphocyte ratio | Inflammatory | Immune activation |
+| **High** | Vitamin B1, B6 | Nutritional | Often-untested cofactors |
+| **Context** | Genetic: APOE, LPA kringle, MTHFR, C677T, F2/F5, CYP21A2 | Genomic | Predisposition context for the above |
+| **Context** | Tracker: HRV, RHR, VO2 max, sleep stages | Recovery / fitness | Real-world validation of lab picture |
+
+A panel that contains, say, only a CBC + lipids is fully contextualized for hematology and cardiovascular risk — the coverage scan simply flags that metabolic-insulin (fasting insulin, HOMA-IR), inflammatory (hs-CRP, homocysteine), nutritional (vit D, ferritin), and hormonal (thyroid, testosterone) markers are absent and thus invisible.
+
+---
+
+Not every marker deserves equal attention. Use a tiered structure (adapted from the `years` system) so the plan targets the highest-leverage markers first, not just the ones furthest from lab-normal.
+
+| Tier | Name | What lives here | Recheck |
+|---|---|---|---|
+| **Primary KPIs** | Active movers | The 3–5 markers you are actively trying to shift this cycle. Pick by phenotype, family history, and what you've already addressed. | Every intervention cycle (2–12 weeks by marker) |
+| **Secondary KPIs** | Guardrails + confirmatory | Markers reliably in optimal range that serve as guardrails, plus confirmatory readouts that triangulate a Primary KPI (HbA1c lags fasting insulin by months; hs-CRP catches inflammation fasting insulin misses; UACR confirms BP reaches the kidney). | ~annually |
+| **Baseline measurements** | Once-in-life | DEXA (bone density, body comp), CCTA (plaque burden when indicated), APOE and Lp(a) genotyping (neither changes). | Infrequent or one-time |
+
+**Principle**: a 60-year-old with confirmed plaque shouldn't track the same five Primary KPIs as a 30-year-old with a clean scan. Promote markers you need to move; demote stable-in-range markers to Secondary as guardrails. Pick from remaining candidates using expected-value vs cost: how much an intervention shifts long-term risk, your honest probability of sticking with it, and durability (a one-time screen vs something that decays the moment you stop).
+
+### Default Primary KPI set (adults, no special history)
+
+ApoB, fasting insulin / HOMA-IR, home blood pressure, waist-to-height ratio, and VO₂max trend from a smartwatch. Start here if starting from zero. Promote/demote based on phenotype and family history (ferritin + TSAT if hemochromatosis carrier; ApoB if paternal early MI; cystatin-C eGFR if high muscle mass makes creatinine eGFR misleading).
+
+---
+
 ## Metabolic
 
 | Marker | Optimal range | Notes | Recheck | Key SNPs |
@@ -82,3 +135,73 @@ Optimal ranges for longevity. These are stricter than standard lab reference ran
 | Sleep latency | <20 min | >30 min → sleep onset issue | Continuous (tracker) | CLOCK, PER2, PER3 |
 | HRV during sleep | >60 ms (RMSSD) | Rising trend across night is good | Continuous (tracker) | ADRB1, CHRM2 |
 | RHR during sleep | 5–10 bpm below waking | No drop → poor recovery or overtraining | Continuous (tracker) | ADRB1, NOS3 |
+
+---
+
+## Biological Age
+
+A compressed-age signal computed from routine blood markers. The delta (biological − chronological) is a high-signal gap indicator: a positive delta means the user is biologically older than their years, and the systems driving it are the highest-ROI calibration targets.
+
+### PhenoAge (Levine 2018)
+
+Validated algorithm from Levine et al., *Aging* (2018) — a Gompertz proportional-hazards model on NHANES mortality data. Takes 9 routine clinical markers + chronological age and returns a "phenotypic age" calibrated to population mortality risk. PhenoAge tracks all-cause mortality more tightly than any single marker.
+
+**Required inputs (use these exact units):**
+
+| Marker | Unit | Where it lives in a panel |
+|---|---|---|
+| Albumin | g/L | Metabolic / liver |
+| Creatinine | µmol/L | Renal |
+| Glucose (fasting) | mmol/L (mg/dL × 0.0555) | Metabolic |
+| C-reactive protein (CRP) | mg/L | Inflammatory |
+| Lymphocyte % | % | CBC differential |
+| Mean cell volume (MCV) | fL | CBC |
+| Red cell distribution width (RDW) | % | CBC |
+| Alkaline phosphatase | U/L | Liver/bone |
+| White blood cell count | ×10⁹/L (1000 cells/µL) | CBC |
+| Chronological age | years | user input |
+
+**Algorithm:**
+
+```
+# Step 1 — weighted linear predictor (xb)
+xb = -19.9067
+     - 0.0336 · albumin_gL
+     + 0.0095 · creatinine_umolL
+     + 0.1953 · glucose_mmolL
+     + 0.0954 · ln(CRP_mgL)
+     - 0.0120 · lymphocyte_pct
+     + 0.0268 · MCV_fL
+     + 0.3306 · RDW_pct
+     + 0.00188 · alkaline_phosphatase_UL
+     + 0.0554 · WBC_x10e9
+     + 0.0804 · chronological_age
+
+# Step 2 — mortality score (Gompertz)
+gamma   = -1.51714
+lambda  =  0.0076927
+M = 1 - exp( (gamma · exp(xb)) / lambda )
+
+# Step 3 — phenotypic (biological) age
+PhenoAge = 141.50225 + ln( -0.00553 · ln(1 - M) ) / 0.09165
+```
+
+**Sanity check**: a healthy person at a given age typically scores a few years *below* their chronological age (PhenoAge runs slightly young in NHANES III). If the output lands 5–10 years *above* age, recheck units — the most common error is feeding albumin in g/dL instead of g/L, or creatinine in mg/dL instead of µmol/L.
+
+**Partial estimates**: if a marker is missing, you cannot simply drop its term — the coefficients are fit jointly. Instead flag PhenoAge as **indeterminate** and report only the qualitative cross-system picture. Do not invent a number.
+
+### GrimAge (surrogate)
+
+GrimAge adds DNAm-based mortality predictors; the routine-blood surrogate uses the same 9 markers plus smoking-pack-years where known, weighted toward the inflammatory and renal terms. Report it as a second opinion on the PhenoAge estimate — large disagreement between the two suggests a dominant single driver (e.g. renal or inflammatory) worth isolating.
+
+### Signal card format
+
+```
+[biological_age] = [PhenoAge: X yr | GrimAge: Y yr | chronological: Z yr | delta: X−Z yr]
+```
+
+- **delta ≤ 0**: biological age at or below chronological — systems are keeping pace.
+- **delta +3 to +7**: moderate acceleration — find the dominant axis (metabolic and inflammatory are the usual roots).
+- **delta > +7**: significant acceleration — prioritize the root-axis intervention above all supplement additions.
+
+**Recheck**: not a lab re-draw; recompute PhenoAge whenever the 9 input markers are refreshed (2–12 weeks depending on which changed). The delta trend across sessions (stored in `longitudinal-record.md`) is the real signal — is biological age converging toward chronological?
