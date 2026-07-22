@@ -1,6 +1,6 @@
 ---
 name: invest-optimizer
-description: Recalibrate portfolio posture to market regime and goals. Triggers: portfolio review, market timing, goal alignment, posture shift.
+description: "Recalibrate portfolio posture to market regime and goals. Use when the user wants a portfolio review or posture shift; for a market-conditions read with no portfolio changes, run the Quick pulse branch."
 ---
 
 # Invest Optimizer
@@ -16,7 +16,7 @@ Reference files:
 
 Load a **goal profile**: a structured record of the user's investment objectives. If the system has a goal intake (e.g. Quinn's `/goal-intake`), load the latest confirmed profile. Otherwise infer from context or ask the user.
 
-The goal anchor is the fixed reference every downstream assessment recalibrates against — it determines which posture fits.
+The goal anchor is the fixed reference every downstream assessment recalibrates against.
 
 | Axis | Values | Why it matters |
 |---|---|---|
@@ -27,7 +27,7 @@ The goal anchor is the fixed reference every downstream assessment recalibrates 
 | Income cadence | weekly / monthly / quarterly / annual / none | Determines whether recommendations prioritize dividend safety and yield vs total-return reinvestment |
 | Concentration | concentrated / balanced / broad | Concentrated tolerates sector risk; broad needs diversification |
 
-**Completion criterion:** All critical axes loaded and noted.
+**Completion criterion:** Every axis in the goal profile table populated and noted.
 
 ## Phase 2 — Read the regime
 
@@ -52,28 +52,20 @@ Check: **Yield curve (10y − 2y)**.
 Verdict: EXPANSION / WARNING / RECESSION / CRISIS
 
 ### 2D — Microstructure: who is driving price action?
+When AI trading agents compose a large share of daily volume, their herding creates the **parabolic-and-drop** regime — vertical parabolic surges followed by random liquidity vacuums and flash crashes — that breaks traditional option strategies.
 
-AI trading agents now compose >60% of daily equity volume. Their herding creates the **parabolic-and-drop** regime — vertical parabolic surges followed by random liquidity vacuums and flash crashes — that breaks traditional option strategies.
+Check: **AI trading volume share**, **intraday tail frequency** (days with >3% single-stock intraday reversals), **flash crash count** (rolling 30-day). Thresholds and verdicts in [`METRICS.md`](METRICS.md).
 
-Check: **AI trading volume share**, **intraday tail frequency** (days with >3% single-stock intraday reversals), **flash crash count** (rolling 30-day).
-
-| Metric | Estimate (mid-2026) | Signal |
-|--------|--------------------|--------|
-| AI trading agent volume share | 60–70%+ | AGENT-DOMINATED |
-| Intraday >3% V-reversals per week | 3–8 | HIGH REGIME NOISE |
-| Flash crash events (30d) | 1–4 | STRUCTURAL FRAGILITY |
-
-Verdict: AGENT-DOMINATED / HUMAN-MIXED / HUMAN-DOMINATED
+Verdict: HUMAN-DOMINATED / HUMAN-MIXED / AGENT-DOMINATED / AGENT-SATURATED
 
 ### 2E — Event/prediction: what are live probability markets pricing?
 
-Use `polymarket-cli` to anchor probability-driven verdicts that complement the four structural axes. Live prediction-market prices on recessions, rate moves, and sector outcomes are a harder signal than any VIX read.
-
+Use `polymarket-cli` to anchor probability-driven verdicts that complement the four structural axes.
 Measures: Polymarket-implied probability of recession within 12m, rate-hike probability, sector-outcome markets.
 
 Verdict: [RECESSION p≥0.30 / NEUTRAL p0.10–0.29 / BULLISH p<0.10]
 
-Fold this into the synthesis as a fifth column. A RICH + COMPLACENT + RECESSION p≥0.30 is LATE CYCLE with extra conviction; a FAIR + ANXIOUS + BULLISH p<0.10 warns the market is pricing tail risk lower than your structural read — flag the tension.
+A RICH + COMPLACENT + RECESSION p≥0.30 is LATE CYCLE with extra conviction; a FAIR + ANXIOUS + BULLISH p<0.10 warns the market is pricing tail risk lower than your structural read — flag the tension.
 
 ### Synthesis
 
@@ -87,7 +79,7 @@ Weight all five axes. Add microstructure as a **modifier** — it amplifies or m
 
 ### Tool fallback
 
-If a quantitative tool (`polymarket-cli`, `Riskfolio-Lib`, `qlib`) is unavailable, fall back to the manual metric checks in METRICS.md and state the gap. Never block a posture brief on a missing data source.
+If a quantitative tool (`polymarket-cli`, `Riskfolio-Lib`, `qlib`) is unavailable, fall back to the manual metric checks in METRICS.md and state the gap — a missing tool downgrades to manual methods; the brief still ships.
 
 ## Phase 3 — Calibrate posture
 
@@ -121,7 +113,7 @@ If `Riskfolio-Lib` is available, run portfolio optimization on the candidate uni
 3. Constrain to the posture's asset-class bands (e.g. Balanced: equities 50–65%, fixed income 25–40%, cash 5–10%)
 4. Output optimal weights per asset
 
-If `Riskfolio-Lib` is unavailable, fall back to equal-weight or inverse-volatility weighting within the target bands and state the gap. Never block a posture brief on a missing tool.
+If `Riskfolio-Lib` is unavailable, fall back to equal-weight or inverse-volatility weighting within the target bands and state the gap.
 
 **Completion criterion:** Every asset in the recommended portfolio has an explicit weight assignment, either optimized or fallback-weighted, summing to 100% within the target posture's allocation bands.
 
