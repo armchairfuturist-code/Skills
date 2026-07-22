@@ -348,7 +348,7 @@ GitHub proof to lead with: [specific repo]
 
 For the top 3-5 roles, auto-generate:
 1. **Recruiter Critic Review:** Run a silent mental evaluation (recruiter's perspective) on the proposed alignment, pruning fluffy phrasing.
-2. **Custom resume bolt stack** (headline, evidence, bridge) tailored to that company — leading with people-facing wins
+2. **Custom resume bolt stack** (headline, evidence, bridge) tailored to that company - leading with people-facing wins
 3. **Cover letter draft** using the template from Branch 1, with company-specific references to their adoption challenges
 4. **Outreach message** if a warm intro path exists (check LinkedIn connections, mutual contacts)
 
@@ -376,9 +376,9 @@ If the user wants recurring searches:
 - Evidence line: [one sentence about adoption, not code]
 
 ### Bolt Stack
-**Headline:** [1 sentence — who you are with people + AI]
-**Evidence:** [1 sentence — adoption win or consulting metric]
-**Bridge:** [1 sentence — what you bring to their team]
+**Headline:** [1 sentence - who you are with people + AI]
+**Evidence:** [1 sentence - adoption win or consulting metric]
+**Bridge:** [1 sentence - what you bring to their team]
 
 ### Next Action
 [Specific, doable step]
@@ -404,14 +404,49 @@ If the user wants recurring searches:
 
 ### Writing Hygiene (anti-slop rules)
 
-Every output line follows these constraints. The models in bio-builder.md, proposal-templates.md, and resume examples demonstrate the correct shape.
+Every output line follows these constraints. The models in bio-builder.md, proposal-templates.md, and resume examples demonstrate the correct shape. Check every generated piece against these rules before outputting.
 
-**No em-dashes.** Absolutely NO literal em-dashes (—) or pandoc/markdown variants. Use standard hyphens (-) or colons (:) exclusively.
-**No contrastive negation.** "Not X, Y" is AI slop. State Y directly. Exception: explicit comparison that clarifies a genuine distinction.
-**No empty adverbs.** "especially", "really", "actually", "simply", "essentially", "truly", "very", "highly", "critically". Every word carries weight or leaves.
-**No filler hedging.** "quite", "somewhat", "rather", "fairly", "a bit". State the degree or don't.
-**No intensifiers.** "extremely", "incredibly", "remarkably", "absolutely". The claim stands or falls on evidence.
-**No passive where active works.** "The repo was built" -> "I built the repo."
-**One sentence, one claim.** No commas stacking three ideas.
+**Completion criterion:** every resume, cover letter, outreach message, and interview answer passes the anti-slop check below with zero violations.
 
-**Check:** read every line back. A line that could open a generic LinkedIn post gets cut.
+#### Banned words
+
+Cut these on sight unless quoted as examples: delve, foster, leverage, utilize, facilitate, empower, streamline, robust, cutting-edge, paradigm shift, game changer, this is huge, this changes everything, tapestry, realm, beacon, multifaceted, meticulous, intricate, paramount, transformative, elevate, embark, supercharge, harness, ever-evolving.
+
+#### Banned filler
+
+Cut when they add nothing. Keep when they carry emphasis, uncertainty, or the writer's natural rhythm: "just", "literally", "honestly", "simply", "actually", "truly", "fundamentally", "importantly", "crucially", "inherently", "inevitably", "quite", "somewhat", "rather", "fairly", "a bit", "extremely", "incredibly", "remarkably", "absolutely", "especially", "really", "very", "highly", "critically".
+
+#### Banned phrases
+
+"it's worth noting", "it's important to note", "at the end of the day", "when it comes to", "at its core", "in today's world", "in the age of", "in the world of", "the reality is", "the truth is", "in terms of", "with regard to", "in order to", "going forward", "in this article", "let's dive in". Cut when they delay the point.
+
+#### Patterns to cut
+
+- **Binary contrasts:** "This is not X. It's Y." / "Not a X. Not a Y. A Z." State Y directly.
+- **Throat-clearing openers:** "Here's the thing", "Let me be clear", "I'll be honest", "The uncomfortable truth is". Cut and state the point.
+- **Faux-insight setups:** "This is the part most people skip", "What most people get wrong", "Here's what nobody tells you". Cut the setup; make the claim stand alone.
+- **Colon reveals:** A noun phrase, a colon, then a dramatic reveal. Rewrite as a plain sentence.
+- **Superficial analysis:** Trailing -ing clauses that pretend to explain: "highlighting", "underscoring", "reflecting", "showcasing". Replace with what it actually does.
+- **Importance puffery:** "Stands as a testament", "marks a pivotal moment", "plays a vital role", "underscores its significance". State the fact and let the reader judge.
+- **Weasel attribution:** "Experts agree", "industry reports suggest", "many argue", "widely regarded as", "studies show". Name the source or cut the claim.
+- **Fake-strong verbs:** Prefer "is" and "has" when clearer. "The app serves as a centralized hub" becomes "The app tracks sponsors, drafts, due dates, and approvals in one place."
+- **Synonym cycling:** If the clear word is right, repeat it. Don't rotate terms for style.
+- **Dramatic fragmentation:** "X. And Y. And Z." or "That's it. That's the whole thing." Use complete sentences.
+- **Robotic rhythm:** Avoid repeated sentence shapes, identical paragraph structures, stacked punchy fragments. Vary shape when it helps the point.
+- **Rhetorical setups:** "What if I told you...", "Think about it:", "Plot twist:", self-answered "Question? Answer." Drop them and make the point.
+- **Fake-profound kickers:** Cut the final "deep" line that turns the point into a cute metaphor or mic-drop. End on the clearest concrete sentence.
+- **Summary-recap endings:** "In conclusion", "Ultimately", "Overall", or a final paragraph that restates the piece. End on the last concrete point or next action instead.
+- **Formatting slop:** Emoji in headings, bold mid-sentence for emphasis, bullets where prose reads better, headers over two-sentence sections.
+
+#### Structural rules
+
+- **No em-dashes.** No literal em-dashes (—) or pandoc/markdown variants. Use hyphens (-) or colons (:) exclusively.
+- **No passive where active works.** "The repo was built" -> "I built the repo."
+- **One sentence, one claim.** No commas stacking three ideas.
+- **Active voice with human subjects.** Let inanimate things do human verbs only when the human subject is obvious from context.
+
+#### Anti-slop check
+
+Before outputting any written piece, read it back against this list. A line that could open a generic LinkedIn post gets cut. The general Rules above apply: every number traces to a real result, the user's voice stays intact, and the Recruiter Critic runs a silent mental critique from a skeptical startup recruiter's perspective. Reject anything generic, empty, or lacking tangible evidence.
+
+**Post-generation check:** for long-form outputs (cover letters, case studies, LinkedIn About sections), run the edit workflow: read the full draft, identify core point and voice signals to preserve, make minimum effective changes, then verify against `eval.md` in the no-ai-slop skill folder. If any check fails, fix and re-check.
