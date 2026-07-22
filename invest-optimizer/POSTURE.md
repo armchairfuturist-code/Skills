@@ -63,3 +63,24 @@ Standard monthly ATM covered calls **underperform structurally** — an intraday
 - **Blend short-duration income + pure equity**: Let the short-duration income layer (daily/weekly) provide cash flow while pure equity holds the parabolic capture. Avoid full allocation to any single expiration schedule.
 - **Watch for intraday skew**: When agents trigger a >5% single-stock move within 30 minutes, option IV reprices instantly. Short-duration writers benefit (premium reprices up), monthly writers lose (strike gets gapped through).
 - **Tax efficiency**: Section 1256 contracts (index options — NDX, SPX) get 60/40 LTCG/STCG treatment. Prefer index-based options (GIAX, QQQI, SPYI) over single-stock in taxable accounts.
+
+## Thematic Tilt Overlay
+
+A **secular/sector supercycle** (e.g. an "AI macro nexus" — token demand, compute, power/energy, digital assets) can run *inside* a broad-market Late Cycle or Contraction. The 1999 precedent applies: broad valuations were late-cycle even as networking/semis compounded. The overlay lets a thesis tilt the **offense sleeve only**, without touching regime-level hedges.
+
+**Rules:**
+- A thematic tilt is a *modifier on the offense band*, never a substitute for the regime read. The market pulse (Phase 2) always wins on defense.
+- The tilt may overweight specific sectors/themes *within* the equities allocation already permitted by the pulse — it does **not** grant extra equity weight beyond the matrix bands.
+- It **cannot** override the Phase 4 risk gate. If the pulse is LATE CYCLE / CONTRACTION, the hedge layers (duration, non-correlated, cash) stay at their minimum regardless of conviction.
+- Treat any secular narrative as *one strategist's thesis to weight*, not doctrine. State the source and the condition that would falsify it (e.g. "token demand growth decelerates below compute supply growth").
+- Common overlay candidates: AI/semiconductor infrastructure, energy/power (grid, nuclear/SMR, utilities feeding load growth), digital assets / crypto-forward (BTC, stablecoin legislation, Treasury digital-asset posture). Source candidates per SCREENING.md's thematic buckets.
+
+## Return-of-Capital & Margin-Income Note
+
+Option-income ETFs (CHPY, AMDY, NVDY, QQQI, SPYI, Roundhill 0DTE, etc.) distribute heavily from **return of capital (ROC)** and option premium. High "distribution yield" is **not** income you keep — it is partly your own NAV handed back, and NAV can erode.
+
+**Rules for income / margin-account goals:**
+- Report **distribution yield** and **total-return yield** separately. A 28% distribution yield on an ETF losing 10% NAV is a *negative* real yield.
+- **Margin survival check:** total-return yield must exceed the account margin rate (e.g. ~7%) *sustained*, or the income compounds debt. Confirm before funding.
+- **ROC-erosion hedge:** pair high-ROC income sleeves with an *uncapped pure-equity growth leg* (e.g. SMH, sector index). The growth leg offsets NAV decay — it is ballast for the income sleeve, not optional upside.
+- **Drawdown defense is not optional in margin accounts.** Stripping hedges to hit a distribution-yield target removes the buffer that prevents a margin call during the very drawdown the regime read warned about. State this tension explicitly when a yield target conflicts with the risk gate.

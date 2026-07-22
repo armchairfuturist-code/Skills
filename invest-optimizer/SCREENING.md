@@ -12,6 +12,8 @@ The screener is a filter, not a generator — candidates must come from somewher
 | Small cap / emerging markets | ETF holdings (IWM, EEM) screened for liquidity and momentum |
 | Quality growth | User's existing holdings + ETF holdings in VUG/QQQ — supplement with sector leaders |
 | Income / dividend | ETF holdings in SCHD, VYM — screen for dividend safety (payout ratio < 60%, consistent dividend growth) |
+| Thematic — energy/power | ETF holdings / constituents in the AI-load-growth complex (nuclear/SMR, utilities, transmission, turbines). Source from thematic ETFs (e.g. NUKZ, GRID, utilities indices); screen for liquidity + momentum |
+| Thematic — digital assets / crypto | Crypto-forward sleeve (BTC/ETH proxy ETFs like IBIT/ETHE, miners, stablecoin-exposed equities). Source from spot-crypto ETFs and miner constituents; screen for volatility tolerance and NAV premium/discount |
 | Broad market shift | User's existing holdings are the universe — screen each for hold/trim/add |
 
 If the user holds individual stocks, always include current holdings in the candidate pool for the relevant areas — a posture shift may mean trimming, not new buys.
