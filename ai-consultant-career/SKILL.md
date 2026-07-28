@@ -1,7 +1,7 @@
 ---
 name: ai-consultant-career
-description: Land a people-facing AI role at a startup (under 150 people). Build resume **bolts** that lead with shipped systems and team adoption, backed by **GitHub proof**. Covers resume, cover letter, interview prep, portfolio authority, web-wide job discovery, and offer negotiation from a position of evidence.
-disable-model-invocation: false
+disable-model-invocation: true
+description: Land a people-facing AI role at a startup (under 150 people): resume bolts, cover letters, interview prep, portfolio authority, web-wide job discovery, and offer negotiation for an LLC-contracted AI adoption consultant.
 ---
 
 # AI Career Builder (for Startup Applicants)
@@ -21,6 +21,7 @@ This skill is for job seekers targeting **people-facing AI roles at startups** (
 - **Bridge**: a transition that connects what you *do* to what they *need*. Every resume bullet, cover letter, and interview answer is a bridge or it's noise.
 - **Evidence line**: a single sentence carrying a specific, verifiable result (shipped system, metric, pull request, product launch) that does the convincing alone.
 - **GitHub proof**: a specific public repo on github.com/armchairfuturist-code that demonstrates the capability you're selling. A shipping repository is worth more than a testimonial.
+- **Adoption-first**: the ordering rule for every bolt, bullet, letter, DM, and interview answer: lead with the team adoption win or consulting metric; GitHub proof supports, never headlines.
 
 ---
 
@@ -37,7 +38,7 @@ This skill has five branches. Identify the branch from the request and follow it
 ---
 
 ## Resume & Cover Letter
-Load `profile-data.md` for the user's work history, certifications, metrics, and GitHub repos.
+Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's work history, certifications, metrics, and GitHub repos.
 
 ### Step 1: Extract raw material
 
@@ -78,7 +79,7 @@ Examples:
 - **Delivered AI workshops** that got [X] teams to adopt automated workflows, cutting manual processes by [X]%.
 - **Built autonomous AI pipelines** at github.com/armchairfuturist-code/[repo] that automated [capability]: then trained teams to maintain and extend them.
 - **Provided 100+ hours** of consulting on AI architecture, deployment, and change management across [X] clients.
-- **Managed change management** for AI adoption initiatives: certification-backed, data-driven, team-focused.
+- **Applied CCMP change management** to [X] AI adoption pilots: started with the most adaptable 20% of employees, then scaled org-wide.
 
 **Rules:**
 - Every bullet must *either* have a number *or* a GitHub link
@@ -107,7 +108,9 @@ Lead with what you've done that's relevant to them:
 > "I'd love 15 minutes to walk you through how I've helped teams adopt AI workflows and talk about how I'd approach [their specific adoption challenge]."
 ```
 
-**Completion criterion:** cover letter sent with all three sections present.
+Full send-ready email template: `proposal-templates.md` #1.
+
+**Completion criterion:** cover letter sent with all four sections present (Hook, Evidence, Bridge, Close).
 ---
 
 ## Interview Prep
@@ -154,7 +157,7 @@ If the company sends a take-home:
 ---
 
 ## Portfolio & Authority
-Load `profile-data.md` for the user's GitHub repos, work history, and certifications.
+Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's GitHub repos, work history, and certifications.
 
 ### Step 1: GitHub profile audit
 
@@ -204,7 +207,7 @@ If they have a personal site:
 ---
 
 ## Job Search Strategy & Offer Negotiation
-Load `profile-data.md` for the user's target roles, employment model, and key metrics.
+Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's target roles, employment model, and key metrics.
 
 ### Step 1: Build your target list
 
@@ -262,7 +265,7 @@ For each tier, identify 3-5 companies. Research:
 ---
 
 ## Automated Job Discovery
-Load `profile-data.md` for the user's target titles, location, and employment constraints.
+Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's target titles, location, and employment constraints.
 
 Scan the web for roles that match the user's background. Use search and scraping to find opportunities across multiple job boards, then filter and rank by fit.
 
@@ -282,19 +285,18 @@ Run parallel searches across these sources. Use `web_search` for discovery, then
 
 | Source | Query pattern | Notes |
 |---|---|---|
-| **LinkedIn Jobs** | `"AI enablement" OR "AI adoption" OR "AI change management" remote&f_TPR=r1209600&f_WT=2` | People-facing AI roles, remote only, last 14 days |
-| **LinkedIn Jobs** | `"chief of staff" AI remote&f_TPR=r1209600&f_WT=2` | Strategic generalist roles, remote only, last 14 days |
-| **LinkedIn Jobs** | `"people operations" AI remote&f_TPR=r1209600&f_WT=2` | People ops with AI angle, remote only, last 14 days |
-| **LinkedIn Jobs** | `"AI trainer" remote&f_TPR=r1209600&f_WT=2` | Training-focused roles, remote only, last 14 days |
-| **RemoteOK RSS** | `https://remoteok.com/remote-ai-jobs.rss` | XML feed, filter for people-facing roles. Most are engineering but scan for enablement/adoption keywords |
-| **RemoteOK RSS** | `https://remoteok.com/remote-marketing-jobs.rss` | Marketing/training roles sometimes overlap with AI enablement |
-| **RemoteOK RSS** | `https://remoteok.com/remote-management-jobs.rss` | Management/strategy roles |
-| **Hacker News (API)** | `https://hacker-news.firebaseio.com/v0/item/{thread_id}.json` | Monthly "Who is Hiring" threads. Find latest thread via HN front page. Direct founder access. |
-| **Y Combinator Work at a Startup** | `https://www.workatastartup.com/jobs` | JS-rendered, use `read`. Filter by "adoption", "enablement", "AI" |
+| **LinkedIn Jobs** | `"AI enablement" OR "AI adoption" OR "AI change management" remote&f_TPR=r2592000&f_WT=2` | People-facing AI roles, remote only, past month (no 14-day filter exists; freshness verified at enrichment) |
+| **LinkedIn Jobs** | `"chief of staff" AI remote&f_TPR=r2592000&f_WT=2` | Strategic generalist roles, remote only, past month |
+| **LinkedIn Jobs** | `"people operations" AI remote&f_TPR=r2592000&f_WT=2` | People ops with AI angle, remote only, past month |
+| **LinkedIn Jobs** | `"AI trainer" remote&f_TPR=r2592000&f_WT=2` | Training-focused roles, remote only, past month |
+| **RemoteOK API** | `https://remoteok.com/api` | JSON of ~100 most recent listings (the old RSS feeds return 410 Gone). Filter for people-facing tags: adoption, enablement, training, marketing, management. Small window: re-run regularly for coverage |
+| **Hacker News (Algolia + API)** | `https://hn.algolia.com/api/v1/search?query=%22who%20is%20hiring%22&tags=story` | Find the latest monthly "Who is Hiring" thread ID via Algolia, then fetch the full thread in one call: `https://hn.algolia.com/api/v1/items/{thread_id}`. Direct founder access. |
+| **Company ATS boards** (source + verification) | `https://api.ashbyhq.com/posting-api/job-board/{company}` | Live JSON of a company's open roles with publish dates. Ashby: that URL. Recruitee: `https://careers.{company}.io/`. Greenhouse: `https://boards-api.greenhouse.io/v1/boards/{company}/jobs`. Verify any lead is still open, or pull a target company's full live role list |
+| **Y Combinator Work at a Startup** | `https://www.workatastartup.com/jobs` | 406/blocked from agent environments: browser-only, run manually. Filter by "adoption", "enablement", "AI" |
 | **Wellfound (AngelList)** | `"AI adoption" OR "AI enablement" site:wellfound.com` | Startup-focused, often blocked (403) |
 | **Google Jobs** | `"AI enablement remote" OR "AI adoption consultant remote"` | Aggregates multiple boards |
 
-Run at least 3 sources in parallel. For each source:
+Run at least 3 sources in parallel. Scrape-hostile sources (LinkedIn, WeWorkRemotely, YC WaaS) block agent fetches; when blocked, substitute live ATS boards of companies from your target list. For each source:
 1. Search with the target title + location filter
 2. Collect top 10 results per source
 3. Deduplicate by company + role
@@ -304,7 +306,7 @@ Run at least 3 sources in parallel. For each source:
 For each unique role found:
 1. Fetch the job posting with `read`
 2. Extract: company name, role title, location, team size, salary range (if listed), application URL, **posting date**
-3. **Reject if posting date is more than 14 days old.** Stale listings waste time.
+3. **Verify the role is still open on the company's live board.** Posting dates lie: roles close without notice, and monthly-thread ads age past any fixed window. Fetch the company's live ATS board (see the Company ATS boards row in the source table). Drop roles no longer listed. A role still listed today is fresh, whatever its posting date.
 4. Score fit (0-5) against the user's profile:
    - **+2** if the role mentions AI adoption, enablement, change management, or team training
    - **+1** if the company is a startup under 150 people
@@ -347,8 +349,8 @@ GitHub proof to lead with: [specific repo]
 ### Step 5: Application prep per role
 
 For the top 3-5 roles, auto-generate:
-1. **Recruiter Critic Review:** Run a silent mental evaluation (recruiter's perspective) on the proposed alignment, pruning fluffy phrasing.
-2. **Custom resume bolt stack** (headline, evidence, bridge) tailored to that company - leading with people-facing wins
+1. **Recruiter Critic Review:** Apply the Recruiter Critic rule (see Rules) to the proposed alignment.
+2. **Custom resume bolt stack** (headline, evidence, bridge) tailored to that company, adoption-first
 3. **Cover letter draft** using the template from Branch 1, with company-specific references to their adoption challenges
 4. **Outreach message** if a warm intro path exists (check LinkedIn connections, mutual contacts)
 
@@ -376,9 +378,9 @@ If the user wants recurring searches:
 - Evidence line: [one sentence about adoption, not code]
 
 ### Bolt Stack
-**Headline:** [1 sentence - who you are with people + AI]
-**Evidence:** [1 sentence - adoption win or consulting metric]
-**Bridge:** [1 sentence - what you bring to their team]
+**Headline:** [1 sentence: who you are with people + AI]
+**Evidence:** [1 sentence: adoption win or consulting metric]
+**Bridge:** [1 sentence: what you bring to their team]
 
 ### Next Action
 [Specific, doable step]
@@ -390,17 +392,16 @@ If the user wants recurring searches:
 - **Recruiter Critic:** Before outputting any resume bolt, cover letter, or application material, perform a silent, rigorous mental critique from the perspective of a skeptical startup recruiter. Reject and rewrite anything that sounds generic, uses empty buzzwords, or lacks tangible, evidence-backed outcomes.
 - Every number in an output must trace back to a real result; no fabricated metrics
 - Preserve the user's voice: improve clarity and punch, don't rewrite personality
-- Preserve the user's GitHub as supporting evidence, not primary: github.com/armchairfuturist-code
-- Case studies are about the *team's adoption*, not the technical architecture
 - When multiple options exist (resume formats, cover letter approaches), always surface at least two with a recommendation
 - **Payment model:** All roles must be payable to Alex Myers Consulting LLC as an independent contractor. No W2. Contract, retainer, or FTE-to-LLC. Lead with this in applications when it matters.
 - **Schedule flexibility:** User maintains existing training and coaching clients. Engagements must allow schedule flexibility (e.g., 30-40 hours/week, async-friendly, outcome-based not hours-based).
-- **People-first proof:** Lead with team adoption wins, consulting metrics, and change management wins. GitHub repos are supporting evidence of AI literacy, not the headline.
+- **Adoption-first ordering applies everywhere**: case studies, bullets, letters, DMs, interview answers. GitHub repos (github.com/armchairfuturist-code) support the claim; they never headline it.
+- **Org repos only:** GitHub proof repos live in the github.com/armchairfuturist-code org. Repos under other accounts are excluded.
 - **Output format:** Always generate resumes as PDF-ready markdown, then convert to PDF using pandoc with the custom template. Application portals expect PDF. Include WhatsApp contact link (wa.me/15157706902) and website (https://thearmchairfuturist.com) on every resume and cover letter. Use short URL form on resumes (wa.me/15157706902, not full query string). Pull contact details from profile-data.md.
-- **Toolkit folder:** All career materials live in `/home/alex/ai-career-toolkit/`. This includes: profile-data.md, resume-template.tex, job-discovery-results.md, and all generated resumes/cover letters (both .md and .pdf).
+- **Toolkit folder:** All career materials live in `/home/alex/ai-career-toolkit/`. This includes: profile-data.md (the single source of truth for profile data), resume-template.tex, job-discovery-results.md, and all generated resumes/cover letters (both .md and .pdf).
 - **PDF generation command:** `pandoc <file>.md -o <file>.pdf --pdf-engine=pdflatex --template=/home/alex/ai-career-toolkit/resume-template.tex --metadata title=""` The template includes the profile image and Charter font for ATS-friendly styling.
 - **Profile image:** Headshot at `/home/alex/Projects/ArmchairFuturistLanding/public/alexheadshot-nobg.png`. Always include on PDF resumes.
-- **Profile data:** Always load profile-data.md before generating any resume or cover letter. Never fabricate education, certifications, or work history. If data is missing from profile-data.md, flag it to the user.
+- **Profile data:** Always load `/home/alex/ai-career-toolkit/profile-data.md` before generating any resume or cover letter. Never fabricate education, certifications, or work history. If data is missing from profile-data.md, flag it to the user.
 
 ### Writing Hygiene (anti-slop rules)
 
@@ -414,7 +415,7 @@ Cut these on sight unless quoted as examples: delve, foster, leverage, utilize, 
 
 #### Banned filler
 
-Cut when they add nothing. Keep when they carry emphasis, uncertainty, or the writer's natural rhythm: "just", "literally", "honestly", "simply", "actually", "truly", "fundamentally", "importantly", "crucially", "inherently", "inevitably", "quite", "somewhat", "rather", "fairly", "a bit", "extremely", "incredibly", "remarkably", "absolutely", "especially", "really", "very", "highly", "critically".
+Cut when they add nothing. Keep when they carry emphasis, uncertainty, or the writer's natural rhythm: "just", "literally", "honestly", "simply", "actually", "truly", "essentially", "fundamentally", "importantly", "crucially", "inherently", "inevitably", "quite", "somewhat", "rather", "fairly", "a bit", "extremely", "incredibly", "remarkably", "absolutely", "especially", "really", "very", "highly", "critically".
 
 #### Banned phrases
 
