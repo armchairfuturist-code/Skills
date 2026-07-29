@@ -220,3 +220,7 @@ Present as a structured posture brief. The format adapts to **investor type** �
 ## Branch: Quick pulse
 
 When only market conditions are requested (no portfolio recommendations), run Phase 2 only (2A–2F; 2G if cheap to run). Output a compact table of axes, modifiers, and overall pulse. Skip Phases 1, 3, 3.5, and 4.
+
+## Branch: Dip/profit signal
+
+When the user asks whether to buy the dip or take profits on an ETF or sector, run `tools/dip_signal.py <ETFS>` and report per [`SIGNALS.md`](SIGNALS.md): score (1–20), band, action, breadth (% of the bucket below its 200-week MA, by weight and by count), and tension flags. When a posture brief exists, fold the score into Phase 3 actions: ≥17 accelerates trims and reserve-building; ≤9 authorizes deploying the reserve tranches the brief staged. Scores are strategic — they size the cash-reserve cycle; tranche timing still comes from the brief.

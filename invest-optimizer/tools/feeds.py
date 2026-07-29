@@ -11,6 +11,7 @@ Probed live 2026-07-29 (pi sandbox):
 Every fetcher raises on failure; callers decide whether the axis GAPs.
 """
 import csv, io, json, re, urllib.parse, urllib.request
+from datetime import date, datetime, timedelta, timezone
 
 TIMEOUT = 15
 UA = {"User-Agent": "Mozilla/5.0 (invest-optimizer tools)"}
@@ -118,3 +119,82 @@ def history(ticker):
 def closes(ticker):
     rows = history(ticker)
     return [(r["t"], r["c"]) for r in rows]
+
+
+# --- long history (for 200-week MAs) -------------------------------------------
+def _sa_chart_history(sym):
+    """stockanalysis chart endpoint: epoch-ms closes back to inception."""
+    for kind in ("e", "s"):
+        try:
+            data = json.loads(fetch(f"https://stockanalysis.com/api/symbol/{kind}/{sym}/history?type=chart"))
+            pts = data.get("data") or []
+            if pts:
+                return [(datetime.fromtimestamp(p[0] / 1000, timezone.utc).strftime("%Y-%m-%d"),
+                         float(p[1])) for p in pts]
+        except Exception:
+            continue
+    return None
+
+
+def _nasdaq_history(ticker):
+    """NASDAQ historical API fallback (~5y window — enough for 200 weeks)."""
+    end = date.today()
+    start = end - timedelta(days=365 * 5)
+    for asset in ("etf", "stocks"):
+        try:
+            url = (f"https://api.nasdaq.com/api/quote/{ticker.upper()}/historical"
+                   f"?assetclass={asset}&fromdate={start}&todate={end}&limit=9999")
+            rows = json.loads(fetch(url))["data"]["tradesTable"]["rows"]
+            if rows:
+                out = [(datetime.strptime(r["date"], "%m/%d/%Y").strftime("%Y-%m-%d"),
+                        float(r["close"].replace(",", "").replace("$", ""))) for r in rows]
+                return sorted(out)
+        except Exception:
+            continue
+    return None
+
+
+def history_long(ticker):
+    """Full daily close history, chronological [(YYYY-MM-DD, close)]."""
+    return _sa_chart_history(ticker.lower()) or _nasdaq_history(ticker) \
+        or (_ for _ in ()).throw(ValueError(f"no long history for {ticker}"))
+
+
+def weekly_closes(daily):
+    """Daily [(date, close)] -> weekly last closes (ISO week buckets)."""
+    weeks = {}
+    for d, c in daily:
+        y, w, _ = date.fromisoformat(d).isocalendar()
+        weeks[(y, w)] = (d, c)  # later dates overwrite -> last close of week
+    return [weeks[k] for k in sorted(weeks)]
+
+
+def ma200w(ticker, weeks=200):
+    """Price vs N-week moving average. Returns (price, ma, pct_distance) or None
+    when history < weeks (young listing — caller must exclude, not fake it)."""
+    wc = weekly_closes(history_long(ticker))
+    if len(wc) < weeks:
+        return None
+    ma = sum(c for _, c in wc[-weeks:]) / weeks
+    price = wc[-1][1]
+    return {"price": price, "ma": ma, "dist": price / ma - 1.0, "asof": wc[-1][0]}
+
+
+# --- ETF holdings (SSR page scrape) ----------------------------------------------
+def holdings(etf, top=25):
+    """Top holdings [(symbol, weight_pct)] from the stockanalysis holdings page.
+    Page order is weight-sorted; nav slugs are filtered by alignment with weights."""
+    html = fetch(f"https://stockanalysis.com/etf/{etf.lower()}/holdings/")
+    import re
+    syms = re.findall(r'/stocks/([a-z.]+)/"', html)
+    seen, order = set(), []
+    for s in syms:
+        if s not in seen:
+            seen.add(s)
+            order.append(s)
+    wts = [float(w) for w in re.findall(r'>(\d+\.\d+)%<', html)]
+    if not wts:
+        raise ValueError(f"no holdings parsed for {etf}")
+    wts = wts[1:]  # first value is the "Top 10 = X% of assets" aggregate
+    syms = order[-len(wts):]  # nav junk sorts first; holdings are the tail
+    return [(s.upper(), w) for s, w in zip(syms, wts)][:top]

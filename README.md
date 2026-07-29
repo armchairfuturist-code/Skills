@@ -79,13 +79,15 @@ Everything in `invest-optimizer/tools/` is plain Python 3 standard library. Noth
 - `market_pulse.py` — the full regime read in one run: Shiller CAPE, Buffett Indicator, S&P/M2, VIX, high-yield spread, the yield curve, a microstructure tail-day proxy, Polymarket recession/rate-hike odds, 60-day equity and equity–bond correlations, and a 2-state HMM regime check.
 - `optimize.py` — portfolio weights from daily prices: HRP (default), min-variance, risk parity, or inverse-volatility, with caps and a correlation-shock stress test.
 - `risk.py` — forward risk for a proposed mix: max drawdown, CVaR, tail ratio, Calmar, and Monte Carlo bust probability.
+- `dip_signal.py` — a 1–20 sector heat gauge: what share of an ETF's bucket trades below its 200-week moving average. 17–20 says take profits and build cash; 6–9 says deploy it in stages; 1–5 says the bucket is well below its weekly averages — buy aggressively. Scale and formula: `SIGNALS.md`.
 - `extensions/invest-tools.ts` — optional for pi users: exposes all three as native agent tools. Copy it to `~/.pi/agent/extensions/`.
 
 ### What you get
 A posture brief. Your profile and why it matters. The market pulse table. A posture table with current allocation, target allocation, the action to take, and the trigger that reverses it. Optimized weight allocations per asset (or fallback-weighted if the optimization library is missing). If the posture implies stock picks, the screener sources candidates from sector ETF holdings, then filters through three technical gates (near 52-week low, average daily range, trend above moving averages). The screener is a research list, not a buy list.
 
 ### The quick version
-Ask only about market conditions and the skill skips your portfolio. You get a compact pulse table: valuation, complacency, macro, overall.
+Ask only about market conditions and the skill skips your portfolio. You get a compact pulse table: valuation, complacency, macro, overall. ### The dip/profit signal
+Ask "should I buy this dip or take profits?" about any ETF and you get a score from 1 to 20. It counts how many of the fund's top holdings trade below their 200-week moving average. High scores mean the bucket is stretched — harvest it and build cash. Low scores mean the bucket is on sale — spend the cash the high scores told you to save. One mechanical loop: profits become reserves, reserves become dips.
 
 ## How to install and run
 
