@@ -52,12 +52,12 @@ Verdict: EXPANSION / WARNING / RECESSION / CRISIS
 When AI trading agents compose a large share of daily volume, their herding creates the **parabolic-and-drop** regime — vertical parabolic surges followed by random liquidity vacuums and flash crashes — that breaks traditional option strategies.
 
 Check: **AI trading volume share**, **intraday tail frequency** (days with >3% single-stock intraday reversals), **flash crash count** (rolling 30-day).
-Thresholds and verdicts in [`METRICS.md`](METRICS.md).
+Thresholds and verdicts in [`METRICS.md`](METRICS.md). `tools/market_pulse.py` computes a tail-day proxy (SMH >3%-range days/week); AI volume share stays news judgment.
 Verdict: HUMAN-DOMINATED / HUMAN-MIXED / AGENT-DOMINATED / AGENT-SATURATED
 
 ### 2E — Event/prediction: what are live probability markets pricing?
 
-Use `polymarket-cli` (or equivalent) to anchor probability-driven verdicts that complement the structural axes.
+Run `tools/market_pulse.py` (stdlib python, no deps) — one shot pulls Polymarket recession + rate-hike probabilities alongside VIX, HY spread, and the 10y−2y curve, each mapped to the [`METRICS.md`](METRICS.md) verdict. Pass extra args for more markets (`market_pulse.py "fed september"`), `--json` for machine output.
 
 Measures: Polymarket-implied probability of recession within 12m, rate-hike probability, sector-outcome markets.
 Verdict: [RECESSION p≥0.30 / NEUTRAL p0.10–0.29 / BULLISH p<0.10]
@@ -66,7 +66,7 @@ A RICH + COMPLACENT + RECESSION p≥0.30 is LATE CYCLE with extra conviction; a 
 
 ### 2F — Correlation: is diversification real?
 
-Check: **average pairwise equity correlation**, **equity–bond correlation**. Thresholds in [`METRICS.md`](METRICS.md).
+Check: **average pairwise equity correlation**, **equity–bond correlation** — `tools/market_pulse.py` computes both (60d SPY/QQQ/SMH pairwise + SPY–IEF). Thresholds in [`METRICS.md`](METRICS.md).
 Verdicts: DIVERSIFIED / NORMAL / ELEVATED / CRISIS-CORR and BALLAST-OK / WEAK-BALLAST / CO-CRASH.
 
 ### Synthesis
@@ -81,13 +81,13 @@ Weight axes 2A–2E into the core pulse (EXPANSION / LATE CYCLE / CONTRACTION / 
 
 ### 2G — Statistical regime confirmation (optional)
 
-If a Markov/HMM regime tool is available, run it on a broad proxy (SPY or the user's equity benchmark) and report current regime, persistence, and stationary mix per [`METRICS.md`](METRICS.md). Use as confirmation or tension flag against the structural pulse — never as a silent override.
+`tools/market_pulse.py` runs a 2-state Gaussian HMM on SPY (~125 obs — thin) and reports regime, persistence, and stationary mix per [`METRICS.md`](METRICS.md). Use as confirmation or tension flag against the structural pulse — never as a silent override.
 
 **Completion criterion:** Verdicts for 2A–2F each supported by at least one metric reading; synthesized pulse with explicit weighting rationale; modifiers (microstructure, correlation) stated; 2G present or explicitly skipped with gap noted.
 
 ### Tool fallback
 
-Data and quant tools, in preference order when present: OpenBB / system market feeds → `polymarket-cli` → yfinance-class price pulls → manual METRICS.md checks. Optimizers are Phase 3.5 (`skfolio`, `Riskfolio-Lib`, `PyPortfolioOpt`). A missing tool downgrades that step; the brief still ships.
+Probed 2026-07-29 — preference order: `tools/market_pulse.py` first (covers 2A, 2B, 2C, 2D proxy, 2E, 2F, 2G; endpoints documented in `tools/feeds.py`) → web reads for the rest: stockanalysis.com (52w ranges, holdings), tradingeconomics.com (index levels). Phase 3.5 → `tools/optimize.py`; Phase 4 forward risk → `tools/risk.py`. Dead in this environment: Yahoo chart API (429), stooq (JS gate), MarketWatch (401), `polymarket-cli`/openbb (not installed), pip (absent → `skfolio`/`Riskfolio-Lib`/`PyPortfolioOpt` unavailable). Still manual: Tobin's Q, AI volume share, flash-crash count. A missing tool downgrades that step; the brief still ships.
 
 ## Phase 3 — Calibrate posture
 
@@ -121,7 +121,7 @@ Translate the target posture from Phase 3 into mathematically grounded allocatio
 7. Optional: discrete allocation to share counts when deployable cash and prices are known
 8. Optional large gap (>15% equity shift): note turnover/cost path (cvxportfolio-class multi-period) without blocking the brief
 
-If no optimizer is available, fall back to equal-weight or inverse-volatility within target bands and state the gap.
+If no optimizer library is available, run `tools/optimize.py` (stdlib, return-free models: HRP default, min-var, risk parity, inverse-vol; per-name caps, effective-N, CVaR, +0.3 correlation-shock stability check). Only if that fails, fall back to equal-weight or inverse-volatility within target bands and state the gap.
 
 **Completion criterion:** Every recommended asset has an explicit weight, optimized or fallback, summing to 100% inside posture bands; model + risk measure + covariance method named; stress checks passed or fallback path stated.
 
@@ -139,7 +139,7 @@ Before outputting, validate recommendations against system risk constraints and 
 
 ### Forward risk analytics
 
-When return history for the recommended mix (or proxy ETFs) is available — via quantstats-class tooling or manual calc — report:
+When return history for the recommended mix (or proxy ETFs) is available — via quantstats-class tooling, `tools/risk.py` (maxDD, CVaR, tail ratio, Calmar, MC bust/goal probability), or manual calc — report:
 
 | Metric | Role |
 |---|---|

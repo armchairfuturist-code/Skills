@@ -61,16 +61,25 @@ If you have not set these, the agent asks or infers them. It will not proceed wi
 
 ### What it does, step by step
 1. Anchor to goals. Load your profile. This is the fixed reference every later call measures against.
-2. Read the regime. It checks five axes:
-   - Valuation: are stocks expensive? (Shiller CAPE, Buffett Indicator, Tobin's Q, S&P 500 vs M2)
-   - Complacency: is everyone pricing in zero risk? (VIX, credit spreads)
-   - Macro: is a recession brewing? (yield curve)
-   - Microstructure: are AI trading bots running the tape? (agent volume share, flash crash count)
-   - Prediction markets: what are betting markets implying about recession and rate moves? (Polymarket)
-   Each axis gets a verdict. Together they form one market pulse: EXPANSION, LATE CYCLE, CONTRACTION, or CRISIS.
+2. Read the regime. It checks seven axes:
+- Valuation: are stocks expensive? (Shiller CAPE, Buffett Indicator, S&P 500 vs M2)
+- Complacency: is everyone pricing in zero risk? (VIX, credit spreads)
+- Macro: is a recession brewing? (yield curve)
+- Microstructure: are AI trading bots running the tape? (intraday tail-day frequency)
+- Prediction markets: what are betting markets implying about recession and rate moves? (Polymarket)
+- Correlation: is diversification real? (equity pairwise, equity–bond)
+- Regime model: does a statistical read agree? (2-state HMM — tension flag, not override)
+Each axis gets a verdict. Together they form one market pulse: EXPANSION, LATE CYCLE, CONTRACTION, or CRISIS. A bundled tool (`tools/market_pulse.py`) pulls every axis live — no API keys, nothing to install.
 3. Calibrate posture. The pulse meets your goals in a matrix. Late cycle plus a growth goal means trim and raise cash. Late cycle plus a preservation goal means cut equity to the floor. Same pulse, different posture.
-4. Optimize weights. If Riskfolio-Lib is available, it runs portfolio optimization (mean-variance, risk parity, or Black-Litterman depending on your goal profile) constrained to the posture's allocation bands. Falls back to equal-weight or inverse-volatility weighting if the library is missing.
-5. Risk check. Every recommendation is tested against position-size and concentration limits. Anything that breaks a limit is downgraded, with the reason stated. If a prior posture brief exists, it validates whether the previous regime read was confirmed, contradicted, or mixed — and adjusts confidence in the current read accordingly.
+4. Optimize weights. A bundled stdlib optimizer (`tools/optimize.py`) runs return-free models — HRP by default, plus min-variance, risk parity, and inverse-volatility — with per-name caps, diversification scoring, and a correlation-shock stability check. If skfolio, Riskfolio-Lib, or PyPortfolioOpt is installed, the agent prefers those; equal-weight is the last resort, never the default.
+5. Risk check. Every recommendation is tested against position-size and concentration limits, plus forward analytics from `tools/risk.py`: historical max drawdown, CVaR, tail ratio, Calmar, and Monte Carlo bust probability against your loss tolerance. Anything that breaks a limit is downgraded, with the reason stated. If a prior posture brief exists, it validates whether the previous regime read was confirmed, contradicted, or mixed — and adjusts confidence in the current read accordingly.
+
+### Bundled tools — zero dependencies, no API keys
+Everything in `invest-optimizer/tools/` is plain Python 3 standard library. Nothing to pip install, no keys to configure. Every data source fails soft: a missing reading downgrades that axis, and the brief still ships.
+- `market_pulse.py` — the full regime read in one run: Shiller CAPE, Buffett Indicator, S&P/M2, VIX, high-yield spread, the yield curve, a microstructure tail-day proxy, Polymarket recession/rate-hike odds, 60-day equity and equity–bond correlations, and a 2-state HMM regime check.
+- `optimize.py` — portfolio weights from daily prices: HRP (default), min-variance, risk parity, or inverse-volatility, with caps and a correlation-shock stress test.
+- `risk.py` — forward risk for a proposed mix: max drawdown, CVaR, tail ratio, Calmar, and Monte Carlo bust probability.
+- `extensions/invest-tools.ts` — optional for pi users: exposes all three as native agent tools. Copy it to `~/.pi/agent/extensions/`.
 
 ### What you get
 A posture brief. Your profile and why it matters. The market pulse table. A posture table with current allocation, target allocation, the action to take, and the trigger that reverses it. Optimized weight allocations per asset (or fallback-weighted if the optimization library is missing). If the posture implies stock picks, the screener sources candidates from sector ETF holdings, then filters through three technical gates (near 52-week low, average daily range, trend above moving averages). The screener is a research list, not a buy list.
@@ -85,7 +94,7 @@ Both skills install the same way. Copy the skill folder into your agent's skills
 - `/calibrate-longevity`
 - `/invest-optimizer`
 
-Paste your data. The agent runs the workflow and hands back the report.
+Paste your data. The agent runs the workflow and hands back the report. invest-optimizer's tools need only Python 3 (standard library — no pip step). If your agent is pi, copy `invest-optimizer/extensions/invest-tools.ts` into `~/.pi/agent/extensions/` to call the tools natively.
 
 ## The shared idea
 
