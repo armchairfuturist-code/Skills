@@ -7,7 +7,7 @@ Two custom AI agent skills that turn raw personal data into a ranked action plan
 These are prompt packs for an AI coding agent (Claude Code, Cline, MiMoCode, and others). Drop the folder into your agent's skills directory and call it by name. The agent then runs a structured workflow instead of free-form guessing.
 
 - `/calibrate-longevity` turns bloodwork, DNA, and tracker data into a ranked longevity plan.
-- `/invest-optimizer` postures your portfolio to the current market regime through the lens of your goals.
+- `/invest-optimizer` combines market-regime analysis, goal-aware posture, robust allocation, liquidity and tail-risk controls, and leakage-safe AI/ML signal validation.
 
 ## calibrate-longevity: your bloodwork, ranked into a plan
 
@@ -46,7 +46,7 @@ This skill discusses experimental compounds that may lack FDA or EMA approval an
 ## invest-optimizer: posture your portfolio to the moment
 
 ### The plain version
-The market has a mood (the regime) and you have a goal (the anchor). This skill reads the market's mood from hard data, then tells you how to tilt your portfolio so the two line up. Same market, different goals, different answer.
+The market has a regime and you have a goal. This skill measures valuation, credit, macro conditions, liquidity, prediction-market probabilities, correlation, and statistical regime evidence; converts that evidence into a goal-aware posture; optimizes weights inside strict bands; then stress-tests the result. AI/ML signals remain research-only until they pass point-in-time, walk-forward, cost, capacity, calibration, and drift gates.
 
 ### What to give it
 Your goal profile:
@@ -65,25 +65,29 @@ If you have not set these, the agent asks or infers them. It will not proceed wi
 - Valuation: are stocks expensive? (Shiller CAPE, Buffett Indicator, S&P 500 vs M2)
 - Complacency: is everyone pricing in zero risk? (VIX, credit spreads)
 - Macro: is a recession brewing? (yield curve)
-- Microstructure: are AI trading bots running the tape? (intraday tail-day frequency)
+- Microstructure and liquidity: can the portfolio trade through stress? (spreads, depth/volume participation when available, gaps, volatility, and a clearly labeled ETF range proxy)
 - Prediction markets: what are betting markets implying about recession and rate moves? (Polymarket)
 - Correlation: is diversification real? (equity pairwise, equity–bond)
-- Regime model: does a statistical read agree? (2-state HMM — tension flag, not override)
+- Regime models: does statistical evidence agree? (HMM as one thin ensemble member, with probabilities, disagreement, and calibration—not an override)
 Each axis gets a verdict. Together they form one market pulse: EXPANSION, LATE CYCLE, CONTRACTION, or CRISIS. A bundled tool (`tools/market_pulse.py`) pulls every axis live — no API keys, nothing to install.
 3. Calibrate posture. The pulse meets your goals in a matrix. Late cycle plus a growth goal means trim and raise cash. Late cycle plus a preservation goal means cut equity to the floor. Same pulse, different posture.
-4. Optimize weights. A bundled stdlib optimizer (`tools/optimize.py`) runs return-free models — HRP by default, plus min-variance, risk parity, and inverse-volatility — with per-name caps, diversification scoring, and a correlation-shock stability check. If skfolio, Riskfolio-Lib, or PyPortfolioOpt is installed, the agent prefers those; equal-weight is the last resort, never the default.
-5. Risk check. Every recommendation is tested against position-size and concentration limits, plus forward analytics from `tools/risk.py`: historical max drawdown, CVaR, tail ratio, Calmar, and Monte Carlo bust probability against your loss tolerance. Anything that breaks a limit is downgraded, with the reason stated. If a prior posture brief exists, it validates whether the previous regime read was confirmed, contradicted, or mixed — and adjusts confidence in the current read accordingly.
+4. Optimize weights. A bundled stdlib optimizer (`tools/optimize.py`) runs return-free models—HRP by default, plus min-variance, risk parity, and inverse-volatility—with per-name caps, effective-N, CVaR, and correlation-shock stability. When available, maintained libraries add shrinkage covariance, Black–Litterman or Entropy-Pooling views, drawdown-aware optimization, and multi-period turnover/cost planning. Equal weight is the final fallback, not the default.
+5. Validate learned signals. A Qlib-style, tool-independent research contract requires point-in-time universes, immutable chronological splits, fold-local preprocessing, simple baselines, purged/embargoed walk-forward tests, IC/RankIC and decay diagnostics, capacity and execution costs, reproducible experiment records, and champion/challenger rollback rules. Forecast, portfolio policy, and execution remain separate. A model may affect views only after passing the promotion gate.
+6. Risk check. Every recommendation is tested against position-size, sector, leverage, liquidity, capacity, and correlation limits plus max drawdown, CVaR, tail ratio, Calmar, and Monte Carlo bust probability. Block or regime-aware bootstrap is preferred over IID simulation. Facts, model estimates, and scenarios are labeled separately; uncertainty, disagreement, calibration, costs, drift, and fallback behavior are explicit. Failed gates downgrade the posture.
 
 ### Bundled tools — zero dependencies, no API keys
 Everything in `invest-optimizer/tools/` is plain Python 3 standard library. Nothing to pip install, no keys to configure. Every data source fails soft: a missing reading downgrades that axis, and the brief still ships.
-- `market_pulse.py` — the full regime read in one run: Shiller CAPE, Buffett Indicator, S&P/M2, VIX, high-yield spread, the yield curve, a microstructure tail-day proxy, Polymarket recession/rate-hike odds, 60-day equity and equity–bond correlations, and a 2-state HMM regime check.
+- `market_pulse.py` — the full regime read in one run: Shiller CAPE, Buffett Indicator, S&P/M2, VIX, high-yield spread, the yield curve, a limited SMH high-low-range proxy, Polymarket recession/rate-hike odds, 60-day equity and equity–bond correlations, and a thin 2-state HMM check. The proxy is not treated as a reversal, flash-crash, market-wide, or AI-attribution measure.
 - `optimize.py` — portfolio weights from daily prices: HRP (default), min-variance, risk parity, or inverse-volatility, with caps and a correlation-shock stress test.
 - `risk.py` — forward risk for a proposed mix: max drawdown, CVaR, tail ratio, Calmar, and Monte Carlo bust probability.
 - `dip_signal.py` — a 1–20 sector heat gauge: what share of an ETF's bucket trades below its 200-week moving average. 17–20 says take profits and build cash; 6–9 says deploy it in stages; 1–5 says the bucket is well below its weekly averages — buy aggressively. Scale and formula: `SIGNALS.md`.
 - `extensions/invest-tools.ts` — optional for pi users: exposes all three as native agent tools. Copy it to `~/.pi/agent/extensions/`.
 
 ### What you get
-A posture brief. Your profile and why it matters. The market pulse table. A posture table with current allocation, target allocation, the action to take, and the trigger that reverses it. Optimized weight allocations per asset (or fallback-weighted if the optimization library is missing). If the posture implies stock picks, the screener sources candidates from sector ETF holdings, then filters through three technical gates (near 52-week low, average daily range, trend above moving averages). The screener is a research list, not a buy list.
+A posture brief with the profile, evidence-dated market pulse, confidence and model disagreement, current-to-target allocation actions, reversal gates, exact weights, liquidity/capacity assumptions, and forward-risk results. Learned signals include their experiment provenance and promotion status. If stock selection is appropriate, candidates pass explicit technical gates; they remain a research list, not a buy list.
+
+### AI/quant guardrails
+The skill borrows useful research patterns from Qlib and tools catalogued by Awesome Quant without assuming any repository creates alpha. It favors deterministic baselines, point-in-time data, reproducible experiments, realistic execution, maintained libraries, and the smallest stack that closes a named gap. Deep learning, graph models, transformers, RL, LLM sentiment, synthetic scenarios, and model-zoo results never receive automatic allocation authority.
 
 ### The quick version
 Ask only about market conditions and the skill skips your portfolio. You get a compact pulse table: valuation, complacency, macro, overall. ### The dip/profit signal
@@ -100,4 +104,4 @@ Paste your data. The agent runs the workflow and hands back the report. invest-o
 
 ## The shared idea
 
-Both skills refuse to guess. They demand real data, rank by impact, and separate what is established from what is experimental. Give them signal, not vibes.
+Both skills demand traceable data, label uncertainty, rank by impact, and separate measurement from judgment. Sophisticated models earn authority only by beating simple baselines under realistic validation.
