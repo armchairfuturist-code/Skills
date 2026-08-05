@@ -116,8 +116,8 @@ Translate the target posture from Phase 3 into mathematically grounded allocatio
 1. Build the candidate universe (equities, ETFs, bonds per the target posture tilt + SCREENING survivors)
 2. Select tool and model per OPTIMIZATION.md — prefer maintained libraries available in the environment; match model to goal × pulse (HRP when valuations are EXTREME; DR-CVaR/CDaR under fragile tails; NCO when universe >12 and correlations unstable)
 3. Set covariance prior (default **Ledoit-Wolf shrinkage**) and expected-return prior (James-Stein / BL equilibrium — not raw historical means)
-4. Encode Phase 2 pulse as a small BL or Entropy Pooling view set (OPTIMIZATION.md table); scale view confidence by axis agreement
-5. Constrain to posture asset-class bands, sector/name ceilings, and turnover budget if prior weights exist
+4. Encode Phase 2 pulse as a small BL or Entropy Pooling view set (OPTIMIZATION.md table); scale view confidence by axis agreement. A learned signal enters views only after the [`AI_RISK.md`](AI_RISK.md) promotion gate; scale it by out-of-sample IC/RankIC and uncertainty.
+5. Constrain to posture asset-class bands, sector/name ceilings, liquidity/capacity, and turnover budget if prior weights exist
 6. Solve; run optimizer-level stress checks (in-band, concentration, CVaR sanity, correlation-break)
 7. Optional: discrete allocation to share counts when deployable cash and prices are known
 8. Optional large gap (>15% equity shift): note turnover/cost path (cvxportfolio-class multi-period) without blocking the brief
@@ -185,10 +185,10 @@ Present as a structured posture brief. The format adapts to **investor type** �
 | Valuation | RICH |
 | Complacency | COMPLACENT |
 | Macro | RECESSION WARNING |
-| Microstructure | AGENT-DOMINATED |
+| Microstructure | FRAGILE |
 | Prediction | RECESSION p=0.34 |
 | Correlation | ELEVATED / WEAK-BALLAST |
-| **Overall** | **LATE CYCLE** (+ corr & agent modifiers) |
+| **Overall** | **LATE CYCLE** (+ liquidity & correlation modifiers) |
 
 ### Posture
 | Area | Current | Target | Action | Risk gate |

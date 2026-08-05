@@ -26,6 +26,20 @@ Use AI to expand and challenge the risk model, not to manufacture precision. Sep
 5. Stress scenarios spanning price, volatility, correlation, credit, liquidity, and execution. Include at least one historical and one forward hypothetical scenario.
 6. Monitor calibration, feature/data drift, and performance decay. On drift, fall back to the deterministic baseline and shorten review cadence.
 
+## Qlib-style research contract
+
+Use this contract when a learned signal is proposed; Qlib may implement it, but the contract is tool-independent.
+
+1. **Point-in-time data:** pin universe membership, corporate-action handling, calendar, vendor snapshot, and feature availability time.
+2. **Dataset boundary:** fit processors only on the training window; keep train/validation/test segments chronological and immutable.
+3. **Baselines first:** compare with a simple linear/GBDT model and a fixed factor set such as Alpha158-class price/volume features before deep, graph, transformer, or RL models.
+4. **Forecast diagnostics:** report IC and RankIC, stability by regime, turnover, capacity, and signal-decay curve—not accuracy alone.
+5. **Recorder:** persist data/version hashes, universe, features, labels, splits, seed, model/config, predictions, costs, and artifacts for every run.
+6. **Signal-policy-execution split:** the model emits forecasts with uncertainty; portfolio policy converts forecasts to constrained targets; an executor models limits, suspensions, spread, impact, and fill timing.
+7. **Rolling deployment:** retrain on a declared schedule, compare champion/challenger out of sample, and define rollback triggers.
+
+**Promotion gate:** a learned signal may alter Black–Litterman/Entropy-Pooling views only when net walk-forward results beat the baseline across multiple folds, IC sign is stable, drawdown and turnover fit the goal, and the result survives a cost/capacity stress. Otherwise it remains research-only.
+
 ## Hard gates
 
 - Prevent look-ahead, survivorship, and universe-selection bias.
@@ -38,15 +52,19 @@ Use AI to expand and challenge the risk model, not to manufacture precision. Sep
 
 ## Tool landscape
 
-Inspect the environment before recommending or installing anything; verify current maintenance, license, data rights, and release date.
+Inspect the environment before recommending or installing anything; verify current maintenance, license, data rights, and release date. Treat Awesome Quant as a discovery index, not an endorsement.
 
-- **Research/features:** Qlib, OpenBB, vectorbt.
-- **Portfolio/risk:** skfolio, Riskfolio-Lib, PyPortfolioOpt.
-- **RL experimentation:** FinRL; apply only after leakage-safe baselines and cost-aware walk-forward tests.
-- **Backtest/execution:** LEAN, NautilusTrader, Backtrader.
+- **End-to-end ML research:** Qlib when point-in-time datasets, experiment recording, model comparison, rolling retraining, and signal-to-execution evaluation are needed.
+- **Research/features:** OpenBB and vectorbt for focused data/exploration paths.
+- **Portfolio/risk:** skfolio, Riskfolio-Lib, PyPortfolioOpt; cvxportfolio for multi-period cost-aware paths.
+- **Factor diagnostics:** Alphalens-reloaded or equivalent for IC, quantiles, turnover, and decay.
+- **Performance reports:** empyrical-reloaded/pyfolio-reloaded or equivalent; verify definitions against in-skill metrics.
+- **Backtest/execution:** LEAN or NautilusTrader when fill, order, venue, and event fidelity matter; lightweight engines are acceptable for daily allocation if assumptions are explicit.
+- **Calendars:** exchange-calendars or equivalent; never infer sessions from weekdays.
+- **RL experimentation:** FinRL only after leakage-safe supervised and rules-based baselines pass.
 - **Monitoring:** Evidently or equivalent drift/calibration tooling.
 
-A repository's popularity or recent release is not evidence of trading edge. Prefer reproducible data lineage, realistic execution, active maintenance, and tests over agent demos or headline returns.
+Select the smallest stack that closes a named gap. Score candidates on active maintenance, test coverage, reproducibility, asset/venue fit, point-in-time data support, cost/execution fidelity, license, and integration burden. Popularity or a recent release is not evidence of edge.
 
 ## Completion criterion
 

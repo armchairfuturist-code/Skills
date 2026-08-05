@@ -103,6 +103,15 @@ When return history for the recommended mix (or proxy ETFs) is available:
 
 If quantstats (or equivalent) is unavailable, approximate with historical max drawdown and CVaR of the proxy mix and state the gap.
 
-## ML validation hook
+## ML signal-to-portfolio hook
 
-Before any AI/ML signal changes views or constraints, apply [`AI_RISK.md`](AI_RISK.md): purged/embargoed walk-forward evaluation, fold-local preprocessing, cost/liquidity modeling, calibration and drift checks, model disagreement, and deterministic fallback. Recent repositories are candidates to inspect, not evidence of edge.
+Before any AI/ML signal changes views or constraints, apply [`AI_RISK.md`](AI_RISK.md), including its Qlib-style research contract.
+
+- Keep forecast, portfolio policy, and execution as separate layers.
+- Convert cross-sectional forecasts to relative views; scale view magnitude by out-of-sample IC/RankIC and uncertainty, then cap by posture bands.
+- Use signal-decay and turnover curves to set rebalance cadence; the fastest model horizon does not automatically become the trading horizon.
+- Compare against equilibrium-only BL, HRP/min-risk, and a simple linear/GBDT factor baseline.
+- Require point-in-time universes, purged/embargoed walk-forward folds, fold-local preprocessing, costs, capacity, and execution constraints.
+- Persist a reproducible experiment record and champion/challenger decision. Drift, unstable IC sign, or failed cost stress returns the portfolio to the deterministic baseline.
+
+Model-zoo performance and repository popularity are research leads, not allocation evidence.
