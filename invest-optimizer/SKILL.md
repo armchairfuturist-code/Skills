@@ -1,6 +1,6 @@
 ---
 name: invest-optimizer
-description: "Recalibrate portfolio posture to market regime and goals. Use when the user wants a portfolio review or posture shift; for a market-conditions read with no portfolio changes, run the Quick pulse branch."
+description: "Portfolio posture, market pulse, dip/profit signals, and allocation risk. Use for portfolio reviews or shifts, market-condition reads, buy-the-dip/profit-taking questions, and risk-aware target weights."
 ---
 
 # Invest Optimizer
@@ -12,6 +12,7 @@ Reference files:
 - [`POSTURE.md`](POSTURE.md) — posture × goals calibration matrix
 - [`OPTIMIZATION.md`](OPTIMIZATION.md) — optimizer models, views, covariance defaults
 - [`SCREENING.md`](SCREENING.md) — individual stock technical gates
+- [`AI_RISK.md`](AI_RISK.md) — AI/ML risk protocol, validation gates, and quant-tool landscape
 
 ## Phase 1 — Anchor to goals
 
@@ -47,13 +48,13 @@ Verdict: COMPLACENT / NEUTRAL / CONCERN / FEAR / PANIC
 Check: **Yield curve (10y − 2y)**.
 Verdict: EXPANSION / WARNING / RECESSION / CRISIS
 
-### 2D — Microstructure: who is driving price action?
+### 2D — Microstructure and liquidity: can the portfolio trade through stress?
 
-When AI trading agents compose a large share of daily volume, their herding creates the **parabolic-and-drop** regime — vertical parabolic surges followed by random liquidity vacuums and flash crashes — that breaks traditional option strategies.
+Check observable measures: spread, depth when available, volume participation, intraday gaps/reversals, realized-vs-implied volatility, and rolling liquidity stress. `tools/market_pulse.py` supplies a limited SMH >3%-range proxy; label it as a proxy, not AI attribution.
 
-Check: **AI trading volume share**, **intraday tail frequency** (days with >3% single-stock intraday reversals), **flash crash count** (rolling 30-day).
-Thresholds and verdicts in [`METRICS.md`](METRICS.md). `tools/market_pulse.py` computes a tail-day proxy (SMH >3%-range days/week); AI volume share stays news judgment.
-Verdict: HUMAN-DOMINATED / HUMAN-MIXED / AGENT-DOMINATED / AGENT-SATURATED
+Do not infer an “AI volume share” or causal agent regime without a dated, reproducible source and methodology. Automated volume is not equivalent to AI-driven volume, and tail events do not identify their cause.
+
+Verdict: LIQUID / NORMAL / FRAGILE / DISLOCATED, with data gaps explicit.
 
 ### 2E — Event/prediction: what are live probability markets pricing?
 
@@ -71,17 +72,17 @@ Verdicts: DIVERSIFIED / NORMAL / ELEVATED / CRISIS-CORR and BALLAST-OK / WEAK-BA
 
 ### Synthesis
 
-Weight axes 2A–2E into the core pulse (EXPANSION / LATE CYCLE / CONTRACTION / CRISIS). Apply **modifiers** from microstructure (2D) and correlation (2F):
+Weight axes 2A–2E into the core pulse (EXPANSION / LATE CYCLE / CONTRACTION / CRISIS). Apply modifiers from 2D and 2F:
 
-- AGENT-DOMINATED + high valuation → crash severity elevated (parabolic-and-drop becomes structural)
-- AGENT-DOMINATED + LATE CYCLE → rotation severity elevated (agents herd exits faster than humans)
-- AGENT-DOMINATED × any pulse → **monthly ATM covered calls structurally underperform**
-- CRISIS-CORR or CO-CRASH → non-equity hedge floors rise; name-count diversification claims are invalid
-- CO-CRASH + LATE CYCLE → duration is not the hedge; prefer cash/T-bills/collars
+- FRAGILE/DISLOCATED → reduce trade size, raise liquidity reserves, model slippage/impact, and prefer bounded-loss structures
+- CRISIS-CORR or CO-CRASH → raise non-equity hedge floors; name-count diversification is invalid
+- CO-CRASH + LATE CYCLE → duration is not the sole hedge; prefer cash/T-bills/collars
+
+When AI/ML risk assessment is requested or data supports it, load [`AI_RISK.md`](AI_RISK.md). Keep facts, model estimates, and scenarios separate; model disagreement lowers confidence and position size.
 
 ### 2G — Statistical regime confirmation (optional)
 
-`tools/market_pulse.py` runs a 2-state Gaussian HMM on SPY (~125 obs — thin) and reports regime, persistence, and stationary mix per [`METRICS.md`](METRICS.md). Use as confirmation or tension flag against the structural pulse — never as a silent override.
+`tools/market_pulse.py` runs a thin 2-state Gaussian HMM. Treat it as one ensemble member, not an override. Prefer multiple windows/models or change-point confirmation; report regime probabilities, disagreement, sample size, and out-of-sample calibration. Follow [`AI_RISK.md`](AI_RISK.md) when adding ML.
 
 **Completion criterion:** Verdicts for 2A–2F each supported by at least one metric reading; synthesized pulse with explicit weighting rationale; modifiers (microstructure, correlation) stated; 2G present or explicitly skipped with gap noted.
 
@@ -93,7 +94,7 @@ Probed 2026-07-29 — preference order: `tools/market_pulse.py` first (covers 2A
 
 Map the market pulse against the goal anchor using **[the posture matrix](POSTURE.md)**. The matrix is the cross-product: same pulse × different goals → different postures.
 
-When 2D verdict is AGENT-DOMINATED or AGENT-SATURATED, apply the **[Agent-Market Microstructure Addendum](POSTURE.md#agent-market-microstructure-addendum)** as a modifier on all income instrument recommendations. Standard allocation templates remain valid for broad asset-class posture but individual income vehicles must be filtered through the addendum's preference hierarchy — use the **parabolic-and-drop** framing to explain why short-duration options outperform monthly in agent-dominated regimes.
+When 2D is FRAGILE or DISLOCATED, apply the **[Microstructure and Liquidity Addendum](POSTURE.md#microstructure-and-liquidity-addendum)**. Match option tenor and structure to the mandate, implied-volatility surface, transaction costs, tax context, and stress loss; do not claim short-duration options structurally outperform without strategy-specific evidence.
 
 When 2F is CRISIS-CORR or CO-CRASH, apply the correlation rules in POSTURE.md: raise non-equity hedge floors and forbid "diversified by ticker count" language.
 
@@ -113,7 +114,7 @@ When the posture implies individual stock picks, apply the technical gates in [`
 Translate the target posture from Phase 3 into mathematically grounded allocation weights. Heuristic templates give ranges; optimization gives exact weights **inside** those ranges. Full model menu, covariance defaults, Entropy Pooling/BL view encoding, and stress checks: [`OPTIMIZATION.md`](OPTIMIZATION.md).
 
 1. Build the candidate universe (equities, ETFs, bonds per the target posture tilt + SCREENING survivors)
-2. Select tool and model per OPTIMIZATION.md — prefer **skfolio**, then Riskfolio-Lib, then PyPortfolioOpt; match model to goal × pulse (HRP when valuations are EXTREME; DR-CVaR or CDaR under AGENT-DOMINATED; NCO when universe >12 and correlations unstable)
+2. Select tool and model per OPTIMIZATION.md — prefer maintained libraries available in the environment; match model to goal × pulse (HRP when valuations are EXTREME; DR-CVaR/CDaR under fragile tails; NCO when universe >12 and correlations unstable)
 3. Set covariance prior (default **Ledoit-Wolf shrinkage**) and expected-return prior (James-Stein / BL equilibrium — not raw historical means)
 4. Encode Phase 2 pulse as a small BL or Entropy Pooling view set (OPTIMIZATION.md table); scale view confidence by axis agreement
 5. Constrain to posture asset-class bands, sector/name ceilings, and turnover budget if prior weights exist
@@ -139,14 +140,14 @@ Before outputting, validate recommendations against system risk constraints and 
 
 ### Forward risk analytics
 
-When return history for the recommended mix (or proxy ETFs) is available — via quantstats-class tooling, `tools/risk.py` (maxDD, CVaR, tail ratio, Calmar, MC bust/goal probability), or manual calc — report:
+Load [`AI_RISK.md`](AI_RISK.md). When return history for the recommended mix (or proxy ETFs) is available — via risk tooling, `tools/risk.py`, or manual calculation — report:
 
 | Metric | Role |
 |---|---|
 | Historical max drawdown | Sanity vs goal loss tolerance |
 | CVaR (expected shortfall) | Tail loss beyond VaR |
 | Tail ratio / Calmar | Asymmetry and drawdown-adjusted return |
-| Monte Carlo bust probability | P(DD ≤ −loss_tolerance); default 1000 paths |
+| Monte Carlo bust probability | P(DD ≤ −loss_tolerance); default 1000 paths; block-bootstrap or regime-aware simulation preferred |
 | Monte Carlo goal probability | Only if the profile states a return target + horizon |
 
 Gate: bust probability above comfort (default >25% moderate, >10% conservative/preservation) → downgrade posture one rung or cut equity band and re-run 3.5. If MC tooling is unavailable, use historical max DD + CVaR and state the gap.
@@ -165,7 +166,7 @@ If a prior posture brief exists, check whether the previous regime read was conf
 
 A contradicted prior read lowers confidence in regime calls depending on the same axes. State the adjustment explicitly.
 
-**Completion criterion:** Every recommendation checked against risk limits and forward analytics (or gap noted). Violations blocked or downgraded with reason. Prior regime read validated as confirmed, contradicted, or mixed with confidence adjustment stated.
+**Completion criterion:** Every recommendation is checked against limits and forward analytics (or a gap is noted). Facts, estimates, and scenarios are labeled; leakage, costs, liquidity, calibration, uncertainty, and drift are tested where applicable. Violations are blocked or downgraded. Prior regime validation and confidence adjustment are stated.
 
 ## Output format
 

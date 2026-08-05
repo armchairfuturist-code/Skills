@@ -80,37 +80,28 @@ Junk bond yield over Treasuries.
 
 The recession usually arrives 6–18 months after the curve un-inverts.
 
-## Market Microstructure
+## Market Microstructure and Liquidity
 
-### AI Trading Agent Volume Share
-Estimated share of daily equity volume driven by automated/AI agents (quant funds, ML models, algos).
+Use observable inputs; never infer AI causality from price shape alone. Report the instrument universe, sampling interval, lookback, and data source.
 
-| Share | Verdict | Meaning |
-|-------|---------|---------|
-| < 30% | HUMAN-DOMINATED | Traditional set-and-forget strategies work fine |
-| 30–50% | HUMAN-MIXED | Monthly options may get intermittent gamma pressure |
-| 50–70% | AGENT-DOMINATED | Short-duration options preferred; monthly ATM covered calls structurally underperform |
-| > 70% | AGENT-SATURATED | Daily OTM minimum; monthly options are alpha leaks |
+### Liquidity stress composite
 
-### Intraday Tail Frequency
-Days per week where a >3% single-stock intraday V-reversal occurs (drop then recover, or surge then crash). Measures the "parabolic-and-drop" signature.
+Combine available measures: quoted/effective spread percentile, depth, volume participation, Amihud price impact, gap frequency, and realized-versus-implied volatility. Compare each with its own history rather than universal cutoffs.
 
-| Frequency | Signal |
-|-----------|--------|
-| < 1/wk | NORMAL — traditional strategies safe |
-| 1–3/wk | ELEVATED — monitor for regime change |
-| 3–8/wk | HIGH — agent-driven microstructure dominant |
-| > 8/wk | EXTREME — structural fragility, daily options + collars preferred |
+| State | Evidence | Portfolio implication |
+|---|---|---|
+| LIQUID | most measures below 50th historical percentile | normal sizing and execution assumptions |
+| NORMAL | measures broadly 50th–80th percentile | standard cost model; monitor |
+| FRAGILE | two or more measures above 80th percentile | reduce size; stage trades; raise impact/slippage stress |
+| DISLOCATED | spread/impact/gaps above 95th percentile or trading impairment | preserve liquidity; bounded-loss hedges; manual review |
 
-### Flash Crash Count
-Rolling 30-day count of >5% intraday index drops that recover within the same session.
+### Intraday tail proxy
 
-| Count | Signal |
-|-------|--------|
-| 0 | NORMAL |
-| 1–2 | ELEVATED — consider put protection |
-| 3–4 | HIGH — collars or cash buffer recommended |
-| > 4 | CRITICAL — minimum position sizing, collars on all positions |
+`tools/market_pulse.py` counts SMH days with >3% high-low range. This is a sector-ETF range proxy—not a V-reversal measure, flash-crash count, market-wide statistic, or estimate of AI participation. Use it only as corroborating evidence and state those limitations.
+
+### AI/automation attribution
+
+Only report AI or automated-volume share when a dated source defines the venue, asset class, sampling method, and whether it measures order submissions, trades, or notional volume. Otherwise mark attribution **UNKNOWN**. Automated execution, systematic trading, high-frequency trading, and AI are not interchangeable.
 
 ## Correlation Regime
 
@@ -139,7 +130,7 @@ SPX constituents or the portfolio's own names; state window (default 60–90 tra
 
 ### Modifier rules
 
-CRISIS-CORR or CO-CRASH modifies the pulse the same way microstructure does:
+CRISIS-CORR or CO-CRASH modifies the pulse alongside liquidity stress:
 
 - ELEVATED/CRISIS-CORR + equity-heavy posture → raise cash/non-equity hedge floors; ban "diversified by name count" language
 - CO-CRASH + LATE CYCLE → duration is not the hedge; prefer T-bills, collars, or trend/alt premia
@@ -147,7 +138,7 @@ CRISIS-CORR or CO-CRASH modifies the pulse the same way microstructure does:
 
 ## Statistical Regime Confirmation (optional)
 
-When a Markov/HMM regime tool is available (e.g. rolling-return labels + transition matrix, or `hmmlearn`-class fit on returns/vol), use it as a **confirmation layer** on the structural pulse — not a replacement.
+When regime tools are available, use them as an ensemble confirmation layer—not a replacement. Compare HMM/Markov-switching with a different family such as change-point detection or volatility clustering. Follow [`AI_RISK.md`](AI_RISK.md).
 
 | Output | How to use |
 |---|---|

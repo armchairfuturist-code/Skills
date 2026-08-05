@@ -38,7 +38,7 @@ def hy_v(v): return ("TIGHT (froth)" if v < 3 else "NORMAL" if v < 5 else
                      "WIDENING (stress)" if v < 8 else "DISTRESS")
 def curve_v(v): return "EXPANSION" if v > 0.5 else ("WARNING" if v >= 0 else "RECESSION (inverted)")
 def tail_v(w): return ("NORMAL" if w < 1 else "ELEVATED" if w < 3 else
-                       "HIGH — agent microstructure" if w < 8 else "EXTREME — fragile")
+                       "HIGH — tail-range proxy" if w < 8 else "EXTREME — range stress")
 def pair_v(r): return ("DIVERSIFIED" if r < 0.3 else "NORMAL" if r < 0.5 else
                        "ELEVATED" if r < 0.7 else "CRISIS-CORR")
 def ballast_v(r): return "BALLAST-OK" if r < -0.2 else ("WEAK-BALLAST" if r < 0.2 else "CO-CRASH")
@@ -115,7 +115,7 @@ def axis_microstructure():
         per_week = tails / 6.0
         return [{"metric": "SMH >3%-range days/wk (30d proxy)", "value": round(per_week, 1),
                  "asof": h[-1]["t"], "verdict": tail_v(per_week),
-                 "note": "ETF-level proxy for single-stock tails; AI volume share is news judgment"}]
+                 "note": "SMH high-low range proxy only; not reversal, flash-crash, market-wide, or AI-attribution evidence"}]
     except Exception as e:
         return [{"metric": "2D tail proxy", "verdict": f"GAP ({e})"}]
 

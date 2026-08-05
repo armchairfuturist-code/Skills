@@ -21,14 +21,14 @@ Pick one primary optimizer from the goal profile. Pulse modifies risk measure an
 |---|---|---|---|
 | Growth / Aggressive | Mean-risk max Sharpe, or Nested Clusters (inner mean-CVaR) | Variance (EXPANSION); **CVaR** (LATE CYCLE / CONTRACTION) | LATE CYCLE → cut equity band ceiling 5–10 pts before optimize |
 | Balanced / Moderate | Risk budgeting (risk parity) or HRP | CVaR or semi-variance | CONTRACTION → HERC over HRP (more defensive cluster weights) |
-| Income / Conservative | Risk parity or min-risk | CVaR or CDaR (drawdown-aware) | AGENT-DOMINATED → prefer CDaR; shorten options sleeve outside optimizer |
+| Income / Conservative | Risk parity or min-risk | CVaR or CDaR (drawdown-aware) | FRAGILE/DISLOCATED → prefer CDaR; model liquidity and execution outside optimizer |
 | Preservation | Min-risk or Black-Litterman with conservative views | Variance or CDaR | Always BL-shrink expected returns toward T-bill; never max-Sharpe |
 
 ### Advanced models (use when data quality supports them)
 
 - **Nested Clusters Optimization (NCO)** — inner estimator per cluster, outer risk-budget across clusters. Default upgrade when universe >12 names and correlations are unstable.
 - **Hierarchical Risk Parity (HRP) / HERC** — no expected-return estimates; robust when Phase 2 valuation is EXTREME/BUBBLE (return forecasts are least trustworthy).
-- **Distributionally robust CVaR** — when microstructure is AGENT-DOMINATED or flash-crash count is HIGH/CRITICAL; hedges ambiguity in the return distribution.
+- **Distributionally robust CVaR** — when tails or liquidity are fragile and the ambiguity set is justified out of sample; hedges distributional uncertainty.
 - **Schur complementary allocation** — alternative to HRP when cluster structure is clear but risk budgets must stay coherent with a factor model.
 - **Entropy Pooling** — encode Phase 2 regime as views on the prior return distribution, then optimize CVaR on the posterior. Preferred bridge from pulse → weights when conviction is high.
 
@@ -54,7 +54,7 @@ Translate the synthesized pulse into a small view set. Over-specifying views def
 | LATE CYCLE | Defensive relative views | Equity expected excess ≤ 0 vs bonds; quality/low-vol outperform broad equity; duration shorten |
 | CONTRACTION | Risk-off absolute | Raise equity CVaR view; widen credit-spread stress; extend quality duration |
 | CRISIS | Stress posterior | Entropy Pool / scenario: equity −2σ month, credit +300 bps; optimize min CVaR on stressed posterior |
-| AGENT-DOMINATED (any pulse) | Tail ambiguity | Prefer DR-CVaR or add left-tail view; do not raise return forecasts |
+| FRAGILE/DISLOCATED (any pulse) | Tail ambiguity | Prefer DR-CVaR or add left-tail view; do not raise return forecasts |
 
 Confidence: scale view uncertainty inversely with Phase 2 axis agreement. Five axes aligned → tighter views; mixed axes → near-equilibrium (weak views).
 
@@ -102,3 +102,7 @@ When return history for the recommended mix (or proxy ETFs) is available:
 - Gate: bust probability above the profile's comfort (default >25% for moderate, >10% for conservative/preservation) → downgrade posture one rung or cut equity band and re-optimize
 
 If quantstats (or equivalent) is unavailable, approximate with historical max drawdown and CVaR of the proxy mix and state the gap.
+
+## ML validation hook
+
+Before any AI/ML signal changes views or constraints, apply [`AI_RISK.md`](AI_RISK.md): purged/embargoed walk-forward evaluation, fold-local preprocessing, cost/liquidity modeling, calibration and drift checks, model disagreement, and deterministic fallback. Recent repositories are candidates to inspect, not evidence of edge.

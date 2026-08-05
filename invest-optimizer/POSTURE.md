@@ -39,30 +39,18 @@ Tilt: dividend aristocrats, preferreds, REITs, high quality corporates
 Equities 10–30% · Fixed income 60–80% · Cash 5–10%<br>
 Tilt: short duration Treasuries, TIPS, money market
 
-## Agent-Market Microstructure Addendum
+## Microstructure and Liquidity Addendum
 
-When AI trading agents compose >30% of daily volume (current: 60–70%+), traditional "set-and-forget" income strategies face structural headwinds from the **parabolic-and-drop** regime.
+When Phase 2D is FRAGILE or DISLOCATED, implementation risk changes even if strategic allocation bands do not.
 
-### How agent-market changes instrument selection
+- Size orders from observed volume and spread; stage execution and stress market impact.
+- Keep a liquidity reserve sized to withdrawals, margin, and stressed liquidation time.
+- For options, compare tenor/strike structures on net total return, implied-versus-realized volatility, skew, gap loss, turnover, tax, and assignment—not a presumed AI regime.
+- Short-dated options carry high gamma, path, spread, and execution risk; monthly calls carry more time exposure and cap upside. Neither structurally dominates across regimes.
+- Prefer bounded-loss spreads or collars when the mandate values drawdown control; verify liquidity in every leg.
+- Separate distribution yield from total return and test NAV erosion.
 
-Standard monthly ATM covered calls **underperform structurally** — an intraday agent-driven spike can breach a strike written 25 days ago in minutes. The premium does not compensate for the capped upside + asymmetric crash exposure.
-
-**Preference hierarchy for income instruments in agent-dominated markets:**
-
-| Rank | Instrument | Why | Example |
-|------|-----------|-----|---------|
-| 1 | **Short-duration options** (daily/weekly) | Gamma-safe — strike resets match agent time horizon. OTM during high-momentum phases captures massive IV premiums. | GIAX (daily index call spreads), CHPY (weekly semi covered calls) |
-| 2 | **Call spreads** (sell near OTM, buy further OTM) | Purchased OTM leg participates in parabolic rallies — upside not fully capped. Section 1256 contracts provide tax advantage. | QQQI, SPYI (call spread on Nasdaq-100 / S&P 500) |
-| 3 | **Collars** (buy-write-plus-put) | Premium from sold call funds a protective put. Hard floor against flash crashes. Lower net yield but survivable. | DIY or structured products |
-| 4 | **Monthly ATM covered calls** | Structurally last — only acceptable when 2D verdict is HUMAN-DOMINATED or as a tactical fill when volatility is flat. | GPIQ, OVL, JEPQ |
-| 5 | **Pure equity growth** (no options) | Captures full parabolic move. No income but necessary for "uncapped" leg. | AOTG, SPMO |
-
-### Portfolio construction implications
-
-- **Duration matters more than strike**: Daily OTM options > weekly OTM > monthly OTM > monthly ATM in agent markets. Each step in duration adds gamma exposure to agent-driven micro-moves.
-- **Blend short-duration income + pure equity**: Let the short-duration income layer (daily/weekly) provide cash flow while pure equity holds the parabolic capture. Avoid full allocation to any single expiration schedule.
-- **Watch for intraday skew**: When agents trigger a >5% single-stock move within 30 minutes, option IV reprices instantly. Short-duration writers benefit (premium reprices up), monthly writers lose (strike gets gapped through).
-- **Tax efficiency**: Section 1256 contracts (index options — NDX, SPX) get 60/40 LTCG/STCG treatment. Prefer index-based options (GIAX, QQQI, SPYI) over single-stock in taxable accounts.
+Completion criterion: instrument choice is supported by strategy-specific evidence after costs and stress, with liquidity assumptions and contrary evidence stated.
 
 ## Correlation Regime Addendum
 
