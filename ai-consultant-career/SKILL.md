@@ -110,7 +110,7 @@ Lead with what you've done that's relevant to them:
 
 Full send-ready email template: `proposal-templates.md` #1.
 
-**Completion criterion:** cover letter sent with all four sections present (Hook, Evidence, Bridge, Close).
+**Completion criterion:** cover letter ready to send with all four sections present (Hook, Evidence, Bridge, Close).
 ---
 
 ## Interview Prep
@@ -407,37 +407,13 @@ If the user wants recurring searches:
 
 Every output line follows these constraints. The models in bio-builder.md, proposal-templates.md, and resume examples demonstrate the correct shape. Check every generated piece against these rules before outputting.
 
-**Completion criterion:** every resume, cover letter, outreach message, and interview answer passes the anti-slop check below with zero violations.
+The exhaustive banned-word, filler, phrase, and pattern lists live in the sibling `no-ai-slop/` folder (vendored from github.com/petergyang/no-ai-slop): `SKILL.md` enumerates what to cut, `eval.md` is the pass/fail checklist. This skill is stricter than the vendored defaults on three points:
 
-#### Banned words
+- **Filler:** additionally cut `essentially`, `quite`, `somewhat`, `rather`, `fairly`, `a bit`, `extremely`, `incredibly`, `remarkably`, `absolutely`, `especially`, `really`, `very`, `highly`, `critically` (the vendored list allows some of these when they carry emphasis).
+- **Em-dashes:** the vendored skill tolerates 1-2 in long drafts; this skill tolerates none. Use hyphens (-) or colons (:) exclusively.
+- **One sentence, one claim:** the vendored untangle rule is looser; resume bullets need the strict version.
 
-Cut these on sight unless quoted as examples: delve, foster, leverage, utilize, facilitate, empower, streamline, robust, cutting-edge, paradigm shift, game changer, this is huge, this changes everything, tapestry, realm, beacon, multifaceted, meticulous, intricate, paramount, transformative, elevate, embark, supercharge, harness, ever-evolving.
-
-#### Banned filler
-
-Cut when they add nothing. Keep when they carry emphasis, uncertainty, or the writer's natural rhythm: "just", "literally", "honestly", "simply", "actually", "truly", "essentially", "fundamentally", "importantly", "crucially", "inherently", "inevitably", "quite", "somewhat", "rather", "fairly", "a bit", "extremely", "incredibly", "remarkably", "absolutely", "especially", "really", "very", "highly", "critically".
-
-#### Banned phrases
-
-"it's worth noting", "it's important to note", "at the end of the day", "when it comes to", "at its core", "in today's world", "in the age of", "in the world of", "the reality is", "the truth is", "in terms of", "with regard to", "in order to", "going forward", "in this article", "let's dive in". Cut when they delay the point.
-
-#### Patterns to cut
-
-- **Binary contrasts:** "This is not X. It's Y." / "Not a X. Not a Y. A Z." State Y directly.
-- **Throat-clearing openers:** "Here's the thing", "Let me be clear", "I'll be honest", "The uncomfortable truth is". Cut and state the point.
-- **Faux-insight setups:** "This is the part most people skip", "What most people get wrong", "Here's what nobody tells you". Cut the setup; make the claim stand alone.
-- **Colon reveals:** A noun phrase, a colon, then a dramatic reveal. Rewrite as a plain sentence.
-- **Superficial analysis:** Trailing -ing clauses that pretend to explain: "highlighting", "underscoring", "reflecting", "showcasing". Replace with what it actually does.
-- **Importance puffery:** "Stands as a testament", "marks a pivotal moment", "plays a vital role", "underscores its significance". State the fact and let the reader judge.
-- **Weasel attribution:** "Experts agree", "industry reports suggest", "many argue", "widely regarded as", "studies show". Name the source or cut the claim.
-- **Fake-strong verbs:** Prefer "is" and "has" when clearer. "The app serves as a centralized hub" becomes "The app tracks sponsors, drafts, due dates, and approvals in one place."
-- **Synonym cycling:** If the clear word is right, repeat it. Don't rotate terms for style.
-- **Dramatic fragmentation:** "X. And Y. And Z." or "That's it. That's the whole thing." Use complete sentences.
-- **Robotic rhythm:** Avoid repeated sentence shapes, identical paragraph structures, stacked punchy fragments. Vary shape when it helps the point.
-- **Rhetorical setups:** "What if I told you...", "Think about it:", "Plot twist:", self-answered "Question? Answer." Drop them and make the point.
-- **Fake-profound kickers:** Cut the final "deep" line that turns the point into a cute metaphor or mic-drop. End on the clearest concrete sentence.
-- **Summary-recap endings:** "In conclusion", "Ultimately", "Overall", or a final paragraph that restates the piece. End on the last concrete point or next action instead.
-- **Formatting slop:** Emoji in headings, bold mid-sentence for emphasis, bullets where prose reads better, headers over two-sentence sections.
+**Completion criterion:** every resume, cover letter, outreach message, and interview answer passes the `no-ai-slop/eval.md` checklist with zero violations, plus the stricter points above.
 
 #### Structural rules
 
@@ -448,6 +424,6 @@ Cut when they add nothing. Keep when they carry emphasis, uncertainty, or the wr
 
 #### Anti-slop check
 
-Before outputting any written piece, read it back against this list. A line that could open a generic LinkedIn post gets cut. The general Rules above apply: every number traces to a real result, the user's voice stays intact, and the Recruiter Critic runs a silent mental critique from a skeptical startup recruiter's perspective. Reject anything generic, empty, or lacking tangible evidence.
+Before outputting any written piece, read it back against the lists in the sibling `no-ai-slop/` folder plus the stricter points above. A line that could open a generic LinkedIn post gets cut. The general Rules above apply: every number traces to a real result, the user's voice stays intact, and the Recruiter Critic runs a silent mental critique from a skeptical startup recruiter's perspective. Reject anything generic, empty, or lacking tangible evidence.
 
 **Post-generation check:** for long-form outputs (cover letters, case studies, LinkedIn About sections), run the edit workflow: read the full draft, identify core point and voice signals to preserve, make minimum effective changes, then verify against `eval.md` in the sibling `no-ai-slop/` folder (vendored from github.com/petergyang/no-ai-slop). Employers screen application copy for AI writing patterns: if any check fails, fix and re-check.
