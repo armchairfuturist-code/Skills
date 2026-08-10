@@ -23,11 +23,11 @@ This skill is for job seekers targeting **people-facing AI roles at startups** (
 - **GitHub proof**: a specific public repo on github.com/armchairfuturist-code that demonstrates the capability you're selling. A shipping repository is worth more than a testimonial.
 - **Adoption-first**: the ordering rule for every bolt, bullet, letter, DM, and interview answer: lead with the team adoption win or consulting metric; GitHub proof supports, never headlines.
 - **Immune system**: the org's resistance mechanism that hardens against new tools. Don't fight it head-on; run a parallel path so the new way outperforms before the response locks in.
-- **Parallel run**: old way and new way side by side. The real adoption signal is the human-override rate falling over time, not a training-completion count.
+- **Parallel run**: old way and new way side by side. The adoption signal is the human-override rate falling over time, not a training-completion count.
 - **Binding**: what retains high-judgment people after the workflow changes — their judgment steers the new system, who-decided-what is visible, the role is specific enough to matter. Friction no longer retains.
-- **Override rate**: the honest adoption metric. A falling override rate means the team has actually switched; a training count does not.
+- **Override rate**: how you tell adoption happened. A falling override rate means the team has actually switched; a training count does not.
 
-**Change management framework** — load `change-management-framework.md` when a branch needs the org-wide change method (workforce transition, retention, board governance, multi-cohort rollout). Carries the CCMP baseline plus the OpenExO AI-transformation method Alex practices — attributed, not claimed as original.
+**Change management framework**: load `change-management-framework.md` when a branch needs the org-wide change method (workforce transition, retention, board governance, multi-cohort rollout). Carries the CCMP baseline plus the OpenExO AI-transformation method Alex practices — attributed, not claimed as original.
 
 ---
 
