@@ -1,7 +1,7 @@
 # Vendored: no-ai-slop
 
 Source: https://github.com/petergyang/no-ai-slop (MIT License)
-Vendored: 2026-07-28
+Vendored: 2026-08-05 (upstream commit D30eddb9)
 
 Files taken verbatim: `SKILL.md`, `eval.md`, `LICENSE`. The upstream repo also
 ships `agents/` and `scripts/` (plugin machinery), not needed here.
