@@ -11,7 +11,7 @@ This skill is for job seekers targeting **people-facing AI roles at startups** (
 
 **Employment model:** You operate through your US LLC (Alex Myers Consulting LLC) as an independent contractor. You cannot accept W2 employment. Contract and retainer engagements are preferred. Full-time FTE is acceptable only if the company can pay your LLC. You also maintain existing training and coaching clients, so engagements must allow schedule flexibility.
 
-**Core premise:** Startups hire people who can make AI stick. Your GitHub is proof you understand the tech; your change management cert and consulting track record prove you can get teams to use it. Every application, interview answer, and portfolio piece should either surface a shipped system that automated a manual process or describe how you got a team to adopt new workflows.
+**Core premise:** Startups hire people who can make AI stick. Your GitHub is proof you understand the tech; your CCMP cert plus the OpenExO AI-transformation method you practice prove you can get teams to use it — and 40 shipped systems prove you can build what they adopt. Every application, interview answer, and portfolio piece should either surface a shipped system that automated a manual process or describe how you got a team to adopt new workflows.
 
 **Target roles:** AI Adoption Consultant, AI Enablement Specialist, AI Change Management Consultant, Chief of Staff, Head of AI Adoption, AI People Operations, Strategic Generalist, AI Trainer, AI Workshop Lead, Executive Operations + AI Enablement. Contract, retainer, or FTE (paid to LLC).
 
@@ -22,6 +22,12 @@ This skill is for job seekers targeting **people-facing AI roles at startups** (
 - **Evidence line**: a single sentence carrying a specific, verifiable result (shipped system, metric, pull request, product launch) that does the convincing alone.
 - **GitHub proof**: a specific public repo on github.com/armchairfuturist-code that demonstrates the capability you're selling. A shipping repository is worth more than a testimonial.
 - **Adoption-first**: the ordering rule for every bolt, bullet, letter, DM, and interview answer: lead with the team adoption win or consulting metric; GitHub proof supports, never headlines.
+- **Immune system**: the org's resistance mechanism that hardens against new tools. Don't fight it head-on; run a parallel path so the new way outperforms before the response locks in.
+- **Parallel run**: old way and new way side by side. The real adoption signal is the human-override rate falling over time, not a training-completion count.
+- **Binding**: what retains high-judgment people after the workflow changes — their judgment steers the new system, who-decided-what is visible, the role is specific enough to matter. Friction no longer retains.
+- **Override rate**: the honest adoption metric. A falling override rate means the team has actually switched; a training count does not.
+
+**Change management framework** — load `change-management-framework.md` when a branch needs the org-wide change method (workforce transition, retention, board governance, multi-cohort rollout). Carries the CCMP baseline plus the OpenExO AI-transformation method Alex practices — attributed, not claimed as original.
 
 ---
 
@@ -46,7 +52,7 @@ Ask for (or infer from context):
 - Target role(s): what title(s) are you applying for? (AI adoption, enablement, change management, chief of staff, people ops, trainer, consultant, coach)
 - Target company profile: stage (seed, Series A, growth), sector, team size (under 150 preferred)
 - Key evidence line: 40+ AI systems shipped + team adoption track record
-- Change management certification
+- CCMP certification + OpenExO AI-transformation method practice
 - GitHub projects that demonstrate understanding of AI (not engineering skill, but proof you know the tech)
 - Target format: resume (1-page PDF), LinkedIn, cover letter, application form
 
@@ -56,12 +62,12 @@ Ask for (or infer from context):
 A resume summary is three bolts stacked. Each is 1-2 sentences. No paragraph survives.
 
 1. **Headline bolt**: `[Role] who has shipped [X] systems and got teams to adopt new ways of working`
-   - *AI consultant who has shipped 40+ production systems and led teams through adoption of new workflows. Change management certified. Code at github.com/armchairfuturist-code.*
+   - *AI consultant who has shipped 40+ production systems and led teams through adoption of new workflows. CCMP-certified, practiced in the OpenExO AI-transformation method. Code at github.com/armchairfuturist-code.*
    - *People-facing AI specialist with 40+ shipped systems across 4 continents and a track record of getting teams to change how they work.*
 
 2. **Evidence bolt**: `[Strongest shipped result with metric]` or `[Team adoption win]`
    - "Delivered AI systems for clients across 4 continents. Got larger teams to adopt new workflows. Built autonomous AI pipelines that automate manual processes."
-   - "Led change management initiatives that got teams to adopt AI-powered workflows, cutting manual processes by [X]%."
+   - "Ran a parallel run on AI-powered workflows: human-override rate fell from [X]% to [Y]%, cutting manual processes by [Z]%."
 
 3. **Bridge bolt**: `[What you bring to this specific team]`
    - "Looking to bring this build-ship-adopt rhythm to [Company]'s [team/product]. I can both understand the tech and get people to use it."
@@ -79,7 +85,7 @@ Examples:
 - **Delivered AI workshops** that got [X] teams to adopt automated workflows, cutting manual processes by [X]%.
 - **Built autonomous AI pipelines** at github.com/armchairfuturist-code/[repo] that automated [capability]: then trained teams to maintain and extend them.
 - **Provided 100+ hours** of consulting on AI architecture, deployment, and change management across [X] clients.
-- **Applied CCMP change management** to [X] AI adoption pilots: started with the most adaptable 20% of employees, then scaled org-wide.
+- **Applied CCMP change management** to [X] AI adoption pilots: started with the most adaptable 20%, ran a parallel run until the override rate fell, then scaled org-wide.
 
 **Rules:**
 - Every bullet must *either* have a number *or* a GitHub link
@@ -97,7 +103,7 @@ Lead with what you've done that's relevant to them:
 > "I've shipped 40+ AI systems and gotten teams across 4 continents to adopt new ways of working. I'd bring that same build-ship-adopt rhythm to [Company]."
 
 ### Evidence (the core of the letter)
-> "I'm change management certified. I've delivered AI workflows that automated manual processes, then trained the teams to use them. Here's proof: github.com/armchairfuturist-code/[repo] shows I understand the tech. The adoption numbers show I can get people to use it."
+> "I'm CCMP-certified and I practice the OpenExO AI-transformation method. I've delivered AI workflows that automated manual processes, then trained the teams to use them. Here's proof: github.com/armchairfuturist-code/[repo] shows I understand the tech. The adoption numbers show I can get people to use it."
 
 ### Bridge (2-3 sentences)
 - Why this company? (specific: name their product, their blog post, their challenge with AI adoption)
@@ -122,7 +128,7 @@ This is a people-facing role. The screen is about AI knowledge and adoption abil
 | Topic | How to prepare |
 |---|---|
 | **AI knowledge** | Reference your 40+ shipped systems. "I've built [type of system] for [client]. I know how it works, and I know how teams adopt it." |
-| **Change management** | Your cert + experience. "I'm change management certified. I've led adoption initiatives that got teams to change how they work." |
+| **Change management** | Your cert + method + experience. "I'm CCMP-certified and I practice the OpenExO AI-transformation method. I run parallel runs until the override rate falls — that's real adoption, not a training count." |
 | **Training / enablement** | "I've delivered workshops on [topic]. I can explain AI concepts to non-technical stakeholders." |
 | **Product sense** | "I shipped [system] for [client type] which solved [problem]. Here's how I thought about the adoption challenge." |
 
@@ -165,7 +171,7 @@ Audit the profile against:
 
 | Element | Pass condition |
 |---|---|
-| **README/profile** | Says who you are: "AI consultant, trainer, and change management specialist. 40+ systems shipped. I get teams to adopt AI." |
+| **README/profile** | Says who you are: "AI consultant, trainer, and change management specialist (CCMP, OpenExO method). 40+ systems shipped. I get teams to adopt AI." |
 | **Pinned repos** | 3-6 repos that prove you understand AI: pipeline work, automation, agentic systems |
 | **README per repo** | Every pinned repo has a README: what it does, what problem it solves, what it automates |
 | **Commit activity** | Shows recent, consistent work. Not a graveyard. |
@@ -178,7 +184,7 @@ GitHub here is proof of AI literacy, not engineering skill. The hiring manager n
 
 | Element | Pass condition |
 |---|---|
-| **Headline** | States what you do with people + AI. Example: "AI Adoption Consultant \| 40+ Systems Shipped \| Change Management Certified \| Teams Adopt New Ways of Working" |
+| **Headline** | States what you do with people + AI. Example: "AI Adoption Consultant \| 40+ Systems Shipped \| CCMP \| OpenExO Method \| Teams Adopt New Ways of Working" |
 | **About section** | Opens with a hook about adoption, then evidence line, then bridge. No laundry lists. GitHub link in first 200 chars as proof of AI literacy. |
 | **Featured section** | Case studies from team adoption wins. GitHub repos as supporting proof, not the headline. |
 | **Activity** | At least 1 relevant post or engagement/week for the last 4 weeks. Share insights on AI adoption, change management, team training. |
@@ -191,7 +197,7 @@ For each failing element, produce exactly one **bolt** (1-2 sentence fix). No pa
 A case study for a shipped project has four parts:
 
 1. **Evidence line**: one sentence with the adoption impact. This is the headline. "AI workflow delivered in 2 days, team trained in 1 week, manual process cut by 80%."
-2. **Problem**: what was broken before. 2-3 sentences. Focus on the human side: hours wasted, frustration, resistance to change.
+2. **Problem**: what was broken before. 2-3 sentences. Focus on the human side: hours wasted, frustration, the immune system hardening against the new tool.
 3. **What I built**: architecture, tech stack, decisions. Link the repo. Focus on what it automates, not the code.
 4. **Outcome**: metric, adoption win, team behavior change. "Team now uses this daily. Response time cut from 4 hours to 90 seconds."
 

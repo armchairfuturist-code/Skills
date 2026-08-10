@@ -33,7 +33,7 @@ Examples:
 | Technical founders / CTOs | "shipped", "production", "architecture", "commits", "API", "open source" | "passionate", "certified", "accredited", "results-driven" | Direct, code-forward. Assume they'll inspect your repos. |
 | Recruiters / HR (non-technical) | "AI systems", "built for [industry]", "deployed across [clients]" | "RAG pipeline", "embedding", "prompt chaining" | Outcome-forward, technology in service of business value |
 | Product / Design (cross-functional) | "shipped", "product", "user", "iteration", "decision" | "metrics", "10x", "crushing it" | Collaboration-forward: how you work, not just what you built |
-| People / Ops leaders | "adoption", "enablement", "training", "rollout", "change management" | "10x", "crushing it", "evangelist" | Outcome-forward: hours reclaimed, teams onboarded, resistance bypassed |
+| People / Ops leaders | "adoption", "enablement", "training", "rollout", "change management" | "10x", "crushing it", "evangelist" | Outcome-forward: hours reclaimed, teams onboarded, override rate falling |
 
 ---
 
@@ -87,7 +87,7 @@ Two structures:
 
 Ready-to-adapt bolts for Alex Myers / The Armchair Futurist, applying to startup roles:
 
-**Headline:** AI adoption consultant: 40+ systems shipped, teams trained across 4 continents, change management certified (CCMP).
+**Headline:** AI adoption consultant: 40+ systems shipped, teams trained across 4 continents, CCMP-certified, practiced in the OpenExO AI-transformation method.
 
 **Evidence (adoption):** Led 8-week AI pilots that start with the most adaptable 20% of employees: rapid ROI first, then org-wide rollout. Clients reclaim 10-20 hours per week.
 
