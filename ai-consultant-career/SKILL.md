@@ -11,7 +11,7 @@ This skill is for job seekers targeting **people-facing AI roles at startups** (
 
 **Employment model:** You operate through your US LLC (Alex Myers Consulting LLC) as an independent contractor. You cannot accept W2 employment. Contract and retainer engagements are preferred. Full-time FTE is acceptable only if the company can pay your LLC. You also maintain existing training and coaching clients, so engagements must allow schedule flexibility.
 
-**Core premise:** Startups hire people who can make AI stick. Your GitHub is proof you understand the tech; your CCMP cert plus the OpenExO AI-transformation method you practice prove you can get teams to use it — and 40 shipped systems prove you can build what they adopt. Every application, interview answer, and portfolio piece should either surface a shipped system that automated a manual process or describe how you got a team to adopt new workflows.
+**Core premise:** Startups hire people who can make AI stick. Your GitHub is proof you understand the tech; your CCMP cert plus the OpenExO AI-transformation method you practice prove you can get teams to use it. Forty shipped systems prove you can build what they adopt. Every application, interview answer, and portfolio piece should either surface a shipped system that automated a manual process or describe how you got a team to adopt new workflows.
 
 **Target roles:** AI Adoption Consultant, AI Enablement Specialist, AI Change Management Consultant, Chief of Staff, Head of AI Adoption, AI People Operations, Strategic Generalist, AI Trainer, AI Workshop Lead, Executive Operations + AI Enablement. Contract, retainer, or FTE (paid to LLC).
 
@@ -24,10 +24,10 @@ This skill is for job seekers targeting **people-facing AI roles at startups** (
 - **Adoption-first**: the ordering rule for every bolt, bullet, letter, DM, and interview answer: lead with the team adoption win or consulting metric; GitHub proof supports, never headlines.
 - **Immune system**: the org's resistance mechanism that hardens against new tools. Don't fight it head-on; run a parallel path so the new way outperforms before the response locks in.
 - **Parallel run**: old way and new way side by side. The adoption signal is the human-override rate falling over time, not a training-completion count.
-- **Binding**: what retains high-judgment people after the workflow changes — their judgment steers the new system, who-decided-what is visible, the role is specific enough to matter. Friction no longer retains.
+- **Binding**: what retains high-judgment people after the workflow changes: their judgment steers the new system, who-decided-what is visible, the role is specific enough to matter. Friction no longer retains.
 - **Override rate**: how you tell adoption happened. A falling override rate means the team has actually switched; a training count does not.
 
-**Change management framework**: load `change-management-framework.md` when a branch needs the org-wide change method (workforce transition, retention, board governance, multi-cohort rollout). Carries the CCMP baseline plus the OpenExO AI-transformation method Alex practices — attributed, not claimed as original.
+**Change management framework**: load `change-management-framework.md` when a branch needs the org-wide change method (workforce transition, retention, board governance, multi-cohort rollout). Carries the CCMP baseline plus the OpenExO AI-transformation method Alex practices, attributed, not claimed as original.
 
 ---
 
@@ -128,7 +128,7 @@ This is a people-facing role. The screen is about AI knowledge and adoption abil
 | Topic | How to prepare |
 |---|---|
 | **AI knowledge** | Reference your 40+ shipped systems. "I've built [type of system] for [client]. I know how it works, and I know how teams adopt it." |
-| **Change management** | Your cert + method + experience. "I'm CCMP-certified and I practice the OpenExO AI-transformation method. I run parallel runs until the override rate falls — that's real adoption, not a training count." |
+| **Change management** | Your cert + method + experience. "I'm CCMP-certified and I practice the OpenExO AI-transformation method. I run parallel runs until the override rate falls. That is adoption, not a training count." |
 | **Training / enablement** | "I've delivered workshops on [topic]. I can explain AI concepts to non-technical stakeholders." |
 | **Product sense** | "I shipped [system] for [client type] which solved [problem]. Here's how I thought about the adoption challenge." |
 
@@ -264,7 +264,7 @@ For each tier, identify 3-5 companies. Research:
 - Never bluff about another offer
 - Always ask for one more thing after the first "yes". The first concession is often not the last.
 - If they can't move on rate, negotiate: contract length, minimum hours, start date, scope flexibility, advisor equity
-- For LLC payment: most tech startups (especially under 150 people) are amenable. Frame it as a benefit: no payroll taxes, no benefits, no HR overhead for them
+- For LLC payment: most tech startups under 150 people are amenable. Frame it as a benefit: no payroll taxes, no benefits, no HR overhead for them
 
 **Completion criterion:** at least one offer received with at least one negotiated term (comp, title, or flexibility).
 
@@ -279,7 +279,7 @@ Scan the web for roles that match the user's background. Use search and scraping
 
 Extract from context or ask:
 - **Target titles**: exact role names to search (e.g., "AI adoption consultant", "AI enablement specialist", "AI change management", "chief of staff AI", "people operations AI", "AI trainer", "strategic generalist AI")
-- **Target locations**: remote worldwide / global only. "Remote, US" or "Remote" that silently requires US residency is a dealbreaker. The user is a US citizen living in Portugal — they can work for US companies but cannot list a US address on applications.
+- **Target locations**: remote worldwide / global only. "Remote, US" or "Remote" that silently requires US residency is a dealbreaker. The user is a US citizen living in Portugal. They can work for US companies but cannot list a US address on applications.
 - **Company size**: under 150 people (startups preferred)
 - **Must-have**: change management, training/consulting, team adoption track record
 - **Dealbreakers**: pure engineering roles, on-site, hybrid, in-office, relocation required
@@ -318,7 +318,7 @@ For each unique role found:
    - **+1** if the company is a startup under 150 people
    - **+1** if remote-friendly
    - **+1** if it mentions consulting, coaching, or strategic generalist work
-   - **-2** if location is US-only (keywords: "Remote, US", "Remote — US", "United States", "must reside in", "US-based", specific US state names in location field, "Eastern/Central/Mountain/Pacific time zone" as a requirement). "Remote" with no location qualifier, "Remote worldwide", "Remote global", "Remote EMEA", "Remote Europe" are acceptable.
+   - **-2** if location is US-only (keywords: "Remote, US", "Remote - US", "United States", "must reside in", "US-based", specific US state names in location field, "Eastern/Central/Mountain/Pacific time zone" as a requirement). "Remote" with no location qualifier, "Remote worldwide", "Remote global", "Remote EMEA", "Remote Europe" are acceptable.
    - **-2** if it explicitly requires on-site, hybrid, or in-office (keywords: "on-site", "onsite", "in-office", "hybrid", "relocation required")
    - **-2** if it explicitly requires W2 employment only. The user operates via LLC (Alex Myers Consulting LLC) and requires C2C/1099 independent contractor arrangements.
    - **-1** if it's a pure engineering/developer role

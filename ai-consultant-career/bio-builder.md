@@ -18,7 +18,7 @@
 ### Niche Statement Framework (for LinkedIn About & Portfolio)
 
 A niche statement is three clauses separated by colons:
-> [What you build]: [who you'd build it for]: [what it unlocks]
+> [What you build]: [who you'd build it for]: [what it enables]
 
 Examples:
 - *Ship AI systems and get teams to adopt them: for early-stage startups: so new ways of working outlast the engagement.*
