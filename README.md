@@ -61,7 +61,7 @@ If you have not set these, the agent asks or infers them. It will not proceed wi
 
 ### What it does, step by step
 1. Anchor to goals. Load your profile. This is the fixed reference every later call measures against.
-2. Read the regime. It checks seven axes:
+2. Read the regime. It checks thirteen axes:
 - Valuation: are stocks expensive? (Shiller CAPE, Buffett Indicator, S&P 500 vs M2)
 - Complacency: is everyone pricing in zero risk? (VIX, credit spreads)
 - Macro: is a recession brewing? (yield curve)
@@ -69,7 +69,13 @@ If you have not set these, the agent asks or infers them. It will not proceed wi
 - Prediction markets: what are betting markets implying about recession and rate moves? (Polymarket)
 - Correlation: is diversification real? (equity pairwise, equity–bond)
 - Regime models: does statistical evidence agree? (HMM as one thin ensemble member, with probabilities, disagreement, and calibration—not an override)
-Each axis gets a verdict. Together they form one market pulse: EXPANSION, LATE CYCLE, CONTRACTION, or CRISIS. A bundled tool (`tools/market_pulse.py`) pulls every axis live — no API keys, nothing to install.
+- Fiscal and sovereign debt: can the government service its debt? (debt service as % of revenue, debt-to-GDP, credit-rating trend, maturity wall)
+- Currency and debasement: is the money losing value? (DXY, real rates, gold and bitcoin as debasement meters)
+- Money creation: is money being created or drained? (M2 growth, QE/QT regime)
+- Digital-asset regime: what is bitcoin pricing? (price vs 200-week MA, reserve-asset adoption)
+- Secular trend: secular bull or bear? (200-day/200-week moving averages)
+- Circular AI financing: is the AI capex cycle fragile or real? (vendor financing, cross-investment loops, token profitability)
+Each axis gets a verdict. The five market axes (valuation, complacency, macro, microstructure, prediction) form one market pulse: EXPANSION, LATE CYCLE, CONTRACTION, or CRISIS. Correlation, regime models, and the six structural/thematic axes (fiscal through AI-financing) apply as modifiers — defense floor, risk budget, and offense ceiling. The 2026 regime is "both truths at once": fiscal/currency fragility (defense) and the AI infrastructure/energy supercycle (offense) are simultaneously true, and neither vetoes the other. A bundled tool (`tools/market_pulse.py`) pulls the core axes live — no API keys, nothing to install; the six structural/thematic axes are read from web/primary sources until wired into the tool.
 3. Calibrate posture. The pulse meets your goals in a matrix. Late cycle plus a growth goal means trim and raise cash. Late cycle plus a preservation goal means cut equity to the floor. Same pulse, different posture.
 4. Optimize weights. A bundled stdlib optimizer (`tools/optimize.py`) runs return-free models—HRP by default, plus min-variance, risk parity, and inverse-volatility—with per-name caps, effective-N, CVaR, and correlation-shock stability. When available, maintained libraries add shrinkage covariance, Black–Litterman or Entropy-Pooling views, drawdown-aware optimization, and multi-period turnover/cost planning. Equal weight is the final fallback, not the default.
 5. Validate learned signals. A Qlib-style, tool-independent research contract requires point-in-time universes, immutable chronological splits, fold-local preprocessing, simple baselines, purged/embargoed walk-forward tests, IC/RankIC and decay diagnostics, capacity and execution costs, reproducible experiment records, and champion/challenger rollback rules. Forecast, portfolio policy, and execution remain separate. A model may affect views only after passing the promotion gate.
@@ -90,7 +96,9 @@ A posture brief with the profile, evidence-dated market pulse, confidence and mo
 The skill borrows useful research patterns from Qlib and tools catalogued by Awesome Quant without assuming any repository creates alpha. It favors deterministic baselines, point-in-time data, reproducible experiments, realistic execution, maintained libraries, and the smallest stack that closes a named gap. Deep learning, graph models, transformers, RL, LLM sentiment, synthetic scenarios, and model-zoo results never receive automatic allocation authority.
 
 ### The quick version
-Ask only about market conditions and the skill skips your portfolio. You get a compact pulse table: valuation, complacency, macro, overall. ### The dip/profit signal
+Ask only about market conditions and the skill skips your portfolio. You get a compact pulse table: valuation, complacency, macro, microstructure, prediction, fiscal, currency, money-creation, digital-asset, secular trend, AI-financing, overall.
+
+### The dip/profit signal
 Ask "should I buy this dip or take profits?" about any ETF and you get a score from 1 to 20. It counts how many of the fund's top holdings trade below their 200-week moving average. High scores mean the bucket is stretched — harvest it and build cash. Low scores mean the bucket is on sale — spend the cash the high scores told you to save. One mechanical loop: profits become reserves, reserves become dips.
 
 ## How to install and run

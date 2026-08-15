@@ -1,6 +1,6 @@
 # Individual Stock Screening
 
-When posture recommends sector or asset-class shifts that imply individual stock picks, source candidates then filter through three technical gates.
+When posture recommends sector or asset-class shifts that imply individual stock picks, source candidates then filter through five technical gates.
 
 ## Candidate sourcing
 
@@ -27,6 +27,10 @@ Generate 15–30 raw candidates per affected area before applying technical gate
 | Proximity to 52-week low | Price ≥ 70% above 52-week low | Screens out stocks trying to recover; requires stocks already proving they can trend higher |
 | Average Daily Range | ADR ≥ 4.5% | Big winners need room to run. Low-volatility stocks rarely become home runs |
 | Momentum structure | Above EMA 8 *and* EMA 21 | Confirms institutional accumulation and strong near-term momentum |
+| Secular trend | Price above 200-day MA | Long-cycle gate — separates secular bull from secular bear; EMA8/21 is traders' momentum, this is the cycle. (The 200-week MA is a *regime-level* signal — Phase 2K/2L — that applies to bitcoin/crypto, not individual stocks.) |
+| Lindy durability | Long operating history / franchise age | Durability filter — biases toward long-surviving franchises. Apply only when the posture is defensive/preservation; skip for growth postures (it systematically misses newly-dominant companies) |
+
+**Conditional gates:** Secular trend applies to every candidate — it is the long-cycle floor. Lindy applies only when the target posture is defensive/preservation; a growth or aggressive posture omits the Lindy gate because it would filter out exactly the newly-dominant companies the regime favors.
 
 ## Manual analysis (applied post-screener, not automated)
 
@@ -43,4 +47,4 @@ When adding a pick to an existing book, check pairwise correlation to the curren
 
 If the posture recommends a market-wide shift (e.g. "rotate to defensive" or "increase fixed income"), the screener applies to the **instruments used to execute the shift** — e.g. which defensive equities, not whether to go defensive.
 
-**Completion criterion:** At least one concrete stock-level example per affected portfolio area that passes all three technical gates, or an explicit note that no candidates survive the filter.
+**Completion criterion:** At least one concrete stock-level example per affected portfolio area that passes all *applicable* technical gates (five for defensive postures; four — omitting Lindy — for growth postures), or an explicit note that no candidates survive the filter.

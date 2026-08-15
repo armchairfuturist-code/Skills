@@ -78,13 +78,51 @@ Weight axes 2A–2E into the core pulse (EXPANSION / LATE CYCLE / CONTRACTION / 
 - CRISIS-CORR or CO-CRASH → raise non-equity hedge floors; name-count diversification is invalid
 - CO-CRASH + LATE CYCLE → duration is not the sole hedge; prefer cash/T-bills/collars
 
+**Structural/thematic axes (2H–2M)** apply as defense-floor / risk-budget / offense-ceiling modifiers via POSTURE.md "Axis → Posture Wiring". FISCAL DOMINANCE + DEBASEMENT set a hard real-asset floor; SECULAR BEAR caps total equity; REAL-GROWTH permits the AI/energy tilt. **Two-Truths rule:** fiscal/currency fragility (defense) and the AI infrastructure/energy supercycle (offense) are simultaneously true in 2026 — neither vetoes the other; they bind different sleeves. See POSTURE.md "The Two-Truths Regime" for falsification conditions.
+
 When AI/ML risk assessment is requested or data supports it, load [`AI_RISK.md`](AI_RISK.md). Keep facts, model estimates, and scenarios separate; model disagreement lowers confidence and position size.
 
 ### 2G — Statistical regime confirmation (optional)
 
 `tools/market_pulse.py` runs a thin 2-state Gaussian HMM. Treat it as one ensemble member, not an override. Prefer multiple windows/models or change-point confirmation; report regime probabilities, disagreement, sample size, and out-of-sample calibration. Follow [`AI_RISK.md`](AI_RISK.md) when adding ML.
 
-**Completion criterion:** Verdicts for 2A–2F each supported by at least one metric reading; synthesized pulse with explicit weighting rationale; modifiers (microstructure, correlation) stated; 2G present or explicitly skipped with gap noted.
+### 2H — Fiscal & sovereign debt: can the government service its debt?
+
+Check: **debt service as % of federal revenue**, **debt-to-GDP**, **credit-rating trend**, **maturity wall** (thresholds in METRICS.md).
+
+Verdict: HEALTHY / WATCH / STRESSED / FISCAL DOMINANCE
+
+### 2I — Currency & debasement: is the money itself losing value?
+
+Check: **DXY**, **real rates**, **gold & bitcoin as debasement meters**.
+
+Verdict: DOLLAR STRONG / NEUTRAL / DEBASEMENT
+
+### 2J — Money creation: is money being created or drained?
+
+Check: **M2 growth YoY**, **QE/QT regime**, **bank reserves**. (Distinct from 2D market-structure liquidity — this is the *monetary quantity*.)
+
+Verdict: DRAIN / NEUTRAL / PRINTING
+
+### 2K — Digital-asset regime signal: what is bitcoin pricing?
+
+Check: **bitcoin vs 200-week MA**, **reserve-asset adoption**.
+
+Verdict: SECULAR BULL / INFLECTION / SECULAR BEAR
+
+### 2L — Secular trend: are we in a secular bull or bear?
+
+Check: **price vs 200-day MA (equities) and 200-week MA (bitcoin)**. Complements the 200-week-MA *breadth* gauge in SIGNALS.md.
+
+Verdict: SECULAR BULL / LATE-CYCLE BULL / SECULAR BEAR
+
+### 2M — Circular AI financing: is the AI capex cycle fragile or real?
+
+Check: **vendor financing / depreciation insurance**, **cross-investment loops**, **token profitability** (Dell's 1Q→57Q revision and Goldman's higher projection — dated vendor/desk forecasts, not fact).
+
+Verdict: FRAGILE / NEUTRAL / REAL-GROWTH
+
+**Completion criterion:** Verdicts for 2A–2M each supported by at least one metric reading; synthesized pulse with explicit weighting rationale; modifiers (microstructure, correlation, and structural/thematic 2H–2M) stated; 2G present or explicitly skipped with gap noted.
 
 ### Tool fallback
 

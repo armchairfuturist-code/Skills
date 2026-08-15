@@ -136,6 +136,118 @@ CRISIS-CORR or CO-CRASH modifies the pulse alongside liquidity stress:
 - CO-CRASH + LATE CYCLE → duration is not the hedge; prefer T-bills, collars, or trend/alt premia
 - DIVERSIFIED + EXPANSION → stock-level [`SCREENING.md`](SCREENING.md) picks and sector tilts are justified
 
+## Fiscal & Sovereign Debt
+
+The dominant 2026 regime driver — debt service, not valuation, is the binding constraint.
+
+### Debt service — interest as % of federal revenue
+| % of revenue | Verdict |
+|---|---|
+| < 10% | HEALTHY |
+| 10-15% | WATCH |
+| 15-25% | STRESSED |
+| > 25% | FISCAL DOMINANCE — debt service crowds out spending; the Fed cannot hike without blowing up the debt it is financing |
+
+### Debt-to-GDP
+| Ratio | Verdict |
+|---|---|
+| < 60% | HEALTHY |
+| 60-100% | ELEVATED |
+| 100-130% | CRISIS-PRONE (Argentina blew up at 55% in 2001 — ratio alone is not the trigger) |
+| > 130% | EXTREME |
+
+### Sovereign credit-rating trend
+Downgrades matter more than the level. The US lost its last AAA (Moody's) May 2025; S&P went 2011, Fitch 2023.
+| Trend | Verdict |
+|---|---|
+| Stable / upgrade | NEUTRAL |
+| One downgrade | WATCH |
+| Full sweep (all three agencies) | STRUCTURAL — "paper can't back paper" |
+
+### Maturity wall / refinancing
+| Signal | Verdict |
+|---|---|
+| Long-duration, low-rate legacy debt | BUFFERED |
+| Large near-term refinancing at 2-3x the old coupon | REFINANCING RISK |
+
+## Currency & Debasement
+
+### DXY (US Dollar Index)
+| Level / trend | Verdict |
+|---|---|
+| Rising | DOLLAR STRONG — risk-off, deflationary pressure |
+| Range-bound | NEUTRAL |
+| Falling (multi-quarter) | DEBASEMENT — de-dollarization bid into gold and bitcoin |
+
+**Caveat:** DXY is *relative* (weighted mostly vs EUR/JPY/GBP) — a falling DXY can mean foreign-currency strength, not USD debasement. Gold and BTC price are the better *absolute* debasement meters; use DXY as a confirm, not the primary signal.
+
+### Real rates (nominal minus inflation expectations)
+| Real rate | Verdict |
+|---|---|
+| Rising | TIGHT — pressure on all long-duration assets. Note: high real yields can also BE the debasement mechanism (fiscal-risk premia), not its absence. |
+| Falling / collapsing | DEBASEMENT REGIME — "real rates are going to collapse" |
+
+### Gold & BTC as debasement meters
+Rising gold + BTC against a flat/falling DXY = debasement *expectation*. If real yields are still high, debasement is *priced, not realized* — the defense captures the real yield (TIPS) AND insures the eventual debasement (gold/BTC).
+
+## Money Creation
+
+Separate from market-microstructure liquidity (2D). This is the *quantity* of money.
+
+### M2 growth (YoY)
+| Growth | Verdict |
+|---|---|
+| Contracting | QT — liquidity draining |
+| 0-5% | NEUTRAL |
+| > 5% and accelerating | MONEY PRINTING — debasement tailwind |
+
+### QE/QT regime + bank reserves
+| Regime | Verdict |
+|---|---|
+| QT (balance-sheet runoff) | DRAIN |
+| Neutral | NEUTRAL |
+| QE (reserve expansion) | PRINTING — asset tailwind, currency headwind |
+
+## Digital-Asset Regime Signal
+
+Bitcoin is the cleanest real-time debasement meter and the subject of the sovereign-reserve narrative (Fidelity: "fading dollar dominance reinforces structural bid for bitcoin").
+
+### Bitcoin vs 200-week moving average
+| Position | Verdict |
+|---|---|
+| Price > 200w MA | SECULAR BULL |
+| Testing 200w MA | INFLECTION — the line has never broken in 15 years; treat as the highest-leverage risk gate |
+| Price < 200w MA | SECULAR BEAR |
+
+(Complementary to the 200-week-MA *breadth* gauge in SIGNALS.md — that sizes the cash cycle; this reads the asset's own secular trend.)
+
+## Secular Trend Filter
+
+The screener's EMA8/21 is a *traders'* gate. This is the long-cycle gate — "secular bull or secular bear?"
+
+### 200-day / 200-week MA (equities / bitcoin)
+| Position | Verdict |
+|---|---|
+| Price above both | SECULAR BULL |
+| Above 200d, below 200w | LATE-CYCLE BULL |
+| Below both | SECULAR BEAR |
+
+## Circular AI Financing
+
+The bear thesis: "AI is a circular financing web with Nvidia in the middle." Test it against the *profitability* fact, not the headline. Data provenance: Dell's end-2028 inference estimate moved from ~1 quadrillion to 57 quadrillion tokens/month inside one year (per Dell, 2025 to 2026); Goldman projects an order of magnitude above Dell's revised figure. State these as dated vendor/desk forecasts, not fact.
+
+### Fragility signals (concentration risk — not a collapse thesis)
+- Vendor financing — Nvidia's "depreciation insurance" on GPUs (a textbook late-cycle tell)
+- Cross-investment loops — Nvidia to OpenAI to Nvidia; ~$879B in circular commitments
+- Revenue concentration on circular counterparties (Eisman: ~70% of AI revenue from OpenAI/Anthropic)
+
+### The counter — token profitability
+The circular-financing bear case rests on one assumption: tokens are subsidized. Current evidence says otherwise — the overwhelming majority of tokens are profitable for everyone in the chain (OpenAI, Anthropic, open-source, infrastructure), and agents (not just humans) become the larger share of purchased tokens.
+
+Verdict: FRAGILE (concentration) / NEUTRAL / REAL-GROWTH.
+
+**Note — FRAGILE and REAL-GROWTH are not mutually exclusive.** Fragility measures financing concentration; REAL-GROWTH measures token profitability. A cycle can be both concentrated AND profitable at once. Read them as two sub-signals, not opposite ends of one scale.
+
 ## Statistical Regime Confirmation (optional)
 
 When regime tools are available, use them as an ensemble confirmation layer—not a replacement. Compare HMM/Markov-switching with a different family such as change-point detection or volatility clustering. Follow [`AI_RISK.md`](AI_RISK.md).
