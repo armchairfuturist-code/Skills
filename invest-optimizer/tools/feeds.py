@@ -180,6 +180,92 @@ def ma200w(ticker, weeks=200):
     return {"price": price, "ma": ma, "dist": price / ma - 1.0, "asof": wc[-1][0]}
 
 
+# --- structural/thematic feeds (2H-2M) -----------------------------------------
+def _ma_n(daily, n):
+    """Price vs n-day MA from daily [(date, close)]; None if too short."""
+    if len(daily) < n:
+        return None
+    closes = [c for _, c in daily[-n:]]
+    ma = sum(closes) / n
+    price = closes[-1]
+    return {"price": price, "ma": ma, "dist": price / ma - 1.0, "asof": daily[-1][0]}
+
+
+def ma200(ticker):
+    return _ma_n(history_long(ticker), 200)
+
+
+def btc_200w():
+    """BTC 200-week MA from Kraken public weekly OHLC (free, no key)."""
+    url = "https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=10080"
+    data = json.loads(fetch(url))
+    result = data.get("result", {})
+    key = next(iter(result), None)
+    candles = result.get(key, []) if key else []
+    closes = [(datetime.fromtimestamp(int(c[0]), timezone.utc).strftime("%Y-%m-%d"),
+               float(c[4])) for c in candles]
+    closes.sort()
+    if len(closes) < 200:
+        return None
+    ma = sum(c for _, c in closes[-200:]) / 200
+    price = closes[-1][1]
+    return {"price": price, "ma": ma, "dist": price / ma - 1.0, "asof": closes[-1][0]}
+
+
+def _change_since(series, days):
+    """% change vs ~N days ago from a chronological (date, value) series."""
+    last_d, last_v = series[-1]
+    target = (date.fromisoformat(last_d) - timedelta(days=days)).isoformat()
+    prev = None
+    for d, v in series:
+        if d <= target:
+            prev = (d, v)
+    if prev is None:
+        return None
+    return {"asof": last_d, "value": (last_v / prev[1] - 1.0) * 100, "prev_asof": prev[0]}
+
+
+def dxy():
+    """Fed nominal advanced-economies dollar index (free DXY-like proxy)."""
+    return fred_series("DTWEXAFEGS")[-1]
+
+
+def real_rate_10y():
+    return fred_series("DFII10")[-1]
+
+
+def m2_yoy():
+    return _change_since(fred_series("M2SL"), 365)
+
+
+def fed_balance_sheet_3m():
+    return _change_since(fred_series("WALCL"), 91)
+
+
+def debt_to_gdp():
+    return fred_series("GFDEGDQ188S")[-1]
+
+
+def interest_to_revenue():
+    """Federal interest payments / receipts (%) — the fiscal-dominance metric."""
+    i = fred_series("A091RC1Q027SBEA")[-1]
+    r = fred_series("W006RC1Q027SBEA")[-1]
+    return {"asof": i[0], "value": i[1] / r[1] * 100}
+
+
+def gold_yoy():
+    daily = history_long("GLD")
+    last_d, last_v = daily[-1]
+    target = (date.fromisoformat(last_d) - timedelta(days=364)).isoformat()
+    prev = None
+    for d, v in daily:
+        if d <= target:
+            prev = (d, v)
+    if prev is None:
+        return None
+    return {"asof": last_d, "value": (last_v / prev[1] - 1.0) * 100, "prev_asof": prev[0]}
+
+
 # --- ETF holdings (SSR page scrape) ----------------------------------------------
 def holdings(etf, top=25):
     """Top holdings [(symbol, weight_pct)] from the stockanalysis holdings page.
