@@ -1,6 +1,7 @@
 ---
 name: calibrate-longevity
 description: Turn bloodwork, DNA, CGM, and health-tracker data into a ranked longevity optimization plan — supplements, peptides, GLP-1s, and research compounds. Use when the user shares lab results, wants a longevity/biohacking protocol, mentions peptides/NAD+/rapamycin/GLP-1, or asks about biological age or methylation clocks.
+disable-model-invocation: true
 ---
 
 # calibrate-longevity

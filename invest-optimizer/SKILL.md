@@ -1,6 +1,7 @@
 ---
 name: invest-optimizer
 description: "Portfolio posture, market pulse, dip/profit signals, and allocation risk. Use for portfolio reviews or shifts, market-condition reads, buy-the-dip/profit-taking questions, and risk-aware target weights."
+disable-model-invocation: true
 ---
 
 # Invest Optimizer
