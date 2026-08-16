@@ -415,13 +415,13 @@ If the user wants recurring searches:
 
 Every output line follows these constraints. The models in bio-builder.md, proposal-templates.md, and resume examples demonstrate the correct shape. Check every generated piece against these rules before outputting.
 
-The exhaustive banned-word, filler, phrase, and pattern lists live in the sibling `no-ai-slop/` folder (vendored from github.com/petergyang/no-ai-slop): `SKILL.md` enumerates what to cut, `eval.md` is the pass/fail checklist. This skill is stricter than the vendored defaults on three points:
+The exhaustive banned-word, filler, phrase, and pattern lists live in the `no-ai-slop` skill at `/home/alex/.agents/skills/no-ai-slop/` (vendored from github.com/petergyang/no-ai-slop): `SKILL.md` enumerates what to cut, `eval.md` is the pass/fail checklist. This skill is stricter than the vendored defaults on three points:
 
 - **Filler:** additionally cut `essentially`, `quite`, `somewhat`, `rather`, `fairly`, `a bit`, `extremely`, `incredibly`, `remarkably`, `absolutely`, `especially`, `really`, `very`, `highly`, `critically` (the vendored list allows some of these when they carry emphasis).
 - **Em-dashes:** the vendored skill tolerates 1-2 in long drafts; this skill tolerates none. Use hyphens (-) or colons (:) exclusively.
 - **One sentence, one claim:** the vendored untangle rule is looser; resume bullets need the strict version.
 
-**Completion criterion:** every resume, cover letter, outreach message, and interview answer passes the `no-ai-slop/eval.md` checklist with zero violations, plus the stricter points above.
+**Completion criterion:** every resume, cover letter, outreach message, and interview answer passes the `/home/alex/.agents/skills/no-ai-slop/eval.md` checklist with zero violations, plus the stricter points above.
 
 #### Structural rules
 
@@ -432,6 +432,6 @@ The exhaustive banned-word, filler, phrase, and pattern lists live in the siblin
 
 #### Anti-slop check
 
-Before outputting any written piece, read it back against the lists in the sibling `no-ai-slop/` folder plus the stricter points above. A line that could open a generic LinkedIn post gets cut. The general Rules above apply: every number traces to a real result, the user's voice stays intact, and the Recruiter Critic runs a silent mental critique from a skeptical startup recruiter's perspective. Reject anything generic, empty, or lacking tangible evidence.
+Before outputting any written piece, read it back against the lists in `/home/alex/.agents/skills/no-ai-slop/` plus the stricter points above. A line that could open a generic LinkedIn post gets cut. The general Rules above apply: every number traces to a real result, the user's voice stays intact, and the Recruiter Critic runs a silent mental critique from a skeptical startup recruiter's perspective. Reject anything generic, empty, or lacking tangible evidence.
 
-**Post-generation check:** for long-form outputs (cover letters, case studies, LinkedIn About sections), run the edit workflow: read the full draft, identify core point and voice signals to preserve, make minimum effective changes, then verify against `eval.md` in the sibling `no-ai-slop/` folder (vendored from github.com/petergyang/no-ai-slop). Employers screen application copy for AI writing patterns: if any check fails, fix and re-check.
+**Post-generation check:** for long-form outputs (cover letters, case studies, LinkedIn About sections), run the edit workflow: read the full draft, identify core point and voice signals to preserve, make minimum effective changes, then verify against `eval.md` in `/home/alex/.agents/skills/no-ai-slop/` (vendored from github.com/petergyang/no-ai-slop). Employers screen application copy for AI writing patterns: if any check fails, fix and re-check.
