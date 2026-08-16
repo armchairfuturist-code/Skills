@@ -80,6 +80,84 @@ A **secular/sector supercycle** (e.g. an "AI macro nexus" — token demand, comp
 - Treat any secular narrative as *one strategist's thesis to weight*, not doctrine. State the source and the condition that would falsify it (e.g. "token demand growth decelerates below compute supply growth").
 - Common overlay candidates: AI/semiconductor infrastructure, energy/power (grid, nuclear/SMR, utilities feeding load growth), digital assets / crypto-forward (BTC, stablecoin legislation, Treasury digital-asset posture). Source candidates per SCREENING.md's thematic buckets.
 
+## Axis → Posture Wiring (structural axes 2H–2M)
+
+The matrix maps the core pulse (2A–2E) to posture. The six structural/thematic axes (2H–2M) are wired directly — every verdict has a defined consequence. No axis is read without a defined portfolio consequence.
+
+**Risk-budget axis** (secular trend, 2L) caps *total* equity.
+**Defense axes** (fiscal 2H, currency 2I, money-creation 2J) set the *floor* on hedges.
+**Offense axes** (digital-asset 2K, AI-financing 2M) set the *ceiling* on the thematic tilt.
+
+### Fiscal (2H) → defense floor
+| Verdict | Consequence |
+|---|---|
+| HEALTHY | Standard duration |
+| WATCH | Bias short duration |
+| STRESSED | Short duration + TIPS + gold/BTC sleeve |
+| FISCAL DOMINANCE | Hard floor on hedges; real assets (gold/BTC/commodities) become core, not satellite |
+
+### Currency (2I) → real-asset tilt
+| Verdict | Consequence |
+|---|---|
+| DOLLAR STRONG | Foreign exposure unhedged OK |
+| NEUTRAL | Maintain |
+| DEBASEMENT | Overweight gold/BTC/real assets; underweight nominal long bonds |
+
+### Money creation (2J) → cash & risk posture
+| Verdict | Consequence |
+|---|---|
+| DRAIN | De-risk; raise cash; expect vol |
+| NEUTRAL | Maintain |
+| PRINTING | Real-asset tilt; nominal cash is the liability |
+
+### Digital-asset (2K) → crypto sleeve
+| Verdict | Consequence |
+|---|---|
+| SECULAR BULL | BTC/ETH sleeve at full permitted weight |
+| INFLECTION | Halve crypto sleeve; wait for the 200w MA to resolve |
+| SECULAR BEAR | Crypto sleeve to zero; no dip-buying |
+
+### Secular trend (2L) → risk budget
+| Verdict | Consequence |
+|---|---|
+| SECULAR BULL | Full equity budget; buy dips |
+| LATE-CYCLE BULL | Reduce equity; add defense |
+| SECULAR BEAR | Minimum equity; capital preservation |
+
+### AI-financing (2M) → offense composition
+| Verdict | Consequence |
+|---|---|
+| FRAGILE | AI sleeve capped; diversify within compute/energy |
+| NEUTRAL | Standard AI tilt |
+| REAL-GROWTH | Full AI/energy tilt permitted — the outsize-return sleeve |
+
+### How the layers compose
+
+1. **Base posture** = matrix[ pulse(2A–2E) × goal ].
+2. **Risk budget** = the tighter cap on total equity from valuation (2A, in the pulse) and secular trend (2L). When they conflict, the more conservative wins — both are risk-reduction signals, so take the lower equity ceiling.
+3. **Defense floor** = the most defensive consequence across 2H–2J. Sets the minimum duration/cash/real-asset allocation — can only raise the floor, never lower it.
+4. **Offense ceiling** = the more permissive consequence across 2K and 2M. Sets the maximum thematic tilt within the equity band — can only lower the ceiling, never raise it above the risk budget.
+5. **Income instrument** = 2D overrides the instrument, not the allocation.
+6. **Conviction** = 2E confirms or flags tension; 2F (correlation) adjusts hedge composition.
+
+## The Two-Truths Regime — fiscal fragility AND the AI supercycle are simultaneously true
+
+The 2026 setup is not "bearish OR bullish." It is both, in different layers, and the skill must hold both without letting one veto the other.
+
+**Truth 1 — the fiscal/currency layer is genuinely fragile.** $3B/day debt service, debasement as the crowd's assumed endgame, de-dollarization bid into gold/BTC. This governs **defense**: duration, cash, non-correlated assets, and hedges stay at their regime minimums regardless of AI conviction.
+
+**Truth 2 — the AI infrastructure/energy layer is the only theme with outsize relative returns.** The market has never underestimated a growth curve the way it is underestimating AI token generation. Dell's end-2028 inference estimate moved from ~1 quadrillion to 57 quadrillion tokens/month inside a single year (a ~57× revision); Goldman projects an order of magnitude higher. And the companies are profitable — the "tokens are subsidized" assumption that powers the circular-financing bear thesis is simply wrong.
+
+**How to hold both:**
+- The regime read (Phase 2) governs **defense**. Fiscal/currency fragility keeps the hedge layers at their minimums.
+- The AI supercycle governs **offense**. The equities sleeve tilts hard toward compute, power/energy, and the token economy *within* the bands the pulse already permits. The tilt spans multiple sectors (compute/semis, power/utilities, digital-assets), so it concentrates within the offense sleeve but spreads across sectors — it does not breach the per-sector ceiling.
+- Do NOT let the circular-financing bear thesis veto the AI sleeve, and do NOT let AI conviction veto the fiscal hedges. They are different layers.
+- The 1999 precedent is only half the story: broad valuations were late-cycle *while* networking/semis compounded — but 1999 had no $3B/day debt service and no 57× token-growth revision. The 2026 setup is more extreme on both axes.
+
+**Falsification conditions (state explicitly, never as doctrine):**
+- AI thesis breaks if token demand growth decelerates below compute supply growth, OR "profitable tokens" is disproven (a major chain player reports subsidized, loss-making tokens at scale).
+- Fiscal thesis breaks if debt service as % of revenue falls back below ~15%, OR a credible fiscal-consolidation path materializes.
+
 ## Return-of-Capital & Margin-Income Note
 
 Option-income ETFs (CHPY, AMDY, NVDY, QQQI, SPYI, Roundhill 0DTE, etc.) distribute heavily from **return of capital (ROC)** and option premium. High "distribution yield" is **not** income you keep — it is partly your own NAV handed back, and NAV can erode.

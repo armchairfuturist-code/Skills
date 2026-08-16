@@ -9,6 +9,12 @@ One run covers every regime axis, each mapped to METRICS.md verdicts:
   2E prediction     Polymarket gamma-api: recession + fed hike (+ extra search terms as args)
   2F correlation    60d pairwise SPY/QQQ/SMH + SPY-IEF equity-bond (stockanalysis)
   2G HMM regime     2-state Gaussian HMM on SPY daily returns (thin: ~125 obs — tension flag only)
+  2H fiscal         debt-to-GDP (FRED GFDEGDQ188S), interest/revenue (FRED), credit-rating + maturity wall (manual)
+  2I currency       DXY proxy (FRED DTWEXAFEGS), 10y TIPS real yield (FRED DFII10), gold GLD YoY
+  2J money          M2 YoY (FRED M2SL), Fed balance sheet 3m (FRED WALCL)
+  2K digital-asset  BTC vs 200-week MA (Kraken weekly OHLC)
+  2L secular        SPY 200-day + 200-week MA (stockanalysis)
+  2M ai-financing   circular AI financing (manual — web/primary sources)
 
 Every axis fails soft (verdict GAP); a missing reading downgrades that axis,
 the brief still ships. Verdict thresholds mirror METRICS.md — edit both or neither.
@@ -44,6 +50,27 @@ def pair_v(r): return ("DIVERSIFIED" if r < 0.3 else "NORMAL" if r < 0.5 else
 def ballast_v(r): return "BALLAST-OK" if r < -0.2 else ("WEAK-BALLAST" if r < 0.2 else "CO-CRASH")
 def recession_v(p): return ("RECESSION (p>=0.30)" if p >= 0.30 else
                             "NEUTRAL (0.10-0.29)" if p >= 0.10 else "BULLISH (p<0.10)")
+
+def debt_gdp_v(v): return ("HEALTHY" if v < 60 else "ELEVATED" if v < 100 else
+                           "CRISIS-PRONE" if v < 130 else "EXTREME")
+def debt_service_v(v): return ("HEALTHY" if v < 10 else "WATCH" if v < 15 else
+                               "STRESSED" if v < 25 else "FISCAL DOMINANCE")
+def dxy_v(yoy): return ("DOLLAR STRONG" if yoy > 2 else "DEBASEMENT" if yoy < -2 else "NEUTRAL")
+def real_rate_v(v): return ("TIGHT (high)" if v > 1.5 else "NEUTRAL" if v > 0 else "DEBASEMENT REGIME (negative)")
+def m2_v(yoy): return ("PRINTING" if yoy > 5 else "NEUTRAL" if yoy >= 0 else "QT (contracting)")
+def qeqt_v(chg): return ("PRINTING (QE)" if chg > 1 else "NEUTRAL" if chg > -1 else "DRAIN (QT)")
+def btc_200w_v(dist): return ("SECULAR BULL" if dist > 0.05 else
+                              "INFLECTION (testing 200w)" if dist >= -0.05 else "SECULAR BEAR")
+def secular_v(d200, d200w):
+    if d200 is None or d200w is None:
+        return "GAP (insufficient history)"
+    a = d200["dist"] > 0
+    b = d200w["dist"] > 0
+    if a and b: return "SECULAR BULL"
+    if a and not b: return "LATE-CYCLE BULL"
+    return "SECULAR BEAR"
+
+
 
 
 # --- axis builders -------------------------------------------------------------
@@ -173,6 +200,111 @@ def axis_hmm():
         return [{"metric": "2G HMM", "verdict": f"GAP ({e})"}]
 
 
+def axis_fiscal():
+    rows = []
+    try:
+        d, v = feeds.debt_to_gdp()
+        rows.append({"metric": "Debt-to-GDP", "value": round(v, 1), "asof": d, "verdict": debt_gdp_v(v)})
+    except Exception as e:
+        rows.append({"metric": "Debt-to-GDP", "verdict": f"GAP ({e})"})
+    try:
+        m = feeds.interest_to_revenue()
+        rows.append({"metric": "Interest / federal revenue", "value": round(m["value"], 1),
+                     "asof": m["asof"], "verdict": debt_service_v(m["value"])})
+    except Exception as e:
+        rows.append({"metric": "Interest / revenue", "verdict": f"GAP ({e})"})
+    rows.append({"metric": "Credit-rating trend", "verdict": "MANUAL - full sweep (S&P 2011, Fitch 2023, Moody's May 2025)"})
+    rows.append({"metric": "Maturity wall", "verdict": "MANUAL - near-term refi at 2-3x old coupon = risk"})
+    return rows
+
+
+def axis_currency():
+    rows = []
+    try:
+        d, v = feeds.dxy()
+        yoy = feeds._change_since(feeds.fred_series("DTWEXAFEGS"), 365)
+        note = "DXY is relative (EUR/JPY/GBP) - gold/BTC are the better absolute meters"
+        if yoy:
+            note += f"; YoY {yoy['value']:.1f}%"
+        rows.append({"metric": "DXY proxy (Fed adv. economies)", "value": round(v, 2), "asof": d,
+                     "verdict": dxy_v(yoy["value"]) if yoy else "NEUTRAL", "note": note})
+    except Exception as e:
+        rows.append({"metric": "DXY", "verdict": f"GAP ({e})"})
+    try:
+        d, v = feeds.real_rate_10y()
+        rows.append({"metric": "10y TIPS real yield", "value": round(v, 2), "asof": d, "verdict": real_rate_v(v),
+                     "note": "high real yields can BE the debasement mechanism (fiscal premia), not its absence"})
+    except Exception as e:
+        rows.append({"metric": "10y real rate", "verdict": f"GAP ({e})"})
+    try:
+        g = feeds.gold_yoy()
+        rows.append({"metric": "Gold (GLD) YoY", "value": round(g["value"], 1), "asof": g["asof"],
+                     "verdict": "rising = debasement bid" if g["value"] > 0 else "falling"})
+    except Exception as e:
+        rows.append({"metric": "Gold (GLD)", "verdict": f"GAP ({e})"})
+    return rows
+
+
+def axis_money():
+    rows = []
+    try:
+        m = feeds.m2_yoy()
+        rows.append({"metric": "M2 YoY", "value": round(m["value"], 1), "asof": m["asof"],
+                     "verdict": m2_v(m["value"]), "note": f"vs {m['prev_asof']}"})
+    except Exception as e:
+        rows.append({"metric": "M2 YoY", "verdict": f"GAP ({e})"})
+    try:
+        b = feeds.fed_balance_sheet_3m()
+        rows.append({"metric": "Fed balance sheet 3m", "value": round(b["value"], 1), "asof": b["asof"],
+                     "verdict": qeqt_v(b["value"]), "note": "QT=shrinking, QE=expanding"})
+    except Exception as e:
+        rows.append({"metric": "Fed balance sheet", "verdict": f"GAP ({e})"})
+    return rows
+
+
+def axis_digital():
+    try:
+        b = feeds.btc_200w()
+        if b is None:
+            return [{"metric": "BTC vs 200-week MA", "verdict": "GAP (young/no history)"}]
+        return [{"metric": "BTC vs 200-week MA",
+                 "value": "$" + format(b["price"], ",.0f") + " vs $" + format(b["ma"], ",.0f") + " (" + format(b["dist"]*100, "+.1f") + "%)",
+                 "asof": b["asof"], "verdict": btc_200w_v(b["dist"]),
+                 "note": "never broken in 15y - highest-leverage risk gate"}]
+    except Exception as e:
+        return [{"metric": "BTC 200-week MA", "verdict": f"GAP ({e})"}]
+
+
+def axis_secular():
+    rows = []
+    try:
+        d200 = feeds.ma200("SPY")
+        rows.append({"metric": "SPY vs 200-day MA",
+                     "value": format(d200["dist"]*100, "+.1f") + "%" if d200 else "n/a",
+                     "asof": d200["asof"] if d200 else None,
+                     "verdict": ("ABOVE" if d200["dist"] > 0 else "BELOW") if d200 else "GAP"})
+    except Exception as e:
+        rows.append({"metric": "SPY 200d", "verdict": f"GAP ({e})"})
+    try:
+        d200w = feeds.ma200w("SPY")
+        rows.append({"metric": "SPY vs 200-week MA",
+                     "value": format(d200w["dist"]*100, "+.1f") + "%" if d200w else "n/a",
+                     "asof": d200w["asof"] if d200w else None,
+                     "verdict": ("ABOVE" if d200w["dist"] > 0 else "BELOW") if d200w else "GAP"})
+    except Exception as e:
+        rows.append({"metric": "SPY 200w", "verdict": f"GAP ({e})"})
+    try:
+        rows.append({"metric": "Secular trend (200d + 200w)",
+                     "verdict": secular_v(feeds.ma200("SPY"), feeds.ma200w("SPY"))})
+    except Exception as e:
+        rows.append({"metric": "Secular trend", "verdict": f"GAP ({e})"})
+    return rows
+
+
+def axis_ai_financing():
+    return [{"metric": "Circular AI financing (2M)", "verdict": "MANUAL - web/primary sources",
+             "note": "vendor financing, cross-investment loops, token profitability (Dell 1Q->57Q, Goldman higher) - qualitative, not computed"}]
+
 # --- main -----------------------------------------------------------------------
 def main():
     extra = [a for a in sys.argv[1:] if a != "--json"]
@@ -183,7 +315,13 @@ def main():
               "2D microstructure": axis_microstructure(),
               "2E prediction": axis_prediction(extra),
               "2F correlation": axis_correlation(),
-              "2G hmm": axis_hmm()}
+              "2G hmm": axis_hmm(),
+              "2H fiscal": axis_fiscal(),
+              "2I currency": axis_currency(),
+              "2J money": axis_money(),
+              "2K digital-asset": axis_digital(),
+              "2L secular": axis_secular(),
+              "2M ai-financing": axis_ai_financing()}
 
     if "--json" in sys.argv:
         print(json.dumps(report, indent=1))

@@ -23,7 +23,7 @@ and gotten the teams behind them to change how they work: [1-sentence
 adoption win with metric relevant to their challenge].
 
 ### Evidence (the core)
-I'm change management certified (CCMP). I've delivered AI workflows that
+I'm CCMP-certified and I practice the OpenExO AI-transformation method. I've delivered AI workflows that
 automated manual processes, then trained the teams to run them. Proof I
 understand the tech: github.com/armchairfuturist-code/[repo]. The adoption
 numbers prove I can get people to use it.
@@ -55,7 +55,7 @@ Use when someone at the company (or a mutual connection) agrees to make an intro
 Hi [Name],
 
 [Referral Name] suggested I connect. I help teams adopt AI: 40+ systems
-shipped, teams trained across 4 continents, change management certified.
+shipped, teams trained across 4 continents, CCMP-certified, practiced in the OpenExO AI-transformation method.
 I'm exploring contract and retainer engagements (paid to my LLC) with
 companies working on [industry/sector], and [Company]'s work on [product]
 caught my eye.
@@ -78,7 +78,7 @@ Use when direct-messaging a recruiter, hiring manager, or tech lead on LinkedIn.
 Hi [Name],
 
 I get teams to adopt AI: 40+ systems shipped, teams trained across 4
-continents, change management certified. [Company]'s [product/team] looks
+continents, CCMP-certified, practiced in the OpenExO AI-transformation method. [Company]'s [product/team] looks
 like a place where adoption is the hard part. That's the work I do.
 
 Would you have a few minutes to see if there's a match?
