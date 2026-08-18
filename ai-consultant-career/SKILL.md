@@ -44,7 +44,7 @@ This skill has five branches. Identify the branch from the request and follow it
 ---
 
 ## Resume & Cover Letter
-Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's work history, certifications, metrics, and GitHub repos.
+Load `/home/alex/Projects/AI-consultant-career/profile-data.md` for the user's work history, certifications, metrics, and GitHub repos.
 
 ### Step 1: Extract raw material
 
@@ -163,7 +163,7 @@ If the company sends a take-home:
 ---
 
 ## Portfolio & Authority
-Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's GitHub repos, work history, and certifications.
+Load `/home/alex/Projects/AI-consultant-career/profile-data.md` for the user's GitHub repos, work history, and certifications.
 
 ### Step 1: GitHub profile audit
 
@@ -213,7 +213,7 @@ If they have a personal site:
 ---
 
 ## Job Search Strategy & Offer Negotiation
-Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's target roles, employment model, and key metrics.
+Load `/home/alex/Projects/AI-consultant-career/profile-data.md` for the user's target roles, employment model, and key metrics.
 
 ### Step 1: Build your target list
 
@@ -271,7 +271,7 @@ For each tier, identify 3-5 companies. Research:
 ---
 
 ## Automated Job Discovery
-Load `/home/alex/ai-career-toolkit/profile-data.md` for the user's target titles, location, and employment constraints.
+Load `/home/alex/Projects/AI-consultant-career/profile-data.md` for the user's target titles, location, and employment constraints.
 
 Scan the web for roles that match the user's background. Use search and scraping to find opportunities across multiple job boards, then filter and rank by fit.
 
@@ -405,11 +405,11 @@ If the user wants recurring searches:
 - **Org repos only:** GitHub proof repos live in the github.com/armchairfuturist-code org. Repos under other accounts are excluded.
 - **Current business always promoted:** Alex Myers Consulting LLC is Alex's current, active business (Mar 2024 - Present; never closed). On every resume and portfolio for this skill, list it FIRST in the Experience section as a top "Current Business" entry, above all other roles, regardless of start-date chronology. Title it "Founder & Principal Consultant (Current Business)". Lead its bullet stack with the LLC / C2C framing (engagements billed to Alex Myers Consulting LLC, never W2), then the operational metrics (15% bottleneck cut, 20% performance uplift). Keep its end date as "Present". This overrides plain reverse-chronological ordering.
 - **Output format:** Always generate resumes as PDF-ready markdown, then convert to PDF using pandoc with the custom template. Application portals expect PDF. Include WhatsApp contact link (wa.me/15157706902) and website (https://thearmchairfuturist.com) on every resume and cover letter. Use short URL form on resumes (wa.me/15157706902, not full query string). Pull contact details from profile-data.md.
-- **Toolkit folder:** All career materials live in `/home/alex/ai-career-toolkit/`. This includes: profile-data.md (the single source of truth for profile data), resume-template.tex, job-discovery-results.md, and all generated resumes/cover letters (both .md and .pdf).
+- **Toolkit folder:** All career materials live in `/home/alex/ai-career-toolkit/`. This includes: resume-template.tex, job-discovery-results.md, and all generated resumes/cover letters (both .md and .pdf).
 - **Glyph discipline (font safety):** The Charter font in resume-template.tex lacks several non-ASCII glyphs, so raw UTF-8 like the middle dot (`·`/U+00B7), en/em dashes (`–`/`—`), superscripts, and curly quotes render as wrong characters or blank boxes in the PDF. Never use them. Write dashes as ASCII hyphens, and format lists - including Certifications - as one item per line with `•` bullets (never inline `·` separators). Trademark/registered symbols (`™`/`®`) must be written as ASCII text (`(TM)`, `(R)`) or omitted; never paste the literal Unicode symbol.
 - **PDF generation command:** `pandoc <file>.md -o <file>.pdf --pdf-engine=pdflatex --template=/home/alex/ai-career-toolkit/resume-template.tex --metadata title=""` The template includes the profile image and Charter font for ATS-friendly styling.
 - **Profile image:** Headshot at `/home/alex/Projects/ArmchairFuturistLanding/public/alexheadshot-nobg.png`. Always include on PDF resumes.
-- **Profile data:** Always load `/home/alex/ai-career-toolkit/profile-data.md` before generating any resume or cover letter. Never fabricate education, certifications, or work history. If data is missing from profile-data.md, flag it to the user.
+- **Profile data:** Always load `/home/alex/Projects/AI-consultant-career/profile-data.md` before generating any resume or cover letter. Never fabricate education, certifications, or work history. If data is missing from profile-data.md, flag it to the user.
 
 ### Writing Hygiene (anti-slop rules)
 

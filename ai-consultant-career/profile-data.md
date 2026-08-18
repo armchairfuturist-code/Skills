@@ -1,5 +1,5 @@
 # profile-data.md has moved
 
-Single source of truth: `/home/alex/ai-career-toolkit/profile-data.md`
+Single source of truth: `/home/alex/Projects/AI-consultant-career/profile-data.md`
 
-Edit the toolkit copy only. This pointer exists so nothing duplicates or drifts.
+Edit that copy only. This pointer exists so nothing duplicates or drifts.
