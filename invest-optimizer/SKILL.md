@@ -1,6 +1,6 @@
 ---
 name: invest-optimizer
-description: "Portfolio posture, market pulse, dip/profit signals, and allocation risk. Use for portfolio reviews or shifts, market-condition reads, buy-the-dip/profit-taking questions, and risk-aware target weights."
+description: "Portfolio posture, market pulse, dip/profit signals, risk. Use for portfolio reviews, market reads, buy-the-dip asks."
 disable-model-invocation: true
 ---
 
@@ -14,6 +14,8 @@ Reference files:
 - [`OPTIMIZATION.md`](OPTIMIZATION.md) — optimizer models, views, covariance defaults
 - [`SCREENING.md`](SCREENING.md) — individual stock technical gates
 - [`AI_RISK.md`](AI_RISK.md) — AI/ML risk protocol, validation gates, and quant-tool landscape
+- [`FORECASTS.md`](FORECASTS.md) — probability ledger with Brier scoring and quarterly calibration review
+- [`INCOME.md`](INCOME.md) — income-sleeve dashboard with distribution/ROC/NAV tripwires
 
 ## Phase 1 — Anchor to goals
 
@@ -37,6 +39,9 @@ Recalibrate current market conditions across the structural axes using the thres
 ### 2A — Valuation: how expensive are stocks vs fundamentals?
 
 Check: **Shiller CAPE**, **Buffett Indicator**, **Tobin's Q**, **S&P 500 ÷ M2**.
+
+Denominator caveat (Machine Age): these ratios divide by human-economy aggregates (GDP, M2). As agents create a growing share of economic value, GDP understates the real economy and equity/GDP ratios read progressively fake-expensive. Treat EXTREME/BUBBLE verdicts from 2A as stale-denominator readings; cross-check against substrate metrics (2M OCPI/OTPI, energy, memory) before acting on a valuation call. A wrong denominator can hide a real bubble or fake one — 2000's fiber buildout was real, the valuations still collapsed.
+
 Verdict: CHEAP / FAIR / RICH / EXTREME / BUBBLE
 
 ### 2B — Complacency & credit: is everyone pricing in zero risk?
@@ -63,6 +68,8 @@ Run `tools/market_pulse.py` (stdlib python, no deps) — one shot pulls Polymark
 
 Measures: Polymarket-implied probability of recession within 12m, rate-hike probability, sector-outcome markets.
 Verdict: [RECESSION p≥0.30 / NEUTRAL p0.10–0.29 / BULLISH p<0.10]
+
+Log every cited probability in [`FORECASTS.md`](FORECASTS.md) with source, volume, and resolution date.
 
 A RICH + COMPLACENT + RECESSION p≥0.30 is LATE CYCLE with extra conviction; a FAIR + ANXIOUS + BULLISH p<0.10 warns the market is pricing tail risk lower than your structural read — flag the tension.
 
@@ -119,7 +126,7 @@ Verdict: SECULAR BULL / LATE-CYCLE BULL / SECULAR BEAR
 
 ### 2M — Circular AI financing: is the AI capex cycle fragile or real?
 
-Check: **vendor financing / depreciation insurance**, **cross-investment loops**, **token profitability** (Dell's 1Q→57Q revision and Goldman's higher projection — dated vendor/desk forecasts, not fact).
+Check: **vendor financing / depreciation insurance**, **cross-investment loops**, **token profitability** (Dell's 1Q→57Q revision and Goldman's higher projection — dated vendor/desk forecasts, not fact), **compute clearing prices (Ornn Compute Price Index)** — free no-key API: `https://api.ornnai.com/api/daily-index/all` (all GPUs) and per-GPU history `/api/gpu/H100%20SXM/index-history` (USD/GPU-hr, hourly-refreshed, executed-transaction benchmark per IOSCO-style methodology; full writeup in ~/Obsidian-vault-PC/Research/machine-age-ocpi-research.md). Readings: frontier GPUs (H100/H200/B200) flat-to-rising over 3mo = demand absorbing supply (REAL-GROWTH evidence); sustained multi-month decline across frontier GPUs = marginal buyer weakening (FRAGILE signal); old-gen collapse (A100, RTX 5090) = compute depreciation speed, i.e. asset-life risk for AI-infrastructure holders; Ornn Token Price Index (`/api/otpi`, realized $/M-token by lab) = application-layer intelligence price — falling token prices with firm compute prices = value migrating to the physical layer (Machine Age thesis).
 
 Verdict: FRAGILE / NEUTRAL / REAL-GROWTH
 
@@ -144,7 +151,7 @@ For each area the portfolio touches, produce:
 3. **Actions** — specific trades or shifts to close the gap
 4. **Risk gate** — the observable condition that, if met, breaks the thesis and triggers a posture revert
 
-When the posture implies individual stock picks, apply the technical gates in [`SCREENING.md`](SCREENING.md).
+When the posture implies individual stock picks, apply the technical gates in [`SCREENING.md`](SCREENING.md). When it implies income-fund picks (monthly/weekly payers, including systematic / AI-marketed option funds), apply the seasoning gate there — unseasoned funds enter capped and in thirds regardless of recent outperformance.
 
 **Completion criterion:** At least one concrete recommendation per portfolio area (equities, fixed income, alternatives, cash, sector tilts, income instruments as applicable), each with target posture, specific actions, and a risk gate.
 
@@ -155,7 +162,7 @@ Translate the target posture from Phase 3 into mathematically grounded allocatio
 1. Build the candidate universe (equities, ETFs, bonds per the target posture tilt + SCREENING survivors)
 2. Select tool and model per OPTIMIZATION.md — prefer maintained libraries available in the environment; match model to goal × pulse (HRP when valuations are EXTREME; DR-CVaR/CDaR under fragile tails; NCO when universe >12 and correlations unstable)
 3. Set covariance prior (default **Ledoit-Wolf shrinkage**) and expected-return prior (James-Stein / BL equilibrium — not raw historical means)
-4. Encode Phase 2 pulse as a small BL or Entropy Pooling view set (OPTIMIZATION.md table); scale view confidence by axis agreement. A learned signal enters views only after the [`AI_RISK.md`](AI_RISK.md) promotion gate; scale it by out-of-sample IC/RankIC and uncertainty.
+4. Encode Phase 2 pulse as a small BL or Entropy Pooling view set (OPTIMIZATION.md table); scale view confidence by axis agreement. A learned signal enters views only after the [`AI_RISK.md`](AI_RISK.md) promotion gate; scale it by out-of-sample IC/RankIC and uncertainty. Scale income-fund view confidence by seasoning: unseasoned names get weak views even when their 6-month numbers lead.
 5. Constrain to posture asset-class bands, sector/name ceilings, liquidity/capacity, and turnover budget if prior weights exist
 6. Solve; run optimizer-level stress checks (in-band, concentration, CVaR sanity, correlation-break)
 7. Optional: discrete allocation to share counts when deployable cash and prices are known
@@ -176,6 +183,7 @@ Before outputting, validate recommendations against system risk constraints and 
 - [ ] Polymarket-implied recession probability matches posture level (LATE CYCLE → recession p context; BULLISH tilt → p<0.10)
 - [ ] Correlation modifier honored (CRISIS-CORR/CO-CRASH → non-equity hedges present)
 - [ ] Drawdown / CVaR within loss tolerance from goal profile
+- [ ] Forecast rows logged and income tripwires checked ([`FORECASTS.md`](FORECASTS.md), [`INCOME.md`](INCOME.md))
 
 ### Forward risk analytics
 

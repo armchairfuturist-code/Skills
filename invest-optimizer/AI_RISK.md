@@ -38,7 +38,7 @@ Use this contract when a learned signal is proposed; Qlib may implement it, but 
 6. **Signal-policy-execution split:** the model emits forecasts with uncertainty; portfolio policy converts forecasts to constrained targets; an executor models limits, suspensions, spread, impact, and fill timing.
 7. **Rolling deployment:** retrain on a declared schedule, compare champion/challenger out of sample, and define rollback triggers.
 
-**Promotion gate:** a learned signal may alter Black–Litterman/Entropy-Pooling views only when net walk-forward results beat the baseline across multiple folds, IC sign is stable, drawdown and turnover fit the goal, and the result survives a cost/capacity stress. Otherwise it remains research-only.
+**Promotion gate:** a learned signal may alter Black–Litterman/Entropy-Pooling views only when net walk-forward results beat the baseline across multiple folds, IC sign is stable, drawdown and turnover fit the goal, and the result survives a cost/capacity stress. Otherwise it remains research-only. An issuer's "AI-optimized" fund marketing clears this same gate before it changes sizing: vendor claim alone buys no view confidence.
 
 ## Hard gates
 
@@ -63,6 +63,9 @@ Inspect the environment before recommending or installing anything; verify curre
 - **Calendars:** exchange-calendars or equivalent; never infer sessions from weekdays.
 - **RL experimentation:** FinRL only after leakage-safe supervised and rules-based baselines pass.
 - **Monitoring:** Evidently or equivalent drift/calibration tooling.
+- **Agent strategy research (evaluated-only):** Vibe-Trading (HKUDS) for natural-language strategy-to-backtest exploration with a large alpha-factor library; reproduce any factor inside the Qlib contract with point-in-time data before it touches views.
+- **Paper-trading/data terminal (evaluated-only):** FinceptTerminal (AGPL-licensed) for FRED-class connectors, QuantLib analytics (VaR/Sharpe/pricing), and paper execution; confirm license fit and desktop weight first; paper-first before any live order path.
+- **Swarm execution (evaluated-only):** AutoHedge-class autonomous execution conflicts with the approval-gated posture and Phase 4 leverage caps; demand LEAN/Nautilus-class fill and venue fidelity before any role beyond research.
 
 Select the smallest stack that closes a named gap. Score candidates on active maintenance, test coverage, reproducibility, asset/venue fit, point-in-time data support, cost/execution fidelity, license, and integration burden. Popularity or a recent release is not evidence of edge.
 

@@ -12,6 +12,7 @@ The screener is a filter, not a generator — candidates must come from somewher
 | Small cap / emerging markets | ETF holdings (IWM, EEM) screened for liquidity and momentum |
 | Quality growth | User's existing holdings + ETF holdings in VUG/QQQ — supplement with sector leaders |
 | Income / dividend | ETF holdings in SCHD, VYM — screen for dividend safety (payout ratio < 60%, consistent dividend growth) |
+| Income — systematic / AI-marketed option funds | Newer monthly/weekly payers (e.g. ROCQ, TDAQ/TSPY, QQQI/SPYI, YieldMax, Calamos autocallables) — vendor "AI-powered" language is a dated claim, not a fact; every candidate enters through the seasoning gate below |
 | Thematic — energy/power | ETF holdings / constituents in the AI-load-growth complex (nuclear/SMR, utilities, transmission, turbines). Source from thematic ETFs (e.g. NUKZ, GRID, utilities indices); screen for liquidity + momentum |
 | Thematic — digital assets / crypto | Crypto-forward sleeve (BTC/ETH proxy ETFs like IBIT/ETHE, miners, stablecoin-exposed equities). Source from spot-crypto ETFs and miner constituents; screen for volatility tolerance and NAV premium/discount |
 | Broad market shift | User's existing holdings are the universe — screen each for hold/trim/add |
@@ -31,6 +32,17 @@ Generate 15–30 raw candidates per affected area before applying technical gate
 | Lindy durability | Long operating history / franchise age | Durability filter — biases toward long-surviving franchises. Apply only when the posture is defensive/preservation; skip for growth postures (it systematically misses newly-dominant companies) |
 
 **Conditional gates:** Secular trend applies to every candidate — it is the long-cycle floor. Lindy applies only when the target posture is defensive/preservation; a growth or aggressive posture omits the Lindy gate because it would filter out exactly the newly-dominant companies the regime favors.
+
+## Income-fund seasoning gate
+
+A fund is **seasoned** when its own track record spans a 20%+ drawdown in its benchmark; otherwise it is **unseasoned** (launched into a melt-up, never drawdown-tested). Seasoning is observed history, not issuer age or marketing.
+
+| Fund | Cap | Entry | Gate |
+|---|---|---|---|
+| Seasoned | Full posture band | Standard tranches | ROC/total-return split per POSTURE.md return-of-capital note; NAV erosion >10% TTM triggers trim |
+| Unseasoned | ≤15% of the income sleeve per name | Thirds only; no chasing above the highs | Same ROC split, plus: first 20%+ benchmark drawdown is the graduation exam — cut on NAV erosion or distribution cut 2 months running before it |
+
+Vendor "AI-optimized yield" claims clear the [`AI_RISK.md`](AI_RISK.md) promotion gate like any learned signal: net edge after costs, stable behavior across regimes, or research-only sizing. Six-month outperformance by an unseasoned fund is a lead, not evidence — size the lead, don't follow it.
 
 ## Manual analysis (applied post-screener, not automated)
 
