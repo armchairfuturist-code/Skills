@@ -130,6 +130,8 @@ Check: **vendor financing / depreciation insurance**, **cross-investment loops**
 
 Verdict: FRAGILE / NEUTRAL / REAL-GROWTH
 
+**Residual-print watch:** lender-grade residuals enter this read only on executed-sale prints (e.g. CCIR-class volumes), never on DCF values, supplier quotes, or rental-curve transforms. Track the print-to-facility ratio (documented used-GPU sales vs outstanding GPU-backed issuance); a liquid print market with observable LTV/borrowing-base language in new issues upgrades financing FRAGILE toward NEUTRAL. Dated compute-derivative milestones (Kalshi ladders, CME H100/B200 review and first-trade dates, CFTC comment windows) log as FORECASTS.md event watches; treat synthetic/term-built curves as upper bounds (non-storable underlying).
+
 **Completion criterion:** Verdicts for 2A–2M each supported by at least one metric reading; synthesized pulse with explicit weighting rationale; modifiers (microstructure, correlation, and structural/thematic 2H–2M) stated; 2G present or explicitly skipped with gap noted.
 
 ### Tool fallback
