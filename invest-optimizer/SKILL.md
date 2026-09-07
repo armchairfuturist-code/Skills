@@ -136,7 +136,7 @@ Verdict: FRAGILE / NEUTRAL / REAL-GROWTH
 
 ### Tool fallback
 
-Probed 2026-07-29 — preference order: `tools/market_pulse.py` first (covers 2A, 2B, 2C, 2D proxy, 2E, 2F, 2G; endpoints documented in `tools/feeds.py`) → web reads for the rest: stockanalysis.com (52w ranges, holdings), tradingeconomics.com (index levels). Phase 3.5 → `tools/optimize.py`; Phase 4 forward risk → `tools/risk.py`. Dead in this environment: Yahoo chart API (429), stooq (JS gate), MarketWatch (401), `polymarket-cli`/openbb (not installed), pip (absent → `skfolio`/`Riskfolio-Lib`/`PyPortfolioOpt` unavailable). Still manual: Tobin's Q, AI volume share, flash-crash count. A missing tool downgrades that step; the brief still ships.
+Probed 2026-07-29 — preference order: `tools/market_pulse.py` first (covers 2A, 2B, 2C, 2D proxy, 2E, 2F, 2G; endpoints documented in `tools/feeds.py`) → web reads for the rest: stockanalysis.com (52w ranges, holdings), tradingeconomics.com (index levels). Cross-check for 2A/2B/2C: `https://levels.io/bubble-detector.json` — one-shot JSON with all seven inputs (CAPE, Buffett, Tobin's Q, S&P÷M2, VIX, HY spread, 10y−2y), updated daily; probed 2026-09-07, covers Tobin's Q (previously manual); METRICS.md thresholds stay authoritative. Phase 3.5 → `tools/optimize.py`; Phase 4 forward risk → `tools/risk.py`. Dead in this environment: Yahoo chart API (429), stooq (JS gate), MarketWatch (401), `polymarket-cli`/openbb (not installed), pip (absent → `skfolio`/`Riskfolio-Lib`/`PyPortfolioOpt` unavailable). Still manual: AI volume share, flash-crash count. A missing tool downgrades that step; the brief still ships.
 
 ## Phase 3 — Calibrate posture
 

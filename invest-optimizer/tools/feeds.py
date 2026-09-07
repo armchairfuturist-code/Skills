@@ -4,7 +4,9 @@
 Probed live 2026-07-29 (pi sandbox):
   WORKS : Polymarket gamma-api (no auth), CBOE VIX_History.csv,
           FRED fredgraph.csv (no API key), treasury.gov curve CSV,
-          multpl.com HTML scrape, stockanalysis.com /api/symbol/{e|s}/<t>/history
+          multpl.com HTML scrape, stockanalysis.com /api/symbol/{e|s}/<t>/history,
+          levels.io/bubble-detector.json (probed 2026-09-07: one-shot JSON with all
+          seven 2A/2B/2C inputs incl. Tobin's Q; cross-check, METRICS.md authoritative)
   DEAD  : Yahoo chart API (429), stooq (JS gate), MarketWatch (401),
           pip (absent -> no third-party libs anywhere in this toolchain).
 
