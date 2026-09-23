@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 Recalibrate portfolio **posture** — the portfolio's overall stance expressed as concrete allocation shifts — to the current market **regime** through the lens of personal investment goals.
 
+> **Caveat**: This skill produces decision-support analysis from public data and the user's stated goals. It is not financial, tax, or legal advice, and its regime reads can be wrong. The user makes and executes the final call; consult a licensed advisor for material decisions.
+
 Reference files:
 - [`METRICS.md`](METRICS.md) — market metric thresholds and synthesis rules
 - [`POSTURE.md`](POSTURE.md) — posture × goals calibration matrix
@@ -86,7 +88,7 @@ Weight axes 2A–2E into the core pulse (EXPANSION / LATE CYCLE / CONTRACTION / 
 - CRISIS-CORR or CO-CRASH → raise non-equity hedge floors; name-count diversification is invalid
 - CO-CRASH + LATE CYCLE → duration is not the sole hedge; prefer cash/T-bills/collars
 
-**Structural/thematic axes (2H–2M)** apply as defense-floor / risk-budget / offense-ceiling modifiers via POSTURE.md "Axis → Posture Wiring". FISCAL DOMINANCE + DEBASEMENT set a hard real-asset floor; SECULAR BEAR caps total equity; REAL-GROWTH permits the AI/energy tilt. **Two-Truths rule:** fiscal/currency fragility (defense) and the AI infrastructure/energy supercycle (offense) are simultaneously true in 2026 — neither vetoes the other; they bind different sleeves. See POSTURE.md "The Two-Truths Regime" for falsification conditions.
+**Structural/thematic axes (2H–2N)** apply as defense-floor / risk-budget / offense-ceiling / execution modifiers via POSTURE.md "Axis → Posture Wiring". FISCAL DOMINANCE + DEBASEMENT set a hard real-asset floor; SECULAR BEAR caps total equity; REAL-GROWTH permits the AI/energy tilt; CROWDED tightens Phase 4 size and staging without touching direction. **Two-Truths rule:** fiscal/currency fragility (defense) and the AI infrastructure/energy supercycle (offense) are simultaneously true in 2026 — neither vetoes the other; they bind different sleeves. See POSTURE.md "The Two-Truths Regime" for falsification conditions.
 
 When AI/ML risk assessment is requested or data supports it, load [`AI_RISK.md`](AI_RISK.md). Keep facts, model estimates, and scenarios separate; model disagreement lowers confidence and position size.
 
@@ -130,13 +132,21 @@ Check: **vendor financing / depreciation insurance**, **cross-investment loops**
 
 Verdict: FRAGILE / NEUTRAL / REAL-GROWTH
 
+`market_pulse.py` prints the automated floor for this axis — EDGAR disclosure counts for "vendor financing" and "take-or-pay" (trailing 90d vs the 90d before) and the Ornn compute index over its 3-month public window. Counts measure *disclosure*, not exposure: read the direction, then make the qualitative call from the filings themselves.
+
 **Residual-print watch:** lender-grade residuals enter this read only on executed-sale prints (e.g. CCIR-class volumes), never on DCF values, supplier quotes, or rental-curve transforms. Track the print-to-facility ratio (documented used-GPU sales vs outstanding GPU-backed issuance); a liquid print market with observable LTV/borrowing-base language in new issues upgrades financing FRAGILE toward NEUTRAL. Dated compute-derivative milestones (Kalshi ladders, CME H100/B200 review and first-trade dates, CFTC comment windows) log as FORECASTS.md event watches; treat synthetic/term-built curves as upper bounds (non-storable underlying).
 
-**Completion criterion:** Verdicts for 2A–2M each supported by at least one metric reading; synthesized pulse with explicit weighting rationale; modifiers (microstructure, correlation, and structural/thematic 2H–2M) stated; 2G present or explicitly skipped with gap noted.
+### 2N — Crowding: who already holds this, and can they leave?
+
+Check **benchmark concentration** (top-10 weight of the book's broad index; `market_pulse.py` reports SPY/QQQ) and, when the user names a large holder, its **latest 13F read from the filing itself** (`market_pulse.py cik=NNNNNNNNNN`). Thresholds and the lag/coverage caveats in [`METRICS.md`](METRICS.md).
+
+Verdict: CROWDED / BALANCED / DISPERSED — **execution evidence only.** It tightens Phase 4 size, staging, and the exit plan; it never sets direction, and "smart money bought" is not a thesis. Aggregators (whalewisdom, dataroma, 13f.info, openinsider) are caches over EDGAR and none answers a plain GET here — read the filing.
+
+**Completion criterion:** Verdicts for every axis listed in Phase 2, each supported by at least one metric reading; synthesized pulse with explicit weighting rationale; modifiers (microstructure, correlation, and structural/thematic 2H–2N) stated; 2G present or explicitly skipped with gap noted.
 
 ### Tool fallback
 
-Probed 2026-07-29 — preference order: `tools/market_pulse.py` first (covers 2A, 2B, 2C, 2D proxy, 2E, 2F, 2G; endpoints documented in `tools/feeds.py`) → web reads for the rest: stockanalysis.com (52w ranges, holdings), tradingeconomics.com (index levels). Cross-check for 2A/2B/2C: `https://levels.io/bubble-detector.json` — one-shot JSON with all seven inputs (CAPE, Buffett, Tobin's Q, S&P÷M2, VIX, HY spread, 10y−2y), updated daily; probed 2026-09-07, covers Tobin's Q (previously manual); METRICS.md thresholds stay authoritative. Phase 3.5 → `tools/optimize.py`; Phase 4 forward risk → `tools/risk.py`. Dead in this environment: Yahoo chart API (429), stooq (JS gate), MarketWatch (401), `polymarket-cli`/openbb (not installed), pip (absent → `skfolio`/`Riskfolio-Lib`/`PyPortfolioOpt` unavailable). Still manual: AI volume share, flash-crash count. A missing tool downgrades that step; the brief still ships.
+Probed 2026-09-23. `python3 tools/market_pulse.py` is the acquisition path for every axis it reports (2A–2N in one run, stdlib only, no keys): its header maps axis → feed, [`tools/feeds.py`](tools/feeds.py) holds the dated probe log, and its verdicts mirror [`METRICS.md`](METRICS.md). Cross-check for 2A/2B/2C: `https://levels.io/bubble-detector.json` — one-shot JSON with all seven inputs (CAPE, Buffett, Tobin's Q, S&P÷M2, VIX, HY spread, 10y−2y), updated daily; probed 2026-09-07, covers Tobin's Q (previously manual); METRICS.md thresholds stay authoritative. Crowding and claim verification run off SEC EDGAR (`feeds.edgar_search`, `feeds.edgar_filings`, `feeds.edgar_13f`) — export `EDGAR_USER_AGENT="Name you@example.com"` — EDGAR expects a declared contact address on document fetches. Only rows the tool prints as GAP or MANUAL go to web reads. Polymarket stays the only keyless probability venue: Kalshi's public API answers 200 without a key but returns null in every price/volume field (429 markets probed 2026-09-23), so a gamma-api outage makes 2E a GAP, not a venue switch. Phase 3.5 → `tools/optimize.py`; Phase 4 forward risk → `tools/risk.py`. Dead or gated in this environment (feeds.py holds the full log): Yahoo chart API (429), stooq (JS gate), MarketWatch (401), finviz and macrotrends (403), the 13F/insider aggregators (whalewisdom, dataroma, 13f.info, openinsider, capitoltrades — caches over EDGAR, read the filing), `polymarket-cli`/openbb (not installed), pip (absent → `skfolio`/`Riskfolio-Lib`/`PyPortfolioOpt` unavailable). Still manual: AI volume share, flash-crash count, credit-rating trend. A missing tool downgrades that step; the brief still ships.
 
 ## Phase 3 — Calibrate posture
 
@@ -184,6 +194,7 @@ Before outputting, validate recommendations against system risk constraints and 
 - [ ] Leverage under cap (≤1.25× default)
 - [ ] Polymarket-implied recession probability matches posture level (LATE CYCLE → recession p context; BULLISH tilt → p<0.10)
 - [ ] Correlation modifier honored (CRISIS-CORR/CO-CRASH → non-equity hedges present)
+- [ ] Crowding modifier honored (2N CROWDED → adds capped to the concentrated cohort, exits staged, wider slippage assumed)
 - [ ] Drawdown / CVaR within loss tolerance from goal profile
 - [ ] Forecast rows logged and income tripwires checked ([`FORECASTS.md`](FORECASTS.md), [`INCOME.md`](INCOME.md))
 
@@ -237,6 +248,7 @@ Present as a structured posture brief. The format adapts to **investor type** �
 | Microstructure | FRAGILE |
 | Prediction | RECESSION p=0.34 |
 | Correlation | ELEVATED / WEAK-BALLAST |
+| Crowding | CROWDED (SPY top-10 38.9%, as-of dated) |
 | **Overall** | **LATE CYCLE** (+ liquidity & correlation modifiers) |
 
 ### Posture

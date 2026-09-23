@@ -30,6 +30,7 @@ Mean Brier across resolved rows vs 0.25. Persistent means above ~0.20 with p far
 | 2026-09-06 | CME H100/B200 futures review ends (default approval unless CFTC acts) | 2026-09-25 | — |
 | 2026-09-06 | First regulated compute futures begin trading | 2026-10-05 | — |
 | 2026-09-06 | CFTC compute-derivatives comment period closes | 2026-10-20 | — |
+| 2026-09-09 | Sept 18 OpEx ($9.6T expiry, Citadel) removes dealer-gamma cushion into FOMC week | 2026-09-18 | — |
 
 ## Completion criterion
 

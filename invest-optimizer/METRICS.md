@@ -248,6 +248,40 @@ Verdict: FRAGILE (concentration) / NEUTRAL / REAL-GROWTH.
 
 **Note — FRAGILE and REAL-GROWTH are not mutually exclusive.** Fragility measures financing concentration; REAL-GROWTH measures token profitability. A cycle can be both concentrated AND profitable at once. Read them as two sub-signals, not opposite ends of one scale.
 
+### Free primary-source checks (no key; `tools/feeds.py`)
+| Check | Read | Caution |
+|---|---|---|
+| EDGAR full-text count — `"vendor financing"`, `"take-or-pay"` in 10-Q/10-K/8-K, trailing 90d vs prior 90d (`feeds.edgar_search`) | Rising count = the practice is spreading through filings (FRAGILE evidence) | Counts **disclosures, not exposure** — a phrase can sit in boilerplate, and take-or-pay also fires on energy/PPA contracts. Direction, never level |
+| Ornn compute index, 3-month public window (`feeds.ornn_compute`) | Frontier GPU flat-to-rising = demand absorbing supply (REAL-GROWTH); sustained multi-month decline = marginal buyer weakening | Index points, not a spot quote; old-gen collapse (A100) is depreciation, not demand |
+| Vendor claim → the filer's own documents (`feeds.edgar_search`, `feeds.edgar_filings`) | A claim not found in the filing is carried as **unverified** per the [`AI_RISK.md`](AI_RISK.md) hard gates | EDGAR document fetches want a contact address in the User-Agent (`EDGAR_USER_AGENT`) |
+
+Dataroma, whalewisdom, 13f.info, openinsider and capitoltrades are caches over EDGAR; none answers a plain GET from this toolchain — read the filing.
+
+## Positioning and Crowding (2N)
+
+**2N is execution evidence only — it never sets direction.** It asks who already owns the trade and whether they can leave, and it changes size, staging, and the exit plan.
+
+### Benchmark concentration (automated: `feeds.holdings`)
+| Broad-index top-10 weight (SPY) | Verdict | Consequence |
+|---|---|---|
+| < 25% | DISPERSED | Normal single-name risk; standard sizing |
+| 25–35% | BALANCED | Standard sizing; name-level stops hold |
+| ≥ 35% | CROWDED | Cap incremental adds to the concentrated cohort; stage exits at ≤1 tranche/week; assume index-level stops are shared — the same exit is crowded |
+
+Sector and thematic funds sit far higher by construction (SMH top-10 ≈ 70%+): read those against **their own history**, never the broad-index scale. Two books at the same headline concentration are not equally crowded — compare to the float.
+
+### Named-filer drill-down (`market_pulse.py cik=NNNNNNNNNN`)
+Latest 13F-HR read from the filing: position count, top-5 share, reported total.
+
+| Attribute | Reality — state it in the brief |
+|---|---|
+| Lag | Filed up to 45 days after quarter end; the snapshot is stale when it lands |
+| Coverage | Long equity and calls only — no shorts, puts, futures, or most non-US positions |
+| Use | Confirms or contradicts your own crowding read. Never a signal, a trade idea, or "smart money says" |
+| Insider activity | Form 4s are primary source but filing counts are not directional (intent, 10b5-1 schedules) — advisory |
+
+**Completion criterion (2N):** broad-index concentration stated with its as-of date and verdict; every named-filer drill-down labelled with its filing lag; the brief names which Phase 4 limits the read tightened.
+
 ## Statistical Regime Confirmation (optional)
 
 When regime tools are available, use them as an ensemble confirmation layer—not a replacement. Compare HMM/Markov-switching with a different family such as change-point detection or volatility clustering. Follow [`AI_RISK.md`](AI_RISK.md).

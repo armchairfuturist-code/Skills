@@ -80,13 +80,14 @@ A **secular/sector supercycle** (e.g. an "AI macro nexus" — token demand, comp
 - Treat any secular narrative as *one strategist's thesis to weight*, not doctrine. State the source and the condition that would falsify it (e.g. "token demand growth decelerates below compute supply growth").
 - Common overlay candidates: AI/semiconductor infrastructure, energy/power (grid, nuclear/SMR, utilities feeding load growth), digital assets / crypto-forward (BTC, stablecoin legislation, Treasury digital-asset posture). Source candidates per SCREENING.md's thematic buckets.
 
-## Axis → Posture Wiring (structural axes 2H–2M)
+## Axis → Posture Wiring (structural axes 2H–2N)
 
-The matrix maps the core pulse (2A–2E) to posture. The six structural/thematic axes (2H–2M) are wired directly — every verdict has a defined consequence. No axis is read without a defined portfolio consequence.
+The matrix maps the core pulse (2A–2E) to posture. The seven structural/thematic axes (2H–2N) are wired directly — every verdict has a defined consequence. No axis is read without a defined portfolio consequence.
 
 **Risk-budget axis** (secular trend, 2L) caps *total* equity.
 **Defense axes** (fiscal 2H, currency 2I, money-creation 2J) set the *floor* on hedges.
 **Offense axes** (digital-asset 2K, AI-financing 2M) set the *ceiling* on the thematic tilt.
+**Execution axis** (crowding, 2N) changes *size, staging, and the exit plan* — never direction.
 
 ### Fiscal (2H) → defense floor
 | Verdict | Consequence |
@@ -131,6 +132,13 @@ The matrix maps the core pulse (2A–2E) to posture. The six structural/thematic
 | NEUTRAL | Standard AI tilt |
 | REAL-GROWTH | Full AI/energy tilt permitted — the outsize-return sleeve |
 
+### Crowding (2N) → execution, not direction
+| Verdict | Consequence |
+|---|---|
+| DISPERSED | Standard sizing; single-name risk assumptions hold |
+| BALANCED | Standard sizing; name-level stops respected |
+| CROWDED | Cap incremental adds to the concentrated cohort; stage exits at ≤1 tranche/week; assume index-level stops are shared — a crowded exit widens slippage and gap risk. Raises the liquidity/capacity bar in Phase 4; never flips a buy into a sell |
+
 ### How the layers compose
 
 1. **Base posture** = matrix[ pulse(2A–2E) × goal ].
@@ -139,6 +147,7 @@ The matrix maps the core pulse (2A–2E) to posture. The six structural/thematic
 4. **Offense ceiling** = the more permissive consequence across 2K and 2M. Sets the maximum thematic tilt within the equity band — can only lower the ceiling, never raise it above the risk budget.
 5. **Income instrument** = 2D overrides the instrument, not the allocation.
 6. **Conviction** = 2E confirms or flags tension; 2F (correlation) adjusts hedge composition.
+7. **Execution** = 2N tightens size, staging, and the exit plan inside whatever the layers above allow. It cannot move a band.
 
 ## The Two-Truths Regime — fiscal fragility AND the AI supercycle are simultaneously true
 

@@ -1,7 +1,7 @@
 // invest-tools — pi extension wrapping the invest-optimizer skill's stdlib
 // python tools as native agent tools. No MCP, no pip, no third-party deps.
 //
-//   invest_pulse     Phase 2 regime data (2A-2G) with METRICS.md verdicts
+//   invest_pulse     Phase 2 regime data (2A-2N) with METRICS.md verdicts
 //   invest_optimize  Phase 3.5 weights: HRP / minvar / riskpar / invvol
 //   invest_risk      Phase 4 forward risk: maxDD, CVaR, tail, Calmar, MC bust
 //
@@ -48,17 +48,24 @@ export default async function (pi: ExtensionAPI) {
     description:
       "Pull the invest-optimizer Phase 2 regime snapshot: valuation (Shiller CAPE, Buffett, SP500/M2), " +
       "complacency (VIX, HY credit spread), macro (10y-2y curve), microstructure tail-day proxy, " +
-      "Polymarket recession/rate-hike probabilities, 60d equity/equity-bond correlations, and a 2-state " +
-      "HMM regime read — each mapped to METRICS.md verdicts. Use at the start of any portfolio/regime question.",
-    promptSnippet: "invest_pulse: full market-regime snapshot (2A-2G) with verdicts — run before portfolio posture work",
+      "Polymarket recession/rate-hike probabilities, 60d equity/equity-bond correlations, a 2-state " +
+      "HMM regime read, the structural axes (fiscal, currency, money, BTC, secular trend), circular " +
+      "AI financing (EDGAR disclosure counts, Ornn compute index) and 2N crowding (benchmark " +
+      "concentration, optional 13F drill-down) — each mapped to METRICS.md verdicts. " +
+      "Use at the start of any portfolio/regime question.",
+    promptSnippet: "invest_pulse: full market-regime snapshot (2A-2N) with verdicts — run before portfolio posture work",
     parameters: Type.Object({
       terms: Type.Optional(Type.Array(Type.String(), {
         description: "Extra Polymarket search terms, e.g. ['oil', 'fed september']",
+      })),
+      cik: Type.Optional(Type.String({
+        description: "Manager CIK for the 2N crowding drill-down, read from their latest 13F-HR on EDGAR",
       })),
       json: Type.Optional(Type.Boolean({ description: "Machine-readable output" })),
     }),
     async execute(_id, params, signal) {
       const args: string[] = [...(params.terms ?? []).filter((t) => t.length < 60)]
+      if (params.cik && /^[0-9]{1,10}$/.test(params.cik)) args.push(`cik=${params.cik}`)
       if (params.json) args.push("--json")
       const text = await runScript(pi, "market_pulse.py", args, 120_000, signal)
       return { content: [{ type: "text", text }], details: {} }

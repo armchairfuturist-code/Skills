@@ -14,15 +14,23 @@ One run covers every regime axis, each mapped to METRICS.md verdicts:
   2J money          M2 YoY (FRED M2SL), Fed balance sheet 3m (FRED WALCL)
   2K digital-asset  BTC vs 200-week MA (Kraken weekly OHLC)
   2L secular        SPY 200-day + 200-week MA (stockanalysis)
-  2M ai-financing   circular AI financing (manual — web/primary sources)
+  2M ai-financing   EDGAR disclosure counts (proxy) + circular AI financing (manual — primary sources)
+  2N crowding       benchmark top-10 weight (stockanalysis) + 13F drill-down per filer CIK arg
+
+Crowding verdicts are advisory on purpose: 2N changes Phase 4 size and staging, never
+regime direction. 13F is ~45-day lagged and long-only, and every 13F aggregator is a cache
+over the filing this axis reads directly. 2M counts are disclosure proxies — a rising count
+is not exposure; the judgment stays manual. EDGAR fetches are keyless but declare a contact:
+export EDGAR_USER_AGENT="Name you@example.com".
 
 Every axis fails soft (verdict GAP); a missing reading downgrades that axis,
 the brief still ships. Verdict thresholds mirror METRICS.md — edit both or neither.
 
-Usage: market_pulse.py [--json] ["extra polymarket search" ...]
+Usage: market_pulse.py [--json] ["extra polymarket search" ...] [cik=NNNNNNNNNN ...]
+A `cik=` arg drills 2N into that manager's latest 13F-HR, read from the filing itself.
 """
 import json, sys
-from datetime import date
+from datetime import date, timedelta
 
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
 import feeds
@@ -69,6 +77,10 @@ def secular_v(d200, d200w):
     if a and b: return "SECULAR BULL"
     if a and not b: return "LATE-CYCLE BULL"
     return "SECULAR BEAR"
+
+
+def crowd_v(w10): return ("CROWDED" if w10 >= 35 else
+                          "BALANCED" if w10 >= 25 else "DISPERSED")
 
 
 
@@ -302,12 +314,77 @@ def axis_secular():
 
 
 def axis_ai_financing():
-    return [{"metric": "Circular AI financing (2M)", "verdict": "MANUAL - web/primary sources",
-             "note": "vendor financing, cross-investment loops, token profitability (Dell 1Q->57Q, Goldman higher) - qualitative, not computed"}]
+    """2M: EDGAR full-text disclosure counts (trailing 90d vs the 90d before) + the
+    qualitative read. Counts are disclosures, not exposure — a rising count says the
+    practice is spreading through filings, which is the observable part."""
+    rows = [{"metric": "Circular AI financing (2M)", "verdict": "MANUAL - primary sources",
+             "note": "vendor financing, cross-investment loops, token profitability "
+                     "(Dell 1Q->57Q, Goldman higher) - qualitative, not computed"}]
+    today = date.today()
+    for phrase in ("vendor financing", "take-or-pay"):
+        try:
+            now = feeds.edgar_search(phrase, startdt=str(today - timedelta(days=90)),
+                                     enddt=str(today))["total"]
+            prior = feeds.edgar_search(phrase, startdt=str(today - timedelta(days=180)),
+                                       enddt=str(today - timedelta(days=91)))["total"]
+            rows.append({"metric": f'EDGAR 90d filings citing "{phrase}"',
+                         "value": f"{now} vs {prior} prior 90d",
+                         "verdict": ("RISING (practice spreading)" if now and prior and now > prior * 1.25
+                                     else "FALLING" if now and prior and now < prior * 0.75
+                                     else "FLAT/NOISE"),
+                         "asof": str(today),
+                         "note": "disclosure count, not exposure; forms=10-Q,10-K,8-K; "
+                                 "take-or-pay also fires on non-AI contracts (energy, PPA)"})
+        except Exception as e:
+            rows.append({"metric": f'EDGAR "{phrase}" count', "verdict": f"GAP ({e})"})
+    try:  # compute clearing prices: the demand side of the same question
+        idx = feeds.ornn_compute("H100 SXM")
+        rows.append({"metric": "Ornn H100 compute index (3mo window)",
+                     "value": f"{idx['value']:.2f} ({idx['chg_window']:+.1f}% over {idx['window']})",
+                     "verdict": ("RISING (demand absorbing supply)" if idx["chg_window"] > 3 else
+                                 "FALLING (marginal buyer weakening)" if idx["chg_window"] < -3
+                                 else "FLAT"),
+                     "asof": idx["asof"],
+                     "note": "index points, not a spot quote; METRICS.md 2M reads the trend"})
+    except Exception as e:
+        rows.append({"metric": "Ornn compute index", "verdict": f"GAP ({e})"})
+    return rows
+
+
+def axis_crowding(ciks=()):
+    """2N: who holds the book's benchmarks, and can they leave? Concentration of the
+    broad index is the automated core; a cik= arg adds that manager's own 13F."""
+    rows = []
+    for etf in ("SPY", "QQQ"):
+        try:
+            h = feeds.holdings(etf, top=10)
+            w = sum(x[1] for x in h)
+            rows.append({"metric": f"{etf} top-10 weight ({','.join(s for s, _ in h[:5])}…)",
+                         "value": f"{w:.1f}%",
+                         "verdict": crowd_v(w) if etf == "SPY" else
+                                    "sector fund — compare to itself, not the broad scale",
+                         "note": "scale mirrors METRICS.md 2N (broad index only)"})
+        except Exception as e:
+            rows.append({"metric": f"{etf} top-10 weight", "verdict": f"GAP ({e})"})
+    for cik in ciks:
+        try:
+            f = feeds.edgar_13f(cik, top=5)
+            top5 = sum(v for _, v in f["holdings"])
+            rows.append({"metric": f"13F CIK {cik}: {f['n_positions']} positions",
+                         "value": f"top-5 {100 * top5 / f['total_usd']:.0f}% of ${f['total_usd'] / 1e9:.1f}B",
+                         "verdict": f"ADVISORY ({f['holdings'][0][0][:28]})",
+                         "asof": f["asof"],
+                         "note": f"filed {f['asof']}: reflects a quarter ending ~6wk earlier; "
+                                 "long-only, no shorts or derivatives — crowding read, never a signal"})
+        except Exception as e:
+            rows.append({"metric": f"13F CIK {cik}", "verdict": f"GAP ({e})"})
+    return rows
 
 # --- main -----------------------------------------------------------------------
 def main():
-    extra = [a for a in sys.argv[1:] if a != "--json"]
+    args = [a for a in sys.argv[1:] if a != "--json"]
+    ciks = [a.split("=", 1)[1] for a in args if a.startswith("cik=")]
+    extra = [a for a in args if not a.startswith("cik=")]
     report = {"generated": str(date.today()),
               "2A valuation": axis_valuation(),
               "2B complacency": axis_complacency(),
@@ -321,7 +398,8 @@ def main():
               "2J money": axis_money(),
               "2K digital-asset": axis_digital(),
               "2L secular": axis_secular(),
-              "2M ai-financing": axis_ai_financing()}
+              "2M ai-financing": axis_ai_financing(),
+              "2N crowding": axis_crowding(ciks)}
 
     if "--json" in sys.argv:
         print(json.dumps(report, indent=1))

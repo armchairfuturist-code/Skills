@@ -49,6 +49,7 @@ Use this contract when a learned signal is proposed; Qlib may implement it, but 
 - Backtest VaR exceedances and CVaR stability; state sample size and horizon.
 - Treat synthetic scenarios as sensitivity tests, never observed probabilities unless calibrated.
 - Keep an audit trail of source snapshots, prompts/model versions, parameters, and overrides.
+- Verify a vendor or desk claim against the issuer's own filings before it changes sizing (`feeds.edgar_search(phrase)`, `feeds.edgar_filings(cik)`); a claim not found in the filing is carried as **unverified**, never as fact.
 
 ## Tool landscape
 
