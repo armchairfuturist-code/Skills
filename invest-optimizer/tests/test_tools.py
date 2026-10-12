@@ -15,6 +15,7 @@ from unittest import mock
 TOOLS = pathlib.Path(__file__).resolve().parent.parent / "tools"
 sys.path.insert(0, str(TOOLS))
 
+import evaluate
 import optimize
 import quant
 import risk
@@ -179,6 +180,71 @@ class OptimizeCliTest(unittest.TestCase):
         payload = json.loads(out)
         self.assertLess(payload["daily_cvar95"], 0.0)
         self.assertGreater(payload["daily_cvar95"], -1.0)
+
+
+class RollForwardTest(unittest.TestCase):
+    def test_flat_market_holds_value_with_no_rebalancing_cost(self):
+        rets = [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+        curve, traded, _ = evaluate.roll(rets, evaluate.equal_weight_policy(2), 1, 25.0)
+        self.assertEqual(curve, [1.0, 1.0, 1.0, 1.0])
+        self.assertEqual(traded, 0.0)
+
+    def test_hold_after_one_rebalance_equals_buy_and_hold(self):
+        # A +10% then +20%, B flat, equal weight, no further rebalance:
+        # 0.5 * 1.10 * 1.20 + 0.5 * 1.00 = 1.16
+        rets = [[0.10, 0.20], [0.00, 0.00]]
+        curve, traded, held = evaluate.roll(rets, evaluate.equal_weight_policy(2),
+                                            len(rets[0]), 0.0)
+        self.assertAlmostEqual(curve[-1], 1.16, places=12)
+        self.assertEqual(traded, 0.0)
+        self.assertEqual(held, 0)
+
+    def test_costs_reduce_wealth_when_the_policy_trades(self):
+        rets = [[0.01, -0.01], [-0.01, 0.01]]
+        flip = lambda history: [1.0, 0.0] if len(history[0]) % 2 == 0 else [0.0, 1.0]
+        free, _, _ = evaluate.roll(rets, flip, 1, 0.0)
+        costly, _, _ = evaluate.roll(rets, flip, 1, 100.0)
+        self.assertLess(costly[-1], free[-1])
+
+    def test_a_policy_receives_only_returns_before_the_rebalance(self):
+        seen = []
+
+        def spy(history):
+            seen.append(len(history[0]))
+            return [0.5, 0.5]
+
+        evaluate.roll([[0.01] * 6, [0.02] * 6], spy, 2, 0.0)
+        self.assertEqual(seen, [0, 2, 4])
+
+    def test_unfit_rebalances_are_held_and_counted(self):
+        def never_fits(history):
+            raise optimize.InfeasibleError("no fit")
+
+        rets = [[0.01] * 6, [0.02] * 6]
+        curve, traded, held = evaluate.roll(rets, never_fits, 2, 10.0)
+        self.assertEqual(held, 3)
+        self.assertEqual(traded, 0.0)
+        # Held weights drift, which is buy and hold of the initial 50/50:
+        # 0.5 * 1.01**6 + 0.5 * 1.02**6
+        self.assertAlmostEqual(curve[-1], 0.5 * 1.01 ** 6 + 0.5 * 1.02 ** 6, places=12)
+
+    def test_summarize_reports_compounded_growth(self):
+        summary = evaluate.summarize([1.0, 1.1, 1.21], 0.0, 0)
+        self.assertEqual(summary["days"], 2)
+        self.assertAlmostEqual(summary["growth"], 1.21, places=9)
+        self.assertEqual(summary["max_drawdown"], 0.0)
+
+    def test_warmup_keeps_the_reported_path_policy_live(self):
+        seen = []
+
+        def spy(history):
+            seen.append(len(history[0]))
+            return [0.5, 0.5]
+
+        curve, _, held = evaluate.roll([[0.01] * 6, [0.02] * 6], spy, 2, 0.0, warmup=2)
+        self.assertEqual(seen, [2, 4])
+        self.assertEqual(held, 0)
+        self.assertEqual(len(curve) - 1, 4)
 
 
 if __name__ == "__main__":
