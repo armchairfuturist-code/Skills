@@ -31,8 +31,10 @@ Load a **goal profile**: a structured record of the user's investment objectives
 | Time horizon | <1 / 1-5 / 5-15 / 15+ years | Short horizons can't wait out recession; long ones average through |
 | Income cadence | weekly / monthly / quarterly / annual / none | recommendations prioritize dividend safety and yield vs total-return reinvestment |
 | Concentration | concentrated / balanced / broad | Concentrated tolerates sector risk; broad needs diversification |
+| Loss tolerance | max drawdown % and bust-probability comfort % | These two numbers are what `tools/risk.py` consumes as `--loss-tol` and `--gate`; without them the tool applies its own defaults and the brief cannot say what the user would actually tolerate |
+| Committed cash | dated near-term withdrawals or obligations | A survival estimate that ignores a withdrawal overstates safety; income-sleeve coverage depends on it |
 
-**Completion criterion:** Every axis in the goal profile table populated and noted.
+**Completion criterion:** Every axis in the goal profile table populated and noted. Loss tolerance is stated as two numbers, not an adjective, before Phase 4 runs.
 
 ## Phase 2 — Read the regime
 
@@ -210,7 +212,7 @@ Load [`AI_RISK.md`](AI_RISK.md). When return history for the recommended mix (or
 | Monte Carlo bust probability | P(DD ≤ −loss_tolerance); default 1000 paths; block-bootstrap or regime-aware simulation preferred |
 | Monte Carlo goal probability | Only if the profile states a return target + horizon |
 
-Gate: bust probability above comfort (default >25% moderate, >10% conservative/preservation) → downgrade posture one rung or cut equity band and re-run 3.5. Pass the limit to `tools/risk.py` with `--gate` (0.25 moderate, 0.10 conservative) so the run reports the gate it applied. If MC tooling is unavailable, use historical max DD + CVaR and state the gap.
+Gate: bust probability above the profile's comfort → downgrade posture one rung or cut equity band and re-run 3.5. Take both numbers from the goal profile's Loss tolerance axis and pass them to `tools/risk.py` as `--gate` and `--loss-tol`, so the run reports the gate it applied. When the profile is silent, fall back to >25% moderate / >10% conservative and say so. If MC tooling is unavailable, use historical max DD + CVaR and state the gap.
 
 If a Markov stationary mix is available from 2G, scale tactical risk: high long-run Bear share → smaller active tilts (stationary distribution as a size modifier).
 
