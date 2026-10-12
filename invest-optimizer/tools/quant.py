@@ -89,6 +89,28 @@ def is_psd(cov, tol=1e-10):
     return True
 
 
+def ledoit_wolf(series):
+    """Ledoit-Wolf shrinkage of the sample covariance toward mu * I.
+
+    OPTIMIZATION.md sets this as the default prior and warns that sample
+    covariance is noisy under three years of daily history. The closed form
+    needs no dependency. `series` is one return list per asset, T observations.
+    """
+    n, T = len(series), len(series[0])
+    if T < 2:
+        raise ValueError("Ledoit-Wolf needs at least two observations")
+    ms = [mean(s) for s in series]
+    x = [[series[i][t] - ms[i] for t in range(T)] for i in range(n)]
+    s = [[sum(x[i][t] * x[j][t] for t in range(T)) / T for j in range(n)] for i in range(n)]
+    mu = sum(s[i][i] for i in range(n)) / n
+    d2 = sum((s[i][j] - (mu if i == j else 0.0)) ** 2 for i in range(n) for j in range(n))
+    b2 = sum(sum((x[i][t] * x[j][t] - s[i][j]) ** 2 for i in range(n) for j in range(n))
+             for t in range(T)) / (T * T)
+    delta = min(1.0, b2 / d2) if d2 > 0 else 1.0
+    return [[delta * mu * (1.0 if i == j else 0.0) + (1.0 - delta) * s[i][j]
+             for j in range(n)] for i in range(n)]
+
+
 def solve(A, b):
     """Gaussian elimination with partial pivot. A is n x n, b length n."""
     n = len(A)

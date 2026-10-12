@@ -159,6 +159,37 @@ class RiskGateTest(unittest.TestCase):
         self.assertEqual(payload["obs"], 2)
 
 
+class CovarianceTest(unittest.TestCase):
+    SERIES = [[math.sin(t * 1.7 + k) * 0.01 + 0.001 * k + 0.0004 * t for t in range(16)]
+              for k in range(3)]
+
+    # sklearn.covariance.LedoitWolf on SERIES, shrinkage 0.2296705288990897.
+    # Pins the closed form to the reference implementation.
+    GOLDEN = [[4.933723563983556e-05, 2.1635390610225008e-05, -1.2330951538838385e-05],
+              [2.1635390610225008e-05, 5.368477770983383e-05, 2.5400154253676605e-05],
+              [-1.2330951538838385e-05, 2.5400154253676605e-05, 5.477033556092045e-05]]
+
+    def test_matches_the_sklearn_reference(self):
+        got = quant.ledoit_wolf(self.SERIES)
+        for i in range(3):
+            for j in range(3):
+                self.assertAlmostEqual(got[i][j], self.GOLDEN[i][j], places=12)
+
+    def test_single_asset_returns_its_sample_variance(self):
+        # d2 is zero for one asset, so shrinkage is total and the result is mu.
+        series = [[0.01, -0.02, 0.03, 0.01]]
+        m = sum(series[0]) / 4
+        variance = sum((v - m) ** 2 for v in series[0]) / 4
+        self.assertAlmostEqual(quant.ledoit_wolf(series)[0][0], variance, places=12)
+
+    def test_shrunk_matrix_is_positive_semi_definite(self):
+        self.assertTrue(quant.is_psd(quant.ledoit_wolf(self.SERIES)))
+
+    def test_needs_at_least_two_observations(self):
+        with self.assertRaises(ValueError):
+            quant.ledoit_wolf([[0.01], [0.02]])
+
+
 class OptimizeCliTest(unittest.TestCase):
     def test_feasible_cap_holds_end_to_end(self):
         out, code = run_cli(optimize, ["AAA", "BBB", "CCC", "--cap", "0.40", "--json"])
@@ -180,6 +211,27 @@ class OptimizeCliTest(unittest.TestCase):
         payload = json.loads(out)
         self.assertLess(payload["daily_cvar95"], 0.0)
         self.assertGreater(payload["daily_cvar95"], -1.0)
+
+    def test_default_covariance_is_ledoit_wolf(self):
+        out, _ = run_cli(optimize, ["AAA", "BBB", "CCC", "--cap", "0.5", "--json"])
+        self.assertEqual(json.loads(out)["cov"], "lw")
+
+    def test_cov_flag_selects_the_estimator(self):
+        out, _ = run_cli(optimize, ["AAA", "BBB", "CCC", "--cap", "0.5",
+                                    "--cov", "sample", "--json"])
+        payload = json.loads(out)
+        self.assertEqual(payload["cov"], "sample")
+        self.assertEqual(sorted(payload["weights"]), ["AAA", "BBB", "CCC"])
+
+    def test_cov_value_is_not_parsed_as_a_ticker(self):
+        out, _ = run_cli(optimize, ["AAA", "BBB", "CCC", "--cap", "0.5",
+                                    "--cov", "lw", "--json"])
+        self.assertNotIn("LW", json.loads(out)["weights"])
+
+    def test_unknown_covariance_exits_one(self):
+        _, code = run_cli(optimize, ["AAA", "BBB", "CCC", "--cap", "0.5",
+                                     "--cov", "bogus"])
+        self.assertEqual(code, 1)
 
 
 class RollForwardTest(unittest.TestCase):
@@ -233,6 +285,19 @@ class RollForwardTest(unittest.TestCase):
         self.assertEqual(summary["days"], 2)
         self.assertAlmostEqual(summary["growth"], 1.21, places=9)
         self.assertEqual(summary["max_drawdown"], 0.0)
+
+    def test_fixed_policy_fits_with_shrinkage_and_the_cap(self):
+        history = [[0.01, -0.02, 0.03, 0.01, 0.005],
+                   [0.005, 0.01, -0.01, 0.02, 0.001],
+                   [-0.01, 0.02, 0.01, -0.02, 0.004]]
+        got = evaluate.fixed_policy(quant.hrp, 0.5, window=5)(history)
+        expected = optimize.cap_weights(quant.hrp(quant.ledoit_wolf(history)), 0.5)
+        self.assertEqual(got, expected)
+
+    def test_insufficient_history_exits_two_with_the_requirement(self):
+        out, code = run_cli(evaluate, ["AAA", "BBB", "--window", "500", "--step", "21"])
+        self.assertEqual(code, 2)
+        self.assertIn("needs 522", out)
 
     def test_warmup_keeps_the_reported_path_policy_live(self):
         seen = []

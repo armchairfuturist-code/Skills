@@ -19,7 +19,7 @@ assumption: equal weight rebalanced on the same schedule, and equal weight held
 from the first date (buy and hold).
 
 Usage:
-  evaluate.py JEPI QQQI SPYI SMH [--model hrp] [--cap 0.30] [--window 126]
+  evaluate.py JEPI QQQI SPYI SMH [--model hrp] [--cap 0.30] [--cov lw] [--window 126]
               [--step 21] [--cost-bps 10] [--json]
 """
 import json, math, sys
@@ -27,7 +27,7 @@ import json, math, sys
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
 import feeds
 import optimize
-from quant import cov_matrix, is_psd, max_drawdown, mean, stdev
+from quant import is_psd, max_drawdown, mean, stdev
 
 MODELS = optimize.MODELS
 
@@ -79,12 +79,12 @@ def summarize(curve, traded_total, held):
             "turnover": round(traded_total, 3), "held_rebalances": held}
 
 
-def fixed_policy(model, cap, window):
+def fixed_policy(model, cap, window, cov_kind="lw"):
     """Fit the model on the trailing window and enforce the name cap."""
     def policy(history):
         if not history or len(history[0]) < 2:
             raise optimize.InfeasibleError("not enough history to fit")
-        cov = cov_matrix([h[-window:] for h in history])
+        cov = optimize.COV[cov_kind]([h[-window:] for h in history])
         if not is_psd(cov):
             raise optimize.InfeasibleError("covariance is not positive semi-definite")
         return optimize.cap_weights(model(cov), cap)
@@ -105,9 +105,10 @@ def main():
     model = args[args.index("--model") + 1] if "--model" in args else "hrp"
     cap, window = opt("--cap", 0.30), int(opt("--window", 126))
     step, cost_bps = int(opt("--step", 21)), opt("--cost-bps", 10)
+    cov_kind = args[args.index("--cov") + 1] if "--cov" in args else "lw"
     tickers = [a.upper() for a in args if not a.startswith("--") and a not in MODELS
-               and a.replace(".", "").isdigit() is False]
-    if model not in MODELS or len(tickers) < 2:
+               and a not in optimize.COV and a.replace(".", "").isdigit() is False]
+    if model not in MODELS or cov_kind not in optimize.COV or len(tickers) < 2:
         print(__doc__)
         sys.exit(1)
 
@@ -126,12 +127,12 @@ def main():
 
     runs = {}
     for name, fn, cadence in [
-            ("policy", fixed_policy(MODELS[model], cap, window), step),
+            ("policy", fixed_policy(MODELS[model], cap, window, cov_kind), step),
             ("equal_weight", equal_weight_policy(len(tickers)), step),
             ("buy_and_hold", equal_weight_policy(len(tickers)), len(rets[0]))]:
         curve, traded, held = roll(rets, fn, cadence, cost_bps, warmup=window)
         runs[name] = summarize(curve, traded, held)
-    out = {"tickers": tickers, "model": model, "cap": cap, "window": window,
+    out = {"tickers": tickers, "model": model, "cap": cap, "cov": cov_kind, "window": window,
            "step": step, "cost_bps": cost_bps, "dates": [dates[0], dates[-1]],
            "evaluated": [dates[window], dates[-1]], "runs": runs}
 
@@ -140,7 +141,7 @@ def main():
         return
     print(f"ROLL-FORWARD — {dates[window]} to {dates[-1]} ({runs['policy']['days']}d live, "
           f"{window}d warmup from {dates[0]})  "
-          f"model={model} step={step}d cost={cost_bps:g}bp cap={cap:.0%}")
+          f"model={model} cov={cov_kind} step={step}d cost={cost_bps:g}bp cap={cap:.0%}")
     print(f"  {'run':<14}{'growth':>8}{'cagr':>8}{'vol':>8}{'maxDD':>8}{'sharpe':>8}{'turnover':>10}")
     for name, r in runs.items():
         print(f"  {name:<14}{r['growth']:>8.2f}{r['cagr']:>8.1%}{r['ann_vol']:>8.1%}"

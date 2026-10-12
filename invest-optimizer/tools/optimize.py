@@ -12,7 +12,7 @@ Models:
   invvol   inverse-volatility (heuristic fallback)
 
 Usage:
-  optimize.py JEPI QQQI SPYI SMH JEPQ IWMI [--model hrp] [--cap 0.30] [--json]
+  optimize.py JEPI QQQI SPYI SMH JEPQ IWMI [--model hrp] [--cap 0.30] [--cov lw] [--json]
 
 Checks reported: in-sum, name cap, effective N, daily CVaR(95) of the mix,
 correlation-break re-solve drift (correlations shrunk toward equicorrelation).
@@ -21,11 +21,12 @@ import json, math, sys
 
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
 import feeds
-from quant import (corr_matrix, cov_matrix, effective_n, hrp, inverse_vol, is_psd, log_returns,
-                   min_variance, percentile, portfolio_simple_returns, portfolio_var,
-                   risk_parity, shock_corr)
+from quant import (corr_matrix, cov_matrix, effective_n, hrp, inverse_vol, is_psd, ledoit_wolf,
+                   log_returns, min_variance, percentile, portfolio_simple_returns,
+                   portfolio_var, risk_parity, shock_corr)
 
 MODELS = {"hrp": hrp, "minvar": min_variance, "riskpar": risk_parity, "invvol": inverse_vol}
+COV = {"lw": ledoit_wolf, "sample": cov_matrix}
 
 
 class InfeasibleError(ValueError):
@@ -75,9 +76,9 @@ def aligned_returns(tickers):
     return rets, dates
 
 
-def solve_for(tickers, model, cap):
+def solve_for(tickers, model, cap, cov_kind="lw"):
     rets, dates = aligned_returns(tickers)
-    cov = cov_matrix(rets)
+    cov = COV[cov_kind](rets)
     if not is_psd(cov):
         raise InfeasibleError("sample covariance is not positive semi-definite")
     w = cap_weights(MODELS[model](cov), cap)
@@ -103,13 +104,14 @@ def main():
     as_json = "--json" in args
     model = args[args.index("--model") + 1] if "--model" in args else "hrp"
     cap = float(args[args.index("--cap") + 1]) if "--cap" in args else 0.30
+    cov_kind = args[args.index("--cov") + 1] if "--cov" in args else "lw"
     tickers = [a.upper() for a in args if not a.startswith("--") and a not in MODELS
-               and a.replace(".", "").isdigit() is False]
-    if model not in MODELS or len(tickers) < 2:
+               and a not in COV and a.replace(".", "").isdigit() is False]
+    if model not in MODELS or cov_kind not in COV or len(tickers) < 2:
         print(__doc__)
         sys.exit(1)
     try:
-        r = solve_for(tickers, model, cap)
+        r = solve_for(tickers, model, cap, cov_kind)
     except InfeasibleError as e:
         print(f"ERROR: {e}")
         print(f"NO ALLOCATION EMITTED — raise --cap to {1 / len(tickers):.1%} or more, "
@@ -120,10 +122,11 @@ def main():
         sys.exit(1)
     r["model"] = model
     r["cap"] = cap
+    r["cov"] = cov_kind
     if as_json:
         print(json.dumps(r, indent=1))
         return
-    print(f"OPTIMIZE — model={model} cov=sample/{r['obs']}d asof={r['asof']} cap={cap:.0%}")
+    print(f"OPTIMIZE — model={model} cov={cov_kind}/{r['obs']}d asof={r['asof']} cap={cap:.0%}")
     for t, w in sorted(r["weights"].items(), key=lambda kv: -kv[1]):
         print(f"  {t:<8} {w:7.2%}" + ("  <- at cap" if abs(w - cap) < 1e-6 else ""))
     print(f"  sum 100.00%  effective N {r['effective_n']:.1f}  ann vol {r['ann_vol']:.1%}  "

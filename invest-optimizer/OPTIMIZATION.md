@@ -36,9 +36,11 @@ Pick one primary optimizer from the goal profile. Pulse modifies risk measure an
 
 Defaults beat sample estimates. Apply unless the user supplies a researched factor model.
 
+When a covariance or model change looks promising, test it with `tools/evaluate.py` before adopting it. That tool rolls a policy forward on a dated schedule, fits on trailing data only, charges costs on the notional it trades, and prints equal weight and buy and hold on the same dates beside it. One path is not evidence of edge; a challenger earns the default only by beating the alternatives net of costs across a long enough window.
+
 | Input | Default | Notes |
 |---|---|---|
-| Covariance | Ledoit-Wolf shrinkage (or skfolio/Riskfolio equivalent) | Sample cov is noisy under 3y daily history |
+| Covariance | Ledoit-Wolf shrinkage (`tools/optimize.py` implements it in stdlib, no dependency; `--cov sample` opts out) | Sample cov is noisy under 3y daily history |
 | Covariance (alt) | Gerber statistic | When returns have many near-zero days or crypto-like noise |
 | Expected returns | James-Stein / exponential mean, or BL equilibrium | Raw historical mean overfits; never use <1y arithmetic mean alone |
 | Factor prior | Time-series factor model when betas available | OpenBB / Qlib factor feeds if present |
