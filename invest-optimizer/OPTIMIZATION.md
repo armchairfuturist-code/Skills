@@ -87,7 +87,7 @@ Before accepting weights into the brief:
 | Concentration | No sector/name breach of ceilings |
 | CVaR sanity | Portfolio historical or synthetic CVaR ≤ goal loss tolerance (annualized framing stated) |
 | Diversification | Effective N (1/Σw²) ≥ floor for broad goals (default ≥ 8); concentrated goals exempt |
-| Correlation break | Under +0.3 uniform correlation shock to equities, band constraints still hold after one re-solve or manual clip |
+| Correlation break | Under a correlation-break stress (correlations shrunk 30% toward equicorrelation, which stays positive semi-definite), band constraints still hold after one re-solve or manual clip |
 | Cross-fit (skfolio) | If CV available, out-of-sample Sharpe or CVaR not catastrophic vs in-sample (flag if OOS collapses >50%) |
 
 Failure → loosen return views, switch to HRP/min-risk, or drop to heuristic inverse-vol; state which fallback fired.
@@ -99,7 +99,7 @@ When return history for the recommended mix (or proxy ETFs) is available:
 - Run bootstrap/Monte Carlo (default 1000 paths)
 - **Bust probability** = P(drawdown ≤ −loss_tolerance from goal profile)
 - **Goal probability** = P(reaching stated return target within horizon) when the profile has one
-- Gate: bust probability above the profile's comfort (default >25% for moderate, >10% for conservative/preservation) → downgrade posture one rung or cut equity band and re-optimize
+- Gate: bust probability above the profile's comfort (default >25% for moderate, >10% for conservative/preservation) → downgrade posture one rung or cut equity band and re-optimize. Pass the limit with `--gate` (0.25 moderate, 0.10 conservative); the run echoes it back so the brief can name the gate it applied
 
 If quantstats (or equivalent) is unavailable, approximate with historical max drawdown and CVaR of the proxy mix and state the gap.
 

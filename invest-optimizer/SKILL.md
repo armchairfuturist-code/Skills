@@ -180,7 +180,7 @@ Translate the target posture from Phase 3 into mathematically grounded allocatio
 7. Optional: discrete allocation to share counts when deployable cash and prices are known
 8. Optional large gap (>15% equity shift): note turnover/cost path (cvxportfolio-class multi-period) without blocking the brief
 
-If no optimizer library is available, run `tools/optimize.py` (stdlib, return-free models: HRP default, min-var, risk parity, inverse-vol; per-name caps, effective-N, CVaR, +0.3 correlation-shock stability check). Only if that fails, fall back to equal-weight or inverse-volatility within target bands and state the gap.
+If no optimizer library is available, run `tools/optimize.py` (stdlib, return-free models: HRP default, min-var, risk parity, inverse-vol; per-name caps, effective-N, CVaR, correlation-break stability check). A cap the universe cannot satisfy is rejected with no weights emitted, never silently breached — widen the universe or raise the cap. Only if that fails, fall back to equal-weight or inverse-volatility within target bands and state the gap.
 
 **Completion criterion:** Every recommended asset has an explicit weight, optimized or fallback, summing to 100% inside posture bands; model + risk measure + covariance method named; stress checks passed or fallback path stated.
 
@@ -210,7 +210,7 @@ Load [`AI_RISK.md`](AI_RISK.md). When return history for the recommended mix (or
 | Monte Carlo bust probability | P(DD ≤ −loss_tolerance); default 1000 paths; block-bootstrap or regime-aware simulation preferred |
 | Monte Carlo goal probability | Only if the profile states a return target + horizon |
 
-Gate: bust probability above comfort (default >25% moderate, >10% conservative/preservation) → downgrade posture one rung or cut equity band and re-run 3.5. If MC tooling is unavailable, use historical max DD + CVaR and state the gap.
+Gate: bust probability above comfort (default >25% moderate, >10% conservative/preservation) → downgrade posture one rung or cut equity band and re-run 3.5. Pass the limit to `tools/risk.py` with `--gate` (0.25 moderate, 0.10 conservative) so the run reports the gate it applied. If MC tooling is unavailable, use historical max DD + CVaR and state the gap.
 
 If a Markov stationary mix is available from 2G, scale tactical risk: high long-run Bear share → smaller active tilts (stationary distribution as a size modifier).
 

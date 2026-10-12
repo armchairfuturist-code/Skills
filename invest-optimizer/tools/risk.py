@@ -8,17 +8,19 @@ Reports per OPTIMIZATION.md / SKILL.md Phase 4:
 
 Usage:
   risk.py JEPI:0.22 QQQI:0.20 SPYI:0.20 SMH:0.14 JEPQ:0.12 IWMI:0.12 \
-          [--loss-tol 0.25] [--horizon 63] [--paths 1000] [--goal 1.10] [--json]
+          [--loss-tol 0.25] [--horizon 63] [--paths 1000] [--goal 1.10] [--gate 0.25] [--json]
 
-Gates (SKILL.md Phase 4): bust >25% (moderate) / >10% (conservative) ->
-downgrade posture one rung. ~125 trading days of history is thin; MC is
-bootstrap, not forecast. State the gap in the brief.
+Gates (SKILL.md Phase 4): pass --gate 0.25 for moderate or --gate 0.10 for
+conservative; a bust estimate above the gate downgrades posture one rung. The
+limit is echoed in the JSON so the brief states which gate was applied.
+~125 trading days of history is thin; MC is bootstrap, not forecast. State the
+gap in the brief.
 """
 import json, math, sys
 
 sys.path.insert(0, __file__.rsplit("/", 1)[0])
 import feeds
-from quant import log_returns, max_drawdown, mc_bust, mean, percentile, stdev
+from quant import log_returns, max_drawdown, mc_bust, mean, percentile, portfolio_log_returns, stdev
 
 
 def main():
@@ -30,6 +32,7 @@ def main():
 
     loss_tol, horizon = opt("--loss-tol", 0.25), int(opt("--horizon", 63))
     paths, goal = int(opt("--paths", 1000)), opt("--goal", 0.0)
+    gate_p = opt("--gate", 0.25)
     positions = []
     for a in args:
         if ":" in a and not a.startswith("--"):
@@ -52,8 +55,8 @@ def main():
         sys.exit(1)
     dates = sorted(set.intersection(*[set(h) for h in hist.values()]))[-126:]
     rets = {t: log_returns([hist[t][d] for d in dates]) for t in tickers}
-    port = [sum(w[i] * rets[t][tt] for i, t in enumerate(tickers)) for tt in range(len(dates) - 1)]
-    simple = [math.exp(r) - 1 for r in port]
+    port = portfolio_log_returns(w, [rets[t] for t in tickers])
+    simple = [math.expm1(r) for r in port]
 
     equity, acc = [1.0], 1.0
     for r in simple:
@@ -70,14 +73,14 @@ def main():
     ann_vol = stdev(simple) * math.sqrt(252)
     calmar = ann_ret / abs(mdd) if mdd != 0 else float("inf")
     bust = mc_bust(port, loss_tol, horizon, paths)
-    gate = "PASS" if bust <= 0.25 else "FAIL — downgrade posture one rung (moderate gate 25%)"
+    gate = "PASS" if bust <= gate_p else f"FAIL — downgrade posture one rung (gate {gate_p:.0%})"
 
     out = {"tickers": dict(zip(tickers, [round(x, 4) for x in w])), "asof": dates[-1],
            "obs": len(simple), "ann_return": round(ann_ret, 4), "ann_vol": round(ann_vol, 4),
            "max_drawdown": round(mdd, 4), "daily_var95": round(var95, 4),
            "daily_cvar95": round(cvar95, 4), "tail_ratio": round(tail_ratio, 2),
            "calmar": round(calmar, 2), "mc": {"paths": paths, "horizon_days": horizon,
-           "loss_tol": loss_tol, "bust_p": round(bust, 3), "gate": gate}}
+           "loss_tol": loss_tol, "gate_p": gate_p, "bust_p": round(bust, 3), "gate": gate}}
     if goal > 0:
         import random
         rng = random.Random(42)
