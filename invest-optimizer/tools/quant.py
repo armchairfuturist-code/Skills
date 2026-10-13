@@ -9,6 +9,21 @@ def log_returns(closes):
     return [math.log(closes[i] / closes[i - 1]) for i in range(1, len(closes)) if closes[i - 1] > 0]
 
 
+def portfolio_simple_returns(weights, asset_log_returns):
+    """Simple return of a fixed-weight mix, one value per period.
+
+    A weighted sum of log returns is not a portfolio return. Aggregate the
+    simple returns, then take the log if a log series is wanted.
+    """
+    T = len(asset_log_returns[0])
+    return [sum(w * math.expm1(asset_log_returns[i][t]) for i, w in enumerate(weights))
+            for t in range(T)]
+
+
+def portfolio_log_returns(weights, asset_log_returns):
+    return [math.log1p(s) for s in portfolio_simple_returns(weights, asset_log_returns)]
+
+
 def mean(xs):
     return sum(xs) / len(xs) if xs else 0.0
 
@@ -56,6 +71,44 @@ def corr_matrix(cov):
     n = len(cov)
     sd = [math.sqrt(max(cov[i][i], 1e-18)) for i in range(n)]
     return [[cov[i][j] / (sd[i] * sd[j]) for j in range(n)] for i in range(n)]
+
+
+def is_psd(cov, tol=1e-10):
+    """True when the symmetric matrix admits a Cholesky factor within tol."""
+    n = len(cov)
+    L = [[0.0] * n for _ in range(n)]
+    for i in range(n):
+        for j in range(i + 1):
+            s = cov[i][j] - sum(L[i][k] * L[j][k] for k in range(j))
+            if i == j:
+                if s < -tol:
+                    return False
+                L[i][j] = math.sqrt(max(s, 0.0))
+            else:
+                L[i][j] = s / L[j][j] if L[j][j] > tol else 0.0
+    return True
+
+
+def ledoit_wolf(series):
+    """Ledoit-Wolf shrinkage of the sample covariance toward mu * I.
+
+    OPTIMIZATION.md sets this as the default prior and warns that sample
+    covariance is noisy under three years of daily history. The closed form
+    needs no dependency. `series` is one return list per asset, T observations.
+    """
+    n, T = len(series), len(series[0])
+    if T < 2:
+        raise ValueError("Ledoit-Wolf needs at least two observations")
+    ms = [mean(s) for s in series]
+    x = [[series[i][t] - ms[i] for t in range(T)] for i in range(n)]
+    s = [[sum(x[i][t] * x[j][t] for t in range(T)) / T for j in range(n)] for i in range(n)]
+    mu = sum(s[i][i] for i in range(n)) / n
+    d2 = sum((s[i][j] - (mu if i == j else 0.0)) ** 2 for i in range(n) for j in range(n))
+    b2 = sum(sum((x[i][t] * x[j][t] - s[i][j]) ** 2 for i in range(n) for j in range(n))
+             for t in range(T)) / (T * T)
+    delta = min(1.0, b2 / d2) if d2 > 0 else 1.0
+    return [[delta * mu * (1.0 if i == j else 0.0) + (1.0 - delta) * s[i][j]
+             for j in range(n)] for i in range(n)]
 
 
 def solve(A, b):
@@ -205,11 +258,16 @@ def risk_parity(cov, iters=500):
 
 
 def shock_corr(cov, bump=0.3):
-    """Uniform +bump correlation shock (correlation-break stress check)."""
+    """Correlation-break stress. Shrink correlations toward equicorrelation.
+
+    A convex combination of two PSD matrices stays PSD. Adding a uniform bump
+    to the off-diagonals does not, and can yield a covariance matrix no
+    optimizer can safely use (quant.is_psd detects that).
+    """
     corr = corr_matrix(cov)
     n = len(cov)
     sd = [math.sqrt(cov[i][i]) for i in range(n)]
-    return [[(min(1.0, corr[i][j] + bump) if i != j else 1.0) * sd[i] * sd[j]
+    return [[((1 - bump) * corr[i][j] + bump) * sd[i] * sd[j]
              for j in range(n)] for i in range(n)]
 
 

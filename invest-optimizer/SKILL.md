@@ -31,8 +31,10 @@ Load a **goal profile**: a structured record of the user's investment objectives
 | Time horizon | <1 / 1-5 / 5-15 / 15+ years | Short horizons can't wait out recession; long ones average through |
 | Income cadence | weekly / monthly / quarterly / annual / none | recommendations prioritize dividend safety and yield vs total-return reinvestment |
 | Concentration | concentrated / balanced / broad | Concentrated tolerates sector risk; broad needs diversification |
+| Loss tolerance | max drawdown % and bust-probability comfort % | These two numbers are what `tools/risk.py` consumes as `--loss-tol` and `--gate`; without them the tool applies its own defaults and the brief cannot say what the user would actually tolerate |
+| Committed cash | dated near-term withdrawals or obligations | A survival estimate that ignores a withdrawal overstates safety; income-sleeve coverage depends on it |
 
-**Completion criterion:** Every axis in the goal profile table populated and noted.
+**Completion criterion:** Every axis in the goal profile table populated and noted. Loss tolerance is stated as two numbers, not an adjective, before Phase 4 runs.
 
 ## Phase 2 — Read the regime
 
@@ -180,7 +182,7 @@ Translate the target posture from Phase 3 into mathematically grounded allocatio
 7. Optional: discrete allocation to share counts when deployable cash and prices are known
 8. Optional large gap (>15% equity shift): note turnover/cost path (cvxportfolio-class multi-period) without blocking the brief
 
-If no optimizer library is available, run `tools/optimize.py` (stdlib, return-free models: HRP default, min-var, risk parity, inverse-vol; per-name caps, effective-N, CVaR, +0.3 correlation-shock stability check). Only if that fails, fall back to equal-weight or inverse-volatility within target bands and state the gap.
+If no optimizer library is available, run `tools/optimize.py` (stdlib, return-free models: HRP default, min-var, risk parity, inverse-vol; per-name caps, effective-N, CVaR, correlation-break stability check). A cap the universe cannot satisfy is rejected with no weights emitted, never silently breached — widen the universe or raise the cap. Only if that fails, fall back to equal-weight or inverse-volatility within target bands and state the gap.
 
 **Completion criterion:** Every recommended asset has an explicit weight, optimized or fallback, summing to 100% inside posture bands; model + risk measure + covariance method named; stress checks passed or fallback path stated.
 
@@ -210,7 +212,7 @@ Load [`AI_RISK.md`](AI_RISK.md). When return history for the recommended mix (or
 | Monte Carlo bust probability | P(DD ≤ −loss_tolerance); default 1000 paths; block-bootstrap or regime-aware simulation preferred |
 | Monte Carlo goal probability | Only if the profile states a return target + horizon |
 
-Gate: bust probability above comfort (default >25% moderate, >10% conservative/preservation) → downgrade posture one rung or cut equity band and re-run 3.5. If MC tooling is unavailable, use historical max DD + CVaR and state the gap.
+Gate: bust probability above the profile's comfort → downgrade posture one rung or cut equity band and re-run 3.5. Take both numbers from the goal profile's Loss tolerance axis and pass them to `tools/risk.py` as `--gate` and `--loss-tol`, so the run reports the gate it applied. When the profile is silent, fall back to >25% moderate / >10% conservative and say so. If MC tooling is unavailable, use historical max DD + CVaR and state the gap.
 
 If a Markov stationary mix is available from 2G, scale tactical risk: high long-run Bear share → smaller active tilts (stationary distribution as a size modifier).
 
